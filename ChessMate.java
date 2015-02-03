@@ -20,6 +20,7 @@ class Board extends JPanel implements MouseListener
 	Board()
 	{
 		readLevel();
+		addMouseListener(this);
 	}	
 	public void paintComponent(Graphics g)
 	{
@@ -39,9 +40,10 @@ class Board extends JPanel implements MouseListener
 	}
 	void readLevel()
 	{
+		//reads in a map for the current level. 
 		Scanner sc= null;
 		try{
-		sc = new Scanner(new File("level.txt"));
+			sc = new Scanner(new File("level.txt"));
 		}catch(FileNotFoundException e){}
 		for(int i=0;sc.hasNextLine();i++)
 		{
@@ -50,11 +52,26 @@ class Board extends JPanel implements MouseListener
 				tiles[j][i] = new Tile(j,i,sc.nextInt());
 			}
 		}
-		//reads in a map for the current level. 
+		
 	}
 	
 	//various listener methods.
-	public void mousePressed(MouseEvent e){}
+	public void mousePressed(MouseEvent e)
+	{
+		Tile temp;
+		for(int i=0;i<tiles.length;i++)
+		{
+			for(int j=0;j<tiles[i].length;j++)
+			{
+				temp = tiles[j][i].check(e);
+				if(temp!=null)
+				{
+					System.out.println("x:"+j+ " y:" + i);
+					break;
+				}
+			}
+		}
+	}
 	public void mouseExited(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
 	public void mouseReleased(MouseEvent e){}
@@ -65,14 +82,22 @@ class Tile{
 	//image dark
 	//image bright
 	int x,y;
-	int width;
+	int width=50;
 	int type;//0 unmovable, 1 is normal, 2 is goal and 3 is start.
 	Tile(int x, int y, int type)
 	{
 		this.x=x;
 		this.y=y;
 		this.type=type;
-		width=50;
+	}
+	Tile check(MouseEvent e)
+	{
+		int tempX=e.getX(), tempY=e.getY();
+		if((tempX>=x*width&&tempX<=x*width+width)&&(tempY>=y*width&&tempY<=y*width+width))
+		{
+			return(this);//someone give me a medal for this.
+		}
+		return null;
 	}
 	void draw(Graphics g, int i)//i is 0 or 1 depending on black or white
 	{
