@@ -11,7 +11,6 @@ class Board extends JPanel implements MouseListener
 	{
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		//g.drawRect(0,0,400,400);//----------------------hardcode
 		int count=0;
 		for(int i=0;i<tiles.length;i++)
 		{
@@ -39,13 +38,13 @@ class Board extends JPanel implements MouseListener
 			for(int j=0;j<tiles[i].length;j++)
 			{
 				int temp = sc.nextInt();
-				if(temp==3)
+				if(temp>3)//AI tile
 				{
-					tiles[j][i] = new Rook(j,i,temp);
+					tiles[j][i] = getPiece(j,i,temp);
 				}
-				else if(temp==2)
+				else if(temp==2)//0 is immovable, 1 is regular
 				{
-					tiles[j][i] = getPiece(token);
+					tiles[j][i] = getPiece(j,i,token);
 				}
 				else 
 					tiles[j][i] = new Tile(j,i,temp);
@@ -55,6 +54,18 @@ class Board extends JPanel implements MouseListener
 	}
 	
 	//various listener methods.
+	public Piece getPiece(int x, int y, int i)
+	{
+		//i is greater than 3. 
+		switch i
+		{
+			case(4):return(new Rook(x,y,1));
+			case(5):return(new Knight(x,y,1));
+			case(6):return(new Bishop(x,y,1));
+			case(7):return(new Queen(x,y,1));
+			case(8):return(new King(x,y,1));
+		}
+	}
 	public void mousePressed(MouseEvent e)
 	{
 		Tile temp;
