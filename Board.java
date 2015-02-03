@@ -1,3 +1,8 @@
+import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 class Board extends JPanel implements MouseListener
 {
 	Tile[][] tiles = new Tile[8][8];//the entire board.
@@ -65,6 +70,7 @@ class Board extends JPanel implements MouseListener
 			case(7):return(new Queen(x,y,1));
 			case(8):return(new King(x,y,1));
 		}
+		return null;
 	}
 	public void mousePressed(MouseEvent e)
 	{

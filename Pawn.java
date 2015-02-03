@@ -1,7 +1,11 @@
-class Pawn
+class Pawn extends Piece
 {
 	Pawn(int x,int y, int type)
 	{
+		super(x,y,type);
 	}
-
+	public boolean move()
+	{
+		return true;
+	}
 }
