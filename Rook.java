@@ -9,16 +9,22 @@ class Rook extends Piece
 {
 	BufferedImage BRook = null;
 	BufferedImage WRook = null;
-	
-	Rook(int x, int y, int type)
+	int color; 
+	Rook(int x, int y, int type, int color)
 	{
 		super(x,y,type);
+		this.color=color;
 		try
 		{
-			BRook= ImageIO.read(new File("BlackRook.png"));
+			if(color==0)
+			
+				BRook= ImageIO.read(new File("BlackRook.png"));
+			else 
+				WRook= ImageIO.read(new File("WhiteRook.png"));
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
+		
 	}
 	public boolean move()
 	{
@@ -27,6 +33,9 @@ class Rook extends Piece
 	public void draw(Graphics g, int i)
 	{
 		super.draw(g,i);
-		g.drawImage(BRook,x*width,y*width,null);
+		if(color==0)
+			g.drawImage(BRook,x*width,y*width,null);
+		else 
+			g.drawImage(WRook,x*width,y*width,null);
 	}
 }

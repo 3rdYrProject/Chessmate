@@ -1,8 +1,10 @@
 class Bishop extends Piece
 {
-	Bishop(int x,int y, int type)
+	int color;
+	Bishop(int x,int y, int type, int color)
 	{
 		super(x,y,type);
+		this.color= color;
 	}
 	public boolean move()
 	{
