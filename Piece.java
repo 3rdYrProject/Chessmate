@@ -3,7 +3,7 @@ abstract class Piece extends Tile{
 	public void draw();
 	public boolean move();
 }
-/*
+/*nothing done, black mark.
 
 retrievemoves
 --sets valid moves into a linked list
