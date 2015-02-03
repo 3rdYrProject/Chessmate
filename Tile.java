@@ -1,3 +1,12 @@
+import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import javax.swing.*;
+import javax.imageio.*;
+import java.awt.image.BufferedImage;
+
 class Tile{
 	
 	BufferedImage dark = null;//image dark
