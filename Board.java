@@ -57,7 +57,7 @@ class Board extends JPanel implements MouseListener
 	public Piece getPiece(int x, int y, int i)
 	{
 		//i is greater than 3. 
-		switch i
+		switch(i)
 		{
 			case(4):return(new Rook(x,y,1));
 			case(5):return(new Knight(x,y,1));
