@@ -24,6 +24,7 @@ class Board extends JPanel implements MouseListener
 	}	
 	public void paintComponent(Graphics g)
 	{
+		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		//g.drawRect(0,0,400,400);//----------------------hardcode
 		int count=0;
@@ -104,22 +105,18 @@ class Tile{
 		if(type==0)//not moveable
 		{
 			g.setColor(new Color(238,238,238));
-			g.fillRect(x*width+1,y*width+1,width,width);
 		}
 		else if(type==1)//regular tiles
 		{
 			if(i==0)
 			{
 				g.setColor(new Color(0,128,0));
-				g.fillRect(x*width,y*width,width,width);
-				//g.drawImage(x,y,dark);
 			}
 			else 
 			{
 				g.setColor(new Color(181,230,30));
-				g.fillRect(x*width,y*width,width,width);
-				//g.drawImage(x,y,bright);
 			}
 		}
+		g.fillRect(x*width, y*width, width, width);
 	}
 }
