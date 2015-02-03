@@ -14,8 +14,8 @@ class Tile{
 	
 	public void initImages(){
 		try {
-			dark = ImageIO.read(new File("images/Dark.png"));
-			light = ImageIO.read(new File("images/Light.png"));
+			dark = ImageIO.read(new File("Dark.png"));
+			light = ImageIO.read(new File("Light.png"));
 		} catch (IOException e) {
 		}
 	}

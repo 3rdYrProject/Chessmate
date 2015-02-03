@@ -5,11 +5,11 @@ import java.awt.event.*;
 import javax.swing.*;
 abstract class Piece extends Tile{
 	
+	private LinkedList<Tile> moves = new LinkedList<Tile>();
 	Piece(int x, int y, int type)
 	{
 		super(x,y,type);
 	}
-	private LinkedList<Tile> moves = new LinkedList<Tile>();
 	
 	public void draw(Graphics g, int i)
 	{

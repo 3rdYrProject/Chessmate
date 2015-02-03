@@ -10,6 +10,6 @@ public class ChessMate
 		JFrame f= new JFrame();
 		f.add(new Board());
 		f.setVisible(true);
-		f.setSize(600,600);
+		f.setSize(600,700);
 	}
 }
