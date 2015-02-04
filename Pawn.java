@@ -18,9 +18,9 @@ class Pawn extends Piece
 		{
 			if(color==0)
 			
-				BPawn= ImageIO.read(new File("images/BlackRook.png"));
+				BPawn= ImageIO.read(new File("images/BlackPawn.png"));
 			else 
-				WPawn= ImageIO.read(new File("images/WhiteRook.png"));
+				WPawn= ImageIO.read(new File("images/WhitePawn.png"));
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
@@ -31,10 +31,6 @@ class Pawn extends Piece
 	}
 	public void draw(Graphics g, int i)
 	{
-		super.draw(g,i);
-		if(color==0)
-			g.drawImage(BPawn,x*width,y*width,null);
-		else 
-			g.drawImage(WPawn,x*width,y*width,null);
+		super.draw(g,i,BPawn,WPawn,color);
 	}
 }

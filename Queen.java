@@ -31,10 +31,6 @@ class Queen extends Piece
 	}
 	public void draw(Graphics g, int i)
 	{
-		super.draw(g,i);
-		if(color==0)
-			g.drawImage(BQueen,x*width,y*width,null);
-		else 
-			g.drawImage(WQueen,x*width,y*width,null);
+		super.draw(g,i,BQueen,WQueen,color);
 	}
 }

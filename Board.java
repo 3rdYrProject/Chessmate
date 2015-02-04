@@ -6,7 +6,7 @@ import javax.swing.*;
 class Board extends JPanel implements MouseListener
 {
 	Tile[][] tiles = new Tile[8][8];//the entire board.
-	
+	Piece userPiece= null;
 	Board()
 	{
 		readLevel();
@@ -49,7 +49,8 @@ class Board extends JPanel implements MouseListener
 				}
 				else if(temp==2)//0 is immovable, 1 is regular
 				{
-					tiles[j][i] = getPiece(j,i,token,1);
+					userPiece= getPiece(j,i,token,1);
+					tiles[j][i]= userPiece;
 				}
 				else 
 					tiles[j][i] = new Tile(j,i,temp);
@@ -74,19 +75,29 @@ class Board extends JPanel implements MouseListener
 	}
 	public void mousePressed(MouseEvent e)
 	{
-		Tile temp;
-		for(int i=0;i<tiles.length;i++)
+		Tile moveLoc = null;
+		outer: for(int i=0;i<tiles.length;i++)
 		{
 			for(int j=0;j<tiles[i].length;j++)
 			{
-				temp = tiles[j][i].check(e);
-				if(temp!=null)
+				moveLoc = tiles[j][i].check(e);
+				
+				if(moveLoc!=null)
 				{
+					
 					System.out.println("x:"+j+ " y:" + i);
-					break;
+					break outer;
 				}
 			}
 		}
+		Tile temp= new Tile(userPiece);
+		if(userPiece.move(moveLoc))
+		{
+			System.out.println(temp.getX()+ " "+temp.getY());
+			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
+			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;1
+			repaint();
+		}	
 	}
 	public void mouseExited(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}

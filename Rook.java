@@ -26,16 +26,14 @@ class Rook extends Piece
 		catch(IOException e){}
 		
 	}
-	public boolean move()
+	public boolean move(Tile t)//checks move is valid
 	{
+		this.x= t.getX();
+		this.y= t.getY();
 		return true;
 	}
 	public void draw(Graphics g, int i)
 	{
-		super.draw(g,i);
-		if(color==0)
-			g.drawImage(BRook,x*width,y*width,null);
-		else 
-			g.drawImage(WRook,x*width,y*width,null);
+		super.draw(g,i,BRook,WRook,color);
 	}
 }
