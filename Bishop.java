@@ -1,5 +1,7 @@
 class Bishop extends Piece
 {
+	BufferedImage BBishop = null;
+	BufferedImage WBishop = null;
 	int color;
 	Bishop(int x,int y, int type, int color)
 	{
