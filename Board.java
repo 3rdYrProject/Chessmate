@@ -298,6 +298,7 @@ class Board extends JPanel implements MouseListener
 	{
 		BufferedImage BBishop = null;
 		BufferedImage WBishop = null;
+		LinkedList<Tile> route = new LinkedList<>();
 		int color;
 		Bishop(int x,int y, int type, int color)
 		{
@@ -314,9 +315,35 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
+		
+		int checkDiag(Tile goal){//checks to see if move is diagonal
+			int direction = 0;
+			if(goal.getX() == (this.x - 1) && goal.getY() == (this.y -1)){//only have up left done..
+				System.out.println("here");								  //only working for 1 square at a time
+				direction = 2;
+			}
+			else direction = 0;
+			return direction;
+		}
+		
 		public boolean move(Tile t)
 		{
-			return true;
+			boolean val = false;
+			System.out.println("Current x: " + this.x + " y: " + this.y);
+			System.out.println("New x: " + t.getX() + " y: " + t.getY());
+			
+			int diag = checkDiag(t);
+			
+			if(diag > 0){
+				if(diag == 2){//if up left then add that to the route 
+					route.add(new Tile(t.getX(), t.getY(), 1));					
+					this.x= t.getX();
+					this.y= t.getY();
+					val = true;
+				}
+			}else val = false;
+
+			return val;	
 		}
 		public void draw(Graphics g, int i)
 		{
