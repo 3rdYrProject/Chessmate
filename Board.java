@@ -109,8 +109,10 @@ class Board extends JPanel implements MouseListener
 	
 	class Tile{
 		
-		BufferedImage dark = null;//image dark
-		BufferedImage light = null;//image bright
+		BufferedImage dark = null;
+		BufferedImage light = null;
+		BufferedImage obstacle = null;
+		
 		boolean occupied=false;
 		int x,y;
 		int width=75;
@@ -144,6 +146,7 @@ class Board extends JPanel implements MouseListener
 			try {
 				dark = ImageIO.read(new File("images/Dark.png"));
 				light = ImageIO.read(new File("images/Light.png"));
+				obstacle = ImageIO.read(new File("images/ground.png"));
 			} catch (IOException e) {
 			}
 		}
@@ -161,8 +164,7 @@ class Board extends JPanel implements MouseListener
 		{
 			if(type==0)//not moveable
 			{
-				g.setColor(new Color(238,238,238));
-				g.fillRect(x*width+1,y*width+1,width,width);
+				g.drawImage(obstacle,x*width,y*width,null);
 			}
 			else if(type==1)//regular tiles
 			{
