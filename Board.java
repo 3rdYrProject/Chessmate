@@ -40,7 +40,7 @@ class Board extends JPanel implements MouseListener
 		
 		int token= sc.nextInt();//player token.
 
-		for(int i=0;sc.hasNextLine();i++)
+		for(int i=0;sc.hasNextInt();i++)
 		{
 			for(int j=0;j<tiles[i].length;j++)
 			{
