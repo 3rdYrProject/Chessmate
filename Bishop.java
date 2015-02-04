@@ -1,3 +1,10 @@
+import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.image.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.imageio.*;
 class Bishop extends Piece
 {
 	BufferedImage BBishop = null;
@@ -11,9 +18,9 @@ class Bishop extends Piece
 		{
 			if(color==0)
 			
-				BRook= ImageIO.read(new File("BlackBishop.png"));
+				BBishop= ImageIO.read(new File("images/BlackBishop.png"));
 			else 
-				WRook= ImageIO.read(new File("WhiteBishop.png"));
+				WBishop= ImageIO.read(new File("images/WhiteBishop.png"));
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
@@ -21,5 +28,13 @@ class Bishop extends Piece
 	public boolean move()
 	{
 		return true;
+	}
+	public void draw(Graphics g, int i)
+	{
+		super.draw(g,i);
+		if(color==0)
+			g.drawImage(BBishop,x*width,y*width,null);
+		else 
+			g.drawImage(WBishop,x*width,y*width,null);
 	}
 }

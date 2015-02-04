@@ -18,9 +18,9 @@ class Rook extends Piece
 		{
 			if(color==0)
 			
-				BRook= ImageIO.read(new File("BlackRook.png"));
+				BRook= ImageIO.read(new File("images/BlackRook.png"));
 			else 
-				WRook= ImageIO.read(new File("WhiteRook.png"));
+				WRook= ImageIO.read(new File("images/WhiteRook.png"));
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}

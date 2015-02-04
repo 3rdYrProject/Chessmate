@@ -1,3 +1,10 @@
+import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.image.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.imageio.*;
 class Knight extends Piece
 {
 	BufferedImage BKnight = null;
@@ -11,9 +18,9 @@ class Knight extends Piece
 		{
 			if(color==0)
 			
-				BRook= ImageIO.read(new File("BlackKnight.png"));
+				BKnight= ImageIO.read(new File("images/BlackKnight.png"));
 			else 
-				WRook= ImageIO.read(new File("WhiteKnight.png"));
+				WKnight= ImageIO.read(new File("images/WhiteKnight.png"));
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
@@ -21,5 +28,13 @@ class Knight extends Piece
 	public boolean move()
 	{
 		return true;
+	}
+	public void draw(Graphics g, int i)
+	{
+		super.draw(g,i);
+		if(color==0)
+			g.drawImage(BKnight,x*width,y*width,null);
+		else 
+			g.drawImage(WKnight,x*width,y*width,null);
 	}
 }	
