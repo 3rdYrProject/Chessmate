@@ -7,6 +7,16 @@ class King extends Piece
 	{
 		super(x,y,type);
 		this.color= color;
+		try
+		{
+			if(color==0)
+			
+				BRook= ImageIO.read(new File("BlackKing.png"));
+			else 
+				WRook= ImageIO.read(new File("WhiteKing.png"));
+		}
+		catch(FileNotFoundException e){}
+		catch(IOException e){}
 	}
 	public boolean move()
 	{
