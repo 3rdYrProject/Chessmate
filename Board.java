@@ -317,30 +317,41 @@ class Board extends JPanel implements MouseListener
 		}
 		
 		int checkDiag(Tile goal){//checks to see if move is diagonal
-			int direction = 0;
-			if(goal.getX() == (this.x - 1) && goal.getY() == (this.y -1)){//only have up left done..
-				System.out.println("here");								  //only working for 1 square at a time
-				direction = 2;
+			int direction = 0;//   down left is 1, up left is 2, up right is 3, down right is 4
+			for(int n = 1; n < 9; n++){
+				if(goal.getX() == (this.x - n) && goal.getY() == (this.y + n)){//down left
+					System.out.println("down left");	
+					direction = 1;
+				}
+				else if(goal.getX() == (this.x - n) && goal.getY() == (this.y - n)){//up left
+					System.out.println("up left");	
+					direction = 2;
+				}
+				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y - n)){//up right
+					System.out.println("up right");	
+					direction = 3;
+				}
+				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y + n)){//down right
+					System.out.println("down right");	
+					direction = 4;
+				}
 			}
-			else direction = 0;
+			System.out.println("Direction " + direction);
 			return direction;
 		}
 		
 		public boolean move(Tile t)
 		{
 			boolean val = false;
-			System.out.println("Current x: " + this.x + " y: " + this.y);
-			System.out.println("New x: " + t.getX() + " y: " + t.getY());
 			
 			int diag = checkDiag(t);
 			
-			if(diag > 0){
-				if(diag == 2){//if up left then add that to the route 
-					route.add(new Tile(t.getX(), t.getY(), 1));					
-					this.x= t.getX();
-					this.y= t.getY();
-					val = true;
-				}
+			if(diag > 0){//if on a diagonal allow move
+				//need to make a method to create a list of tiles between current and goal
+				//need to check each square to see if AI piece or obstacle			
+				this.x= t.getX();
+				this.y= t.getY();
+				val = true;
 			}else val = false;
 
 			return val;	
