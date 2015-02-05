@@ -181,7 +181,7 @@ class Board extends JPanel implements MouseListener
 	}
 	abstract class Piece extends Tile{
 		
-		private LinkedList<Tile> moves = new LinkedList<Tile>();
+		LinkedList<Tile> route = new LinkedList<>();
 		Piece(int x, int y, int type)
 		{
 			super(x,y,type);
@@ -221,13 +221,93 @@ class Board extends JPanel implements MouseListener
 			catch(IOException e){}
 			
 		}
-		public boolean move(Tile t)//checks move is valid
+		public boolean move(Tile t)
 		{
 			
-			//valid.
-			this.x= t.getX();
-			this.y= t.getY();
-			return true;
+			int diag = checkDir(t);
+			
+			if(diag > 0){//if on a diagonal allow move
+				//method to create a list of tiles between current and goal
+				createRoute(t, diag);
+				//need to check each square in route to see if AI piece or obstacle
+				
+				if(checkRoute(t)==t){						
+					this.x= t.getX();
+					this.y= t.getY();
+					return true;
+				}
+			}
+			return false;	
+		}
+		int checkDir(Tile goal){//checks to see if move is diagonal
+		
+			//1 1 1
+			//1 2 1
+			//1 1 1
+			int direction = 0;//down is 1, up is 2, right is 3, left is 4
+			
+			if(goal.getX() == (this.x) && goal.getY()>(this.y)){//down 
+				System.out.println("down");	
+				direction = 1;
+			}
+			else if(goal.getX() == (this.x) && goal.getY()<(this.y)){//up
+				System.out.println("up");	
+				direction = 2;
+			}
+			else if(goal.getX()>(this.x) && goal.getY() == (this.y)){//right
+				System.out.println("right");	
+				direction = 3;
+			}
+			else if(goal.getX()<(this.x) && goal.getY() == (this.y)){//left
+				System.out.println("left");	
+				direction = 4;
+			}
+			
+			System.out.println("Direction " + direction);
+			return direction;
+		}
+		public void createRoute(Tile goal, int direction){//needs to be generic
+			int distance = 0;
+			route.clear();
+			distance = Math.abs(this.x - goal.getX());
+			int inc = 0;
+			//down up right left
+			while(distance >0){
+				if(direction == 1){
+					route.add(tiles[this.x][this.y + distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 2){
+					route.add(tiles[this.x][this.y - distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 3){
+					route.add(tiles[this.x + distance][this.y]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 4){
+					route.add(tiles[this.x - distance][this.y]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+			}
+		}
+		
+		public Tile checkRoute(Tile goal){
+
+			for(int i = 0; i < route.size(); i++){
+				if(route.get(i).getType()==0){
+					return null;
+				}
+			}
+			return goal;
 		}
 		public void draw(Graphics g, int i)
 		{
@@ -298,7 +378,6 @@ class Board extends JPanel implements MouseListener
 	{
 		BufferedImage BBishop = null;
 		BufferedImage WBishop = null;
-		LinkedList<Tile> route = new LinkedList<>();
 		int color;
 		Bishop(int x,int y, int type, int color)
 		{
