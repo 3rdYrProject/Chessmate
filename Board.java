@@ -342,7 +342,6 @@ class Board extends JPanel implements MouseListener
 
 		public boolean move(Tile t)
 		{
-			boolean val = false;
 			
 			int diag = checkDiag(t);
 			
@@ -354,11 +353,10 @@ class Board extends JPanel implements MouseListener
 				if(checkRoute(t)==t){						
 					this.x= t.getX();
 					this.y= t.getY();
-					val = true;
+					return true;
 				}
-			}else val = false;
-
-			return val;	
+			}
+			return false;	
 		}
 		
 		public void createRoute(Tile goal, int direction){
@@ -396,14 +394,13 @@ class Board extends JPanel implements MouseListener
 		}
 		
 		public Tile checkRoute(Tile goal){
-			Tile returnTile = null;
+
 			for(int i = 0; i < route.size(); i++){
 				if(route.get(i).getType()==0){
-					returnTile = null;;
+					return null;
 				}
-				else returnTile = goal;
 			}
-			return returnTile;
+			return goal;
 		}
 		
 		public void draw(Graphics g, int i)
