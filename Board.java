@@ -161,21 +161,18 @@ class Board extends JPanel implements MouseListener
 			return null;
 		}
 		void draw(Graphics g, int i)//i is 0 or 1 depending on black or white
-		{
+		{	
+			if(i==0)
+			{
+				g.drawImage(dark,x*width,y*width,null);//g.drawImage(x,y,dark);
+			}
+			else 
+			{
+				g.drawImage(light,x*width,y*width,null);//g.drawImage(x,y,bright);
+			}
 			if(type==0)//not moveable
 			{
 				g.drawImage(obstacle,x*width,y*width,null);
-			}
-			else if(type==1)//regular tiles
-			{
-				if(i==0)
-				{
-					g.drawImage(dark,x*width,y*width,null);//g.drawImage(x,y,dark);
-				}
-				else 
-				{
-					g.drawImage(light,x*width,y*width,null);//g.drawImage(x,y,bright);
-				}
 			}
 		}
 	}
@@ -269,34 +266,29 @@ class Board extends JPanel implements MouseListener
 		public void createRoute(Tile goal, int direction){//needs to be generic
 			int distance = 0;
 			route.clear();
-			distance = Math.abs(this.x - goal.getX());
+			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
 			int inc = 0;
 			//down up right left
+			System.out.println(direction+ " " +distance);
 			while(distance >0){
 				if(direction == 1){
 					route.add(tiles[this.x][this.y + distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 2){
 					route.add(tiles[this.x][this.y - distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 3){
 					route.add(tiles[this.x + distance][this.y]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 4){
 					route.add(tiles[this.x - distance][this.y]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
+				distance--;
+				inc++;
 			}
 		}
 		
