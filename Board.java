@@ -317,7 +317,7 @@ class Board extends JPanel implements MouseListener
 		}
 		
 		int checkDiag(Tile goal){//checks to see if move is diagonal
-			int direction = 0;//   down left is 1, up left is 2, up right is 3, down right is 4
+			int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
 			for(int n = 1; n < 9; n++){
 				if(goal.getX() == (this.x - n) && goal.getY() == (this.y + n)){//down left
 					System.out.println("down left");	
@@ -339,7 +339,7 @@ class Board extends JPanel implements MouseListener
 			System.out.println("Direction " + direction);
 			return direction;
 		}
-		
+
 		public boolean move(Tile t)
 		{
 			boolean val = false;
@@ -347,8 +347,10 @@ class Board extends JPanel implements MouseListener
 			int diag = checkDiag(t);
 			
 			if(diag > 0){//if on a diagonal allow move
-				//need to make a method to create a list of tiles between current and goal
-				//need to check each square to see if AI piece or obstacle			
+				//method to create a list of tiles between current and goal
+				createRoute(t, diag);
+				//need to check each square in route to see if AI piece or obstacle
+						
 				this.x= t.getX();
 				this.y= t.getY();
 				val = true;
@@ -356,6 +358,43 @@ class Board extends JPanel implements MouseListener
 
 			return val;	
 		}
+		
+		public void createRoute(Tile goal, int direction){
+			int distance = 0;
+			route.clear();
+			distance = Math.abs(this.x - goal.getX());
+			int inc = 0;
+			
+			while(distance >0){
+				if(direction == 1){
+					route.add(tiles[this.x - distance][this.y + distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 2){
+					route.add(tiles[this.x - distance][this.y - distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 3){
+					route.add(tiles[this.x + distance][this.y - distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+				else if(direction == 4){
+					route.add(tiles[this.x + distance][this.y + distance]);
+					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
+					distance--;
+					inc++;
+				}
+			}
+		}
+		
+		
+		
 		public void draw(Graphics g, int i)
 		{
 			super.draw(g,i,BBishop,WBishop,color);
