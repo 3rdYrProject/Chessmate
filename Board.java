@@ -350,10 +350,12 @@ class Board extends JPanel implements MouseListener
 				//method to create a list of tiles between current and goal
 				createRoute(t, diag);
 				//need to check each square in route to see if AI piece or obstacle
-						
-				this.x= t.getX();
-				this.y= t.getY();
-				val = true;
+				
+				if(checkRoute(t)==t){						
+					this.x= t.getX();
+					this.y= t.getY();
+					val = true;
+				}
 			}else val = false;
 
 			return val;	
@@ -393,7 +395,16 @@ class Board extends JPanel implements MouseListener
 			}
 		}
 		
-		
+		public Tile checkRoute(Tile goal){
+			Tile returnTile = null;
+			for(int i = 0; i < route.size(); i++){
+				if(route.get(i).getType()==0){
+					returnTile = null;;
+				}
+				else returnTile = goal;
+			}
+			return returnTile;
+		}
 		
 		public void draw(Graphics g, int i)
 		{
