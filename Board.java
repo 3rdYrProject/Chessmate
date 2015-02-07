@@ -440,27 +440,21 @@ class Board extends JPanel implements MouseListener
 				if(direction == 1){
 					route.add(tiles[this.x - distance][this.y + distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 2){
 					route.add(tiles[this.x - distance][this.y - distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 3){
 					route.add(tiles[this.x + distance][this.y - distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
 				else if(direction == 4){
 					route.add(tiles[this.x + distance][this.y + distance]);
 					System.out.println("distance : " + distance + " tile" + route.get(inc).getType());
-					distance--;
-					inc++;
 				}
+				distance--;
+				inc++;
 			}
 		}
 		
@@ -537,5 +531,4 @@ class Board extends JPanel implements MouseListener
 			super.draw(g,i,BKing,WKing,color);
 		}
 	}
-
 }	
