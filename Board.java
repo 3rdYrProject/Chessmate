@@ -146,7 +146,7 @@ class Board extends JPanel implements MouseListener
 			try {
 				dark = ImageIO.read(new File("images/Dark.png"));
 				light = ImageIO.read(new File("images/Light.png"));
-				obstacle = ImageIO.read(new File("images/ground.png"));
+				obstacle = ImageIO.read(new File("images/tree.png"));
 			} catch (IOException e) {
 			}
 		}
@@ -221,11 +221,11 @@ class Board extends JPanel implements MouseListener
 		public boolean move(Tile t)
 		{
 			
-			int diag = checkDir(t);
+			int dir = checkDir(t);
 			
-			if(diag > 0){//if on a diagonal allow move
+			if(dir > 0){//if on a diagonal allow move
 				//method to create a list of tiles between current and goal
-				createRoute(t, diag);
+				createRoute(t, dir);
 				//need to check each square in route to see if AI piece or obstacle
 				
 				if(checkRoute(t)==t){						
@@ -236,7 +236,7 @@ class Board extends JPanel implements MouseListener
 			}
 			return false;	
 		}
-		int checkDir(Tile goal){//checks to see if move is diagonal
+		int checkDir(Tile goal){//checks to see if move is on a vertice
 		
 			//1 1 1
 			//1 2 1
