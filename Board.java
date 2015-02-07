@@ -193,7 +193,15 @@ class Board extends JPanel implements MouseListener
 			else 
 				g.drawImage(WPiece,x*width,y*width,null);
 		}
-		
+		public Tile checkRoute(Tile goal){
+
+			for(int i = 0; i < route.size(); i++){
+				if(route.get(i).getType()==0){
+					return null;
+				}
+			}
+			return goal;
+		}
 		public abstract boolean move(Tile t);
 	}
 	
@@ -291,16 +299,6 @@ class Board extends JPanel implements MouseListener
 				inc++;
 			}
 		}
-		
-		public Tile checkRoute(Tile goal){
-
-			for(int i = 0; i < route.size(); i++){
-				if(route.get(i).getType()==0){
-					return null;
-				}
-			}
-			return goal;
-		}
 		public void draw(Graphics g, int i)
 		{
 			super.draw(g,i,BRook,WRook,color);
@@ -361,7 +359,8 @@ class Board extends JPanel implements MouseListener
 		{
 			int tempX = t.getX();
 			int tempY = t.getY();
-			
+			if(t.getType()!=1)
+				return false;
 			if(checkRoute(tempX,tempY))
 			{	
 				this.x= t.getX();
@@ -484,16 +483,6 @@ class Board extends JPanel implements MouseListener
 				distance--;
 				inc++;
 			}
-		}
-		
-		public Tile checkRoute(Tile goal){
-
-			for(int i = 0; i < route.size(); i++){
-				if(route.get(i).getType()==0){
-					return null;
-				}
-			}
-			return goal;
 		}
 		
 		public void draw(Graphics g, int i)
