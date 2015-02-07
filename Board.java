@@ -357,9 +357,37 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
-		public boolean move(Tile t)
+		public boolean move(Tile t)//once the destination tile is valid the knight can move there regardless.
 		{
-			return true;
+			int tempX = t.getX();
+			int tempY = t.getY();
+			
+			if(checkRoute(tempX,tempY))
+			{	
+				this.x= t.getX();
+				this.y= t.getY();
+				return true;
+			}
+			return false;
+		}
+		public boolean checkRoute(int tempX, int tempY)
+		{
+			int xNum= 2, yNum=1;
+			for(int i=0; i<2; i++)//8 possible positions for a knight to move.
+			{
+				if(x-xNum==tempX&&y-yNum==tempY)
+					return true;
+				else if(x-xNum==tempX&&y+yNum==tempY)
+					return true;
+				else if(x+xNum==tempX&&y-yNum==tempY)
+					return true;
+				else if(x+xNum==tempX&&y+yNum==tempY)
+					return true;
+				
+				xNum=1;
+				yNum=2;
+			}
+			return false;
 		}
 		public void draw(Graphics g, int i)
 		{
