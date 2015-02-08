@@ -93,8 +93,9 @@ class Board extends JPanel implements MouseListener
 			}
 		}
 		Tile temp= new Tile(userPiece);
-		LinkedList<Tile> route = new LinkedList<>(); 
-		if(userPiece.move(moveLoc))
+		
+		moveLoc = userPiece.move(moveLoc);
+		if(moveLoc!=null)
 		{
 			System.out.println(temp.getX()+ " "+temp.getY());
 			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
@@ -141,6 +142,14 @@ class Board extends JPanel implements MouseListener
 		int getType()
 		{
 			return type;
+		}
+		boolean getOccupied()
+		{
+			return occupied;
+		}
+		public boolean equals(Tile t)
+		{
+			return(this.x==t.x && this.y==t.y);
 		}
 		public void initImages(){
 			try {
@@ -193,7 +202,7 @@ class Board extends JPanel implements MouseListener
 			else 
 				g.drawImage(WPiece,x*width,y*width,null);
 		}
-		public abstract boolean move(Tile t);
+		public abstract Tile move(Tile t);
 	}
 	
 	class Rook extends Piece
@@ -217,23 +226,27 @@ class Board extends JPanel implements MouseListener
 			catch(IOException e){}
 			
 		}
-		public boolean move(Tile t)
+		public Tile move(Tile t)
 		{
 			
 			int dir = checkDir(t);
-			
+			Tile temp = null;
 			if(dir > 0){//if on a direction allow move
 				//method to create a list of tiles between current and goal
 				
 				//need to check each square in route to see if AI piece or obstacle
-				
-				if(checkRoute(t, dir)==t){						
+				temp = checkRoute(t,dir);
+				if(temp.equals(t)){						
 					this.x= t.getX();
 					this.y= t.getY();
-					return true;
+				}
+				else if(temp!=null)
+				{
+					this.x= temp.getX();
+					this.y= temp.getY();
 				}
 			}
-			return false;	
+			return temp;	
 		}
 		int checkDir(Tile goal){//checks to see if move is on a vertice
 		
@@ -273,18 +286,26 @@ class Board extends JPanel implements MouseListener
 				if(direction == 1){
 					if(tiles[this.x][this.y + distance].getType()==0)
 						return null;
+					else if(tiles[this.x][this.y + distance].getOccupied())
+						return tiles[this.x][this.y + distance];
 				}
 				else if(direction == 2){
 					if(tiles[this.x][this.y - distance].getType()==0)
 						return null;
+					else if(tiles[this.x][this.y - distance].getOccupied())
+						return tiles[this.x][this.y - distance];
 				}
 				else if(direction == 3){
 					if(tiles[this.x + distance][this.y].getType()==0)
 						return null;
+					else if(tiles[this.x + distance][this.y].getOccupied())
+						return tiles[this.x + distance][this.y];
 				}
 				else if(direction == 4){
 					if(tiles[this.x - distance][this.y].getType()==0)
 						return null;
+					else if(tiles[this.x - distance][this.y].getOccupied())
+						return tiles[this.x - distance][this.y];
 				}
 				distance--;
 				inc++;
@@ -317,9 +338,9 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
-		public boolean move(Tile t)
+		public Tile move(Tile t)
 		{
-			return true;
+			return null;
 		}
 		public void draw(Graphics g, int i)
 		{
@@ -347,20 +368,20 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
-		public boolean move(Tile t)//once the destination tile is valid the knight can move there regardless.
+		public Tile move(Tile t)//once the destination tile is valid the knight can move there regardless.
 		{
 			int tempX = t.getX();
 			int tempY = t.getY();
 			
 			if(t.getType()!=1)
-				return false;
+				return null;
 			if(checkRoute(tempX,tempY))
 			{	
 				this.x= t.getX();
 				this.y= t.getY();
-				return true;
+				return t;
 			}
-			return false;
+			return null;
 		}
 		public boolean checkRoute(int tempX, int tempY)
 		{
@@ -431,7 +452,7 @@ class Board extends JPanel implements MouseListener
 			return direction;
 		}
 
-		public boolean move(Tile t)
+		public Tile move(Tile t)
 		{
 			
 			int diag = checkDiag(t);
@@ -443,10 +464,10 @@ class Board extends JPanel implements MouseListener
 				if(checkRoute(t,diag)==t){						
 					this.x= t.getX();
 					this.y= t.getY();
-					return true;
+					return t;
 				}
 			}
-			return false;	
+			return null;	
 		}
 		
 		public Tile checkRoute(Tile goal, int direction){
@@ -503,9 +524,9 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
-		public boolean move(Tile t)
+		public Tile move(Tile t)
 		{
-			return true;
+			return null;
 		}
 		public void draw(Graphics g, int i)
 		{
@@ -532,9 +553,9 @@ class Board extends JPanel implements MouseListener
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
-		public boolean move(Tile t)
+		public Tile move(Tile t)
 		{
-			return true;
+			return null;
 		}
 		public void draw(Graphics g, int i)
 		{
