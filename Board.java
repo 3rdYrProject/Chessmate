@@ -236,7 +236,12 @@ class Board extends JPanel implements MouseListener
 				
 				//need to check each square in route to see if AI piece or obstacle
 				temp = checkRoute(t,dir);
-				if(temp.equals(t)){						
+				System.out.println(temp);
+				if(temp==null)
+				{
+					return temp;
+				}
+				if(temp.equals(t)){		
 					this.x= t.getX();
 					this.y= t.getY();
 				}
@@ -282,10 +287,14 @@ class Board extends JPanel implements MouseListener
 			int inc = 1;
 			//down up right left
 			System.out.println(direction+ " " +distance);
-			while(inc < distance){
+			while(inc <= distance){
 				if(direction == 1){
+					System.out.println(tiles[this.x][this.y + inc].getType());
 					if(tiles[this.x][this.y + inc].getType()==0)
+					{
+						
 						return null;
+					}
 					else if(tiles[this.x][this.y + inc].getOccupied())
 						return tiles[this.x][this.y + inc];
 				}
@@ -462,19 +471,21 @@ class Board extends JPanel implements MouseListener
 				//method to create a list of tiles between current and goal
 				//need to check each square in route to see if AI piece or obstacle
 				temp= checkRoute(t,diag);
+				if(temp==null)
+				{
+					return temp;
+				}
 				if(temp.equals(t)){						
 					this.x= t.getX();
 					this.y= t.getY();
-					return t;
 				}
 				else if(temp!=null)
 				{
 					this.x= temp.getX();
 					this.y= temp.getY();
-					return temp;
 				}
 			}
-			return null;	
+			return temp;	
 		}
 		
 		public Tile checkRoute(Tile goal, int direction){
@@ -483,7 +494,7 @@ class Board extends JPanel implements MouseListener
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
 			
-			while(inc < distance){
+			while(inc <= distance){
 				if(direction == 1){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
 						return null;
