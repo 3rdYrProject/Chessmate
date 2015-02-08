@@ -279,35 +279,34 @@ class Board extends JPanel implements MouseListener
 			int distance = 0;
 			route.clear();
 			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
-			int inc = 0;
+			int inc = 1;
 			//down up right left
 			System.out.println(direction+ " " +distance);
-			while(distance >0){
+			while(inc < distance){
 				if(direction == 1){
-					if(tiles[this.x][this.y + distance].getType()==0)
+					if(tiles[this.x][this.y + inc].getType()==0)
 						return null;
-					else if(tiles[this.x][this.y + distance].getOccupied())
-						return tiles[this.x][this.y + distance];
+					else if(tiles[this.x][this.y + inc].getOccupied())
+						return tiles[this.x][this.y + inc];
 				}
 				else if(direction == 2){
-					if(tiles[this.x][this.y - distance].getType()==0)
+					if(tiles[this.x][this.y - inc].getType()==0)
 						return null;
-					else if(tiles[this.x][this.y - distance].getOccupied())
-						return tiles[this.x][this.y - distance];
+					else if(tiles[this.x][this.y - inc].getOccupied())
+						return tiles[this.x][this.y - inc];
 				}
 				else if(direction == 3){
-					if(tiles[this.x + distance][this.y].getType()==0)
+					if(tiles[this.x + inc][this.y].getType()==0)
 						return null;
-					else if(tiles[this.x + distance][this.y].getOccupied())
-						return tiles[this.x + distance][this.y];
+					else if(tiles[this.x + inc][this.y].getOccupied())
+						return tiles[this.x + inc][this.y];
 				}
 				else if(direction == 4){
-					if(tiles[this.x - distance][this.y].getType()==0)
+					if(tiles[this.x - inc][this.y].getType()==0)
 						return null;
-					else if(tiles[this.x - distance][this.y].getOccupied())
-						return tiles[this.x - distance][this.y];
+					else if(tiles[this.x - inc][this.y].getOccupied())
+						return tiles[this.x - inc][this.y];
 				}
-				distance--;
 				inc++;
 			}
 			return goal;
@@ -430,7 +429,9 @@ class Board extends JPanel implements MouseListener
 		
 		int checkDiag(Tile goal){//checks to see if move is diagonal
 			int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
-			for(int n = 1; n < 9; n++){
+			
+			for(int n = 1; n < 9; n++){//this loop is unneccesary 
+			
 				if(goal.getX() == (this.x - n) && goal.getY() == (this.y + n)){//down left
 					System.out.println("down left");	
 					direction = 1;
@@ -480,34 +481,33 @@ class Board extends JPanel implements MouseListener
 			int distance = 0;
 			route.clear();
 			distance = Math.abs(this.x - goal.getX());
-			int inc = 0;
+			int inc = 1;
 			
-			while(distance >0){
+			while(inc < distance){
 				if(direction == 1){
-					if(tiles[this.x - distance][this.y + distance].getType()==0)
+					if(tiles[this.x - inc][this.y + inc].getType()==0)
 						return null;
-					else if(tiles[this.x - distance][this.y + distance].getOccupied())
-						return tiles[this.x - distance][this.y + distance];
+					else if(tiles[this.x - inc][this.y + inc].getOccupied())
+						return tiles[this.x - inc][this.y + inc];
 				}
 				else if(direction == 2){
-					if(tiles[this.x - distance][this.y - distance].getType()==0)
+					if(tiles[this.x - inc][this.y - inc].getType()==0)
 						return null;
-					else if(tiles[this.x - distance][this.y - distance].getOccupied())
-						return tiles[this.x - distance][this.y - distance];
+					else if(tiles[this.x - inc][this.y - inc].getOccupied())
+						return tiles[this.x - inc][this.y - inc];
 				}
 				else if(direction == 3){
-					if(tiles[this.x + distance][this.y - distance].getType()==0)
+					if(tiles[this.x + inc][this.y - inc].getType()==0)
 						return null;
-					else if(tiles[this.x + distance][this.y - distance].getOccupied())
-						return tiles[this.x + distance][this.y - distance];
+					else if(tiles[this.x + inc][this.y - inc].getOccupied())
+						return tiles[this.x + inc][this.y - inc];
 				}
 				else if(direction == 4){
-					if(tiles[this.x + distance][this.y + distance].getType()==0)
+					if(tiles[this.x + inc][this.y + inc].getType()==0)
 						return null;
-					else if(tiles[this.x + distance][this.y + distance].getOccupied())
-						return tiles[this.x + distance][this.y + distance];
+					else if(tiles[this.x + inc][this.y + inc].getOccupied())
+						return tiles[this.x + inc][this.y + inc];
 				}
-				distance--;
 				inc++;
 			}
 			return goal;
