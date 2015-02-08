@@ -194,6 +194,7 @@ class Board extends JPanel implements MouseListener
 			occupied=true;
 		}
 		
+<<<<<<< HEAD
 		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
 		{
 			super.draw(g,i);
@@ -249,6 +250,9 @@ class Board extends JPanel implements MouseListener
 			return temp;	
 		}
 		int checkDir(Tile goal){//checks to see if move is on a vertice
+=======
+		public int checkOrth(Tile goal){//checks to see if move is on a vertice
+>>>>>>> origin/master
 		
 			//1 1 1
 			//1 2 1
@@ -275,6 +279,33 @@ class Board extends JPanel implements MouseListener
 			System.out.println("Direction " + direction);
 			return direction;
 		}
+		
+		int checkDiag(Tile goal){//checks to see if move is diagonal
+			int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
+			
+			for(int n = 1; n < 9; n++){//this loop is unneccesary 
+			
+				if(goal.getX() == (this.x - n) && goal.getY() == (this.y + n)){//down left
+					System.out.println("down left");	
+					direction = 1;
+				}
+				else if(goal.getX() == (this.x - n) && goal.getY() == (this.y - n)){//up left
+					System.out.println("up left");	
+					direction = 2;
+				}
+				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y - n)){//up right
+					System.out.println("up right");	
+					direction = 3;
+				}
+				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y + n)){//down right
+					System.out.println("down right");	
+					direction = 4;
+				}
+			}
+			System.out.println("Direction " + direction);
+			return direction;
+		}
+		
 		public Tile checkRoute(Tile goal, int direction){//needs to be generic
 			int distance = 0;
 			route.clear();
@@ -311,18 +342,115 @@ class Board extends JPanel implements MouseListener
 			}
 			return goal;
 		}
+		
+		public Tile checkRouteDiag(Tile goal, int direction){
+			int distance = 0;
+			distance = Math.abs(this.x - goal.getX());
+			int inc = 1;
+			
+			while(inc <= distance){
+				if(direction == 1){
+					if(tiles[this.x - inc][this.y + inc].getType()==0)
+						return null;
+					else if(tiles[this.x - inc][this.y + inc].getOccupied())
+						return tiles[this.x - inc][this.y + inc];
+				}
+				else if(direction == 2){
+					if(tiles[this.x - inc][this.y - inc].getType()==0)
+						return null;
+					else if(tiles[this.x - inc][this.y - inc].getOccupied())
+						return tiles[this.x - inc][this.y - inc];
+				}
+				else if(direction == 3){
+					if(tiles[this.x + inc][this.y - inc].getType()==0)
+						return null;
+					else if(tiles[this.x + inc][this.y - inc].getOccupied())
+						return tiles[this.x + inc][this.y - inc];
+				}
+				else if(direction == 4){
+					if(tiles[this.x + inc][this.y + inc].getType()==0)
+						return null;
+					else if(tiles[this.x + inc][this.y + inc].getOccupied())
+						return tiles[this.x + inc][this.y + inc];
+				}
+				inc++;
+			}
+			return goal;
+		}
+		
+		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
+		{
+			super.draw(g,i);
+			if(color==0)
+				g.drawImage(BPiece,x*width,y*width,null);
+			else 
+				g.drawImage(WPiece,x*width,y*width,null);
+		}
+		public abstract Tile move(Tile t);
+	}
+	
+	class Rook extends Piece
+	{
+		BufferedImage BRook = null;
+		BufferedImage WRook = null;
+		int color; 
+		Rook(int x, int y, int type, int color)
+		{
+			super(x,y,type);
+			this.color=color;
+			try
+			{
+				if(color==0)
+				
+					BRook= ImageIO.read(new File("images/BlackRook.png"));
+				else 
+					WRook= ImageIO.read(new File("images/WhiteRook.png"));
+			}
+			catch(FileNotFoundException e){}
+			catch(IOException e){}
+			
+		}
+		public Tile move(Tile t)
+		{
+			
+			int dir = checkOrth(t);
+			Tile temp = null;
+			if(dir > 0){//if on a direction allow move
+				//method to create a list of tiles between current and goal
+				
+				//need to check each square in route to see if AI piece or obstacle
+				temp = checkRoute(t,dir);
+				if(temp!=null)
+				{
+					this.x= temp.getX();
+					this.y= temp.getY();
+					return temp;
+				}
+			}
+			return null;	
+		}
+		
+		public int checkOrth(Tile goal){
+			return super.checkOrth(goal);
+		}
+		
+		public Tile checkRoute(Tile goal, int direction){
+			return super.checkRoute(goal, direction);
+		}
+		
+		
 		public void draw(Graphics g, int i)
 		{
 			super.draw(g,i,BRook,WRook,color);
 		}
 	}
 	
-	class Pawn extends Piece
+	class Bishop extends Piece
 	{
-		BufferedImage BPawn = null;
-		BufferedImage WPawn = null;
+		BufferedImage BBishop = null;
+		BufferedImage WBishop = null;
 		int color;
-		Pawn(int x,int y, int type, int color)
+		Bishop(int x,int y, int type, int color)
 		{
 			super(x,y,type);
 			this.color= color;
@@ -330,23 +458,97 @@ class Board extends JPanel implements MouseListener
 			{
 				if(color==0)
 				
-					BPawn= ImageIO.read(new File("images/BlackPawn.png"));
+					BBishop= ImageIO.read(new File("images/BlackBishop.png"));
 				else 
-					WPawn= ImageIO.read(new File("images/WhitePawn.png"));
+					WBishop= ImageIO.read(new File("images/WhiteBishop.png"));
 			}
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
 		}
 		public Tile move(Tile t)
 		{
+			
+			int diag = checkDiag(t);
+			Tile temp= null;
+			if(diag > 0){//if on a diagonal allow move
+				temp= checkRouteDiag(t,diag);
+				if(temp!=null)
+				{
+					this.x= temp.getX();
+					this.y= temp.getY();
+					return temp;
+				}
+			}
+			return null;	
+		}
+		
+		int checkDiag(Tile goal){
+			return super.checkDiag(goal);
+		}
+		
+		public Tile checkRouteDiag(Tile goal, int direction){
+			return super.checkRouteDiag(goal, direction);
+		}
+
+		public void draw(Graphics g, int i)
+		{
+			super.draw(g,i,BBishop,WBishop,color);
+		}
+	}
+	class Queen extends Piece
+	{
+		BufferedImage BQueen = null;
+		BufferedImage WQueen = null;
+		int color;
+		Queen(int x,int y, int type, int color)
+		{
+			super(x,y,type);
+			this.color= color;
+			try
+			{
+				if(color==0)
+				
+					BQueen= ImageIO.read(new File("images/BlackQueen.png"));
+				else 
+					WQueen= ImageIO.read(new File("images/WhiteQueen.png"));
+			}
+			catch(FileNotFoundException e){}
+			catch(IOException e){}
+		}
+		
+		public int checkDirQ(Tile goal){
+			if(super.checkDiag(goal)==0)
+				return super.checkOrth(goal);
+			else return (super.checkDiag(goal)+4);
+		}
+		
+		public Tile checkRouteQ(Tile goal, int direction){
+			if(direction > 4)
+				return super.checkRouteDiag(goal, (direction-4));
+			else
+				return super.checkRoute(goal, direction);
+		}
+		
+		public Tile move(Tile t)
+		{
+			int diag = checkDirQ(t);
+			Tile temp= null;
+			if(diag > 0){//if on a diagonal allow move
+				temp= checkRouteQ(t,diag);
+				if(temp!=null)
+				{
+					this.x= temp.getX();
+					this.y= temp.getY();
+					return temp;
+				}
+			}
 			return null;
 		}
 		public void draw(Graphics g, int i)
 		{
-			super.draw(g,i,BPawn,WPawn,color);
+			super.draw(g,i,BQueen,WQueen,color);
 		}
 	}
-		
 	class Knight extends Piece
 	{
 		BufferedImage BKnight = null;
@@ -406,6 +608,7 @@ class Board extends JPanel implements MouseListener
 			super.draw(g,i,BKnight,WKnight,color);
 		}
 	}	
+<<<<<<< HEAD
 	class Bishop extends Piece
 	{
 		BufferedImage BBishop = null;
@@ -519,11 +722,14 @@ class Board extends JPanel implements MouseListener
 		}
 	}
 	class Queen extends Piece
+=======
+	class Pawn extends Piece
+>>>>>>> origin/master
 	{
-		BufferedImage BQueen = null;
-		BufferedImage WQueen = null;
+		BufferedImage BPawn = null;
+		BufferedImage WPawn = null;
 		int color;
-		Queen(int x,int y, int type, int color)
+		Pawn(int x,int y, int type, int color)
 		{
 			super(x,y,type);
 			this.color= color;
@@ -531,9 +737,9 @@ class Board extends JPanel implements MouseListener
 			{
 				if(color==0)
 				
-					BQueen= ImageIO.read(new File("images/BlackQueen.png"));
+					BPawn= ImageIO.read(new File("images/BlackPawn.png"));
 				else 
-					WQueen= ImageIO.read(new File("images/WhiteQueen.png"));
+					WPawn= ImageIO.read(new File("images/WhitePawn.png"));
 			}
 			catch(FileNotFoundException e){}
 			catch(IOException e){}
@@ -544,7 +750,7 @@ class Board extends JPanel implements MouseListener
 		}
 		public void draw(Graphics g, int i)
 		{
-			super.draw(g,i,BQueen,WQueen,color);
+			super.draw(g,i,BPawn,WPawn,color);
 		}
 	}
 	class King extends Piece
