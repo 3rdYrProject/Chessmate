@@ -476,7 +476,7 @@ class Board extends JPanel implements MouseListener
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
 			
-			while(inc < (distance+1)){
+			while(inc < (distance+1)){//+1 on distance because otherwise if right beside obstacle it allows move
 				if(direction == 1){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
 						return null;
