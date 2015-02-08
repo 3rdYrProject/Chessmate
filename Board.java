@@ -459,15 +459,8 @@ class Board extends JPanel implements MouseListener
 			int diag = checkDiag(t);
 			Tile temp= null;
 			if(diag > 0){//if on a diagonal allow move
-				//method to create a list of tiles between current and goal
-				//need to check each square in route to see if AI piece or obstacle
 				temp= checkRoute(t,diag);
-				if(temp.equals(t)){						
-					this.x= t.getX();
-					this.y= t.getY();
-					return t;
-				}
-				else if(temp!=null)
+				if(temp!=null)
 				{
 					this.x= temp.getX();
 					this.y= temp.getY();
@@ -483,7 +476,7 @@ class Board extends JPanel implements MouseListener
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
 			
-			while(inc < distance){
+			while(inc < (distance+1)){
 				if(direction == 1){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
 						return null;
