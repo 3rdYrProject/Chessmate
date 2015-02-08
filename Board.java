@@ -193,8 +193,8 @@ class Board extends JPanel implements MouseListener
 			super(x,y,type);
 			occupied=true;
 		}
+		public abstract Tile move(Tile t);
 		
-<<<<<<< HEAD
 		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
 		{
 			super.draw(g,i);
@@ -202,82 +202,6 @@ class Board extends JPanel implements MouseListener
 				g.drawImage(BPiece,x*width,y*width,null);
 			else 
 				g.drawImage(WPiece,x*width,y*width,null);
-		}
-		public abstract Tile move(Tile t);
-	}
-	
-	class Rook extends Piece
-	{
-		BufferedImage BRook = null;
-		BufferedImage WRook = null;
-		int color; 
-		Rook(int x, int y, int type, int color)
-		{
-			super(x,y,type);
-			this.color=color;
-			try
-			{
-				if(color==0)
-				
-					BRook= ImageIO.read(new File("images/BlackRook.png"));
-				else 
-					WRook= ImageIO.read(new File("images/WhiteRook.png"));
-			}
-			catch(FileNotFoundException e){}
-			catch(IOException e){}
-			
-		}
-		public Tile move(Tile t)
-		{
-			
-			int dir = checkDir(t);
-			Tile temp = null;
-			if(dir > 0){//if on a direction allow move
-				//method to create a list of tiles between current and goal
-				
-				//need to check each square in route to see if AI piece or obstacle
-				temp = checkRoute(t,dir);
-				if(temp.equals(t)){						
-					this.x= t.getX();
-					this.y= t.getY();
-				}
-				else if(temp!=null)
-				{
-					this.x= temp.getX();
-					this.y= temp.getY();
-				}
-			}
-			return temp;	
-		}
-		int checkDir(Tile goal){//checks to see if move is on a vertice
-=======
-		public int checkOrth(Tile goal){//checks to see if move is on a vertice
->>>>>>> origin/master
-		
-			//1 1 1
-			//1 2 1
-			//1 1 1
-			int direction = 0;//down is 1, up is 2, right is 3, left is 4
-			
-			if(goal.getX() == (this.x) && goal.getY()>(this.y)){//down 
-				System.out.println("down");	
-				direction = 1;
-			}
-			else if(goal.getX() == (this.x) && goal.getY()<(this.y)){//up
-				System.out.println("up");	
-				direction = 2;
-			}
-			else if(goal.getX()>(this.x) && goal.getY() == (this.y)){//right
-				System.out.println("right");	
-				direction = 3;
-			}
-			else if(goal.getX()<(this.x) && goal.getY() == (this.y)){//left
-				System.out.println("left");	
-				direction = 4;
-			}
-			
-			System.out.println("Direction " + direction);
-			return direction;
 		}
 		
 		int checkDiag(Tile goal){//checks to see if move is diagonal
@@ -305,15 +229,38 @@ class Board extends JPanel implements MouseListener
 			System.out.println("Direction " + direction);
 			return direction;
 		}
+		public int checkOrth(Tile goal){//checks to see if move is on a vertice
 		
+			int direction = 0;//down is 1, up is 2, right is 3, left is 4
+			
+			if(goal.getX() == (this.x) && goal.getY()>(this.y)){//down 
+				System.out.println("down");	
+				direction = 1;
+			}
+			else if(goal.getX() == (this.x) && goal.getY()<(this.y)){//up
+				System.out.println("up");	
+				direction = 2;
+			}
+			else if(goal.getX()>(this.x) && goal.getY() == (this.y)){//right
+				System.out.println("right");	
+				direction = 3;
+			}
+			else if(goal.getX()<(this.x) && goal.getY() == (this.y)){//left
+				System.out.println("left");	
+				direction = 4;
+			}
+			
+			System.out.println("Direction " + direction);
+			return direction;
+		}
 		public Tile checkRoute(Tile goal, int direction){//needs to be generic
 			int distance = 0;
 			route.clear();
 			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
 			int inc = 1;
-			//down up right left
+		//down up right left
 			System.out.println(direction+ " " +distance);
-			while(inc < distance){
+			while(inc <= distance){
 				if(direction == 1){
 					if(tiles[this.x][this.y + inc].getType()==0)
 						return null;
@@ -332,7 +279,8 @@ class Board extends JPanel implements MouseListener
 					else if(tiles[this.x + inc][this.y].getOccupied())
 						return tiles[this.x + inc][this.y];
 				}
-				else if(direction == 4){
+				else if(direction == 4)
+				{
 					if(tiles[this.x - inc][this.y].getType()==0)
 						return null;
 					else if(tiles[this.x - inc][this.y].getOccupied())
@@ -342,12 +290,10 @@ class Board extends JPanel implements MouseListener
 			}
 			return goal;
 		}
-		
 		public Tile checkRouteDiag(Tile goal, int direction){
 			int distance = 0;
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
-			
 			while(inc <= distance){
 				if(direction == 1){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
@@ -377,18 +323,7 @@ class Board extends JPanel implements MouseListener
 			}
 			return goal;
 		}
-		
-		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
-		{
-			super.draw(g,i);
-			if(color==0)
-				g.drawImage(BPiece,x*width,y*width,null);
-			else 
-				g.drawImage(WPiece,x*width,y*width,null);
-		}
-		public abstract Tile move(Tile t);
 	}
-	
 	class Rook extends Piece
 	{
 		BufferedImage BRook = null;
@@ -437,7 +372,6 @@ class Board extends JPanel implements MouseListener
 		public Tile checkRoute(Tile goal, int direction){
 			return super.checkRoute(goal, direction);
 		}
-		
 		
 		public void draw(Graphics g, int i)
 		{
@@ -516,13 +450,13 @@ class Board extends JPanel implements MouseListener
 			catch(IOException e){}
 		}
 		
-		public int checkDirQ(Tile goal){
+		int checkDirQ(Tile goal){
 			if(super.checkDiag(goal)==0)
 				return super.checkOrth(goal);
 			else return (super.checkDiag(goal)+4);
 		}
 		
-		public Tile checkRouteQ(Tile goal, int direction){
+		Tile checkRouteQ(Tile goal, int direction){
 			if(direction > 4)
 				return super.checkRouteDiag(goal, (direction-4));
 			else
@@ -607,124 +541,8 @@ class Board extends JPanel implements MouseListener
 		{
 			super.draw(g,i,BKnight,WKnight,color);
 		}
-	}	
-<<<<<<< HEAD
-	class Bishop extends Piece
-	{
-		BufferedImage BBishop = null;
-		BufferedImage WBishop = null;
-		int color;
-		Bishop(int x,int y, int type, int color)
-		{
-			super(x,y,type);
-			this.color= color;
-			try
-			{
-				if(color==0)
-				
-					BBishop= ImageIO.read(new File("images/BlackBishop.png"));
-				else 
-					WBishop= ImageIO.read(new File("images/WhiteBishop.png"));
-			}
-			catch(FileNotFoundException e){}
-			catch(IOException e){}
-		}
-		
-		int checkDiag(Tile goal){//checks to see if move is diagonal
-			int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
-			
-			for(int n = 1; n < 9; n++){//this loop is unneccesary 
-			
-				if(goal.getX() == (this.x - n) && goal.getY() == (this.y + n)){//down left
-					System.out.println("down left");	
-					direction = 1;
-				}
-				else if(goal.getX() == (this.x - n) && goal.getY() == (this.y - n)){//up left
-					System.out.println("up left");	
-					direction = 2;
-				}
-				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y - n)){//up right
-					System.out.println("up right");	
-					direction = 3;
-				}
-				else if(goal.getX() == (this.x + n) && goal.getY() == (this.y + n)){//down right
-					System.out.println("down right");	
-					direction = 4;
-				}
-			}
-			System.out.println("Direction " + direction);
-			return direction;
-		}
-
-		public Tile move(Tile t)
-		{
-			
-			int diag = checkDiag(t);
-			Tile temp= null;
-			if(diag > 0){//if on a diagonal allow move
-				//method to create a list of tiles between current and goal
-				//need to check each square in route to see if AI piece or obstacle
-				temp= checkRoute(t,diag);
-				if(temp.equals(t)){						
-					this.x= t.getX();
-					this.y= t.getY();
-					return t;
-				}
-				else if(temp!=null)
-				{
-					this.x= temp.getX();
-					this.y= temp.getY();
-					return temp;
-				}
-			}
-			return null;	
-		}
-		
-		public Tile checkRoute(Tile goal, int direction){
-			int distance = 0;
-			route.clear();
-			distance = Math.abs(this.x - goal.getX());
-			int inc = 1;
-			
-			while(inc < distance){
-				if(direction == 1){
-					if(tiles[this.x - inc][this.y + inc].getType()==0)
-						return null;
-					else if(tiles[this.x - inc][this.y + inc].getOccupied())
-						return tiles[this.x - inc][this.y + inc];
-				}
-				else if(direction == 2){
-					if(tiles[this.x - inc][this.y - inc].getType()==0)
-						return null;
-					else if(tiles[this.x - inc][this.y - inc].getOccupied())
-						return tiles[this.x - inc][this.y - inc];
-				}
-				else if(direction == 3){
-					if(tiles[this.x + inc][this.y - inc].getType()==0)
-						return null;
-					else if(tiles[this.x + inc][this.y - inc].getOccupied())
-						return tiles[this.x + inc][this.y - inc];
-				}
-				else if(direction == 4){
-					if(tiles[this.x + inc][this.y + inc].getType()==0)
-						return null;
-					else if(tiles[this.x + inc][this.y + inc].getOccupied())
-						return tiles[this.x + inc][this.y + inc];
-				}
-				inc++;
-			}
-			return goal;
-		}
-		
-		public void draw(Graphics g, int i)
-		{
-			super.draw(g,i,BBishop,WBishop,color);
-		}
 	}
-	class Queen extends Piece
-=======
 	class Pawn extends Piece
->>>>>>> origin/master
 	{
 		BufferedImage BPawn = null;
 		BufferedImage WPawn = null;
