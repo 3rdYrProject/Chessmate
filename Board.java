@@ -347,7 +347,8 @@ class Board extends JPanel implements MouseListener
 		}
 		public Tile move(Tile t)
 		{
-			
+			if(t.getType()==0)
+				return null;
 			int dir = checkOrth(t);
 			Tile temp = null;
 			if(dir > 0){//if on a direction allow move
@@ -401,7 +402,8 @@ class Board extends JPanel implements MouseListener
 		}
 		public Tile move(Tile t)
 		{
-			
+			if(t.getType()==0)
+				return null;
 			int diag = checkDiag(t);
 			Tile temp= null;
 			if(diag > 0){//if on a diagonal allow move
@@ -465,6 +467,8 @@ class Board extends JPanel implements MouseListener
 		
 		public Tile move(Tile t)
 		{
+			if(t.getType()==0)
+				return null;
 			int diag = checkDirQ(t);
 			Tile temp= null;
 			if(diag > 0){//if on a diagonal allow move
