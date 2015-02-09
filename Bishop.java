@@ -25,14 +25,14 @@ class Bishop extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile move(Tile t)
+	public Tile move(Tile t, Tile[][] tiles)
 	{
 		if(t.getType()==0)
 			return null;
 		int diag = checkDiag(t);
 		Tile temp= null;
 		if(diag > 0){//if on a diagonal allow move
-			temp= checkRouteDiag(t,diag);
+			temp= checkRouteDiag(t,diag,tiles);
 			if(temp!=null)
 			{
 				this.x= temp.getX();
