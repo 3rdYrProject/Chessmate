@@ -27,26 +27,24 @@ abstract class Piece extends Tile{
 		
 		int checkDiag(Tile goal){//checks to see if move is diagonal
 			int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
-			
-			if(goal.getX() == (this.x - 1) && goal.getY() == (this.y + 1)){//down left
-				System.out.println("down left");	
-				direction = 1;
+						
+			int xPos = Math.abs(this.x - goal.getX());
+			int yPos = Math.abs(this.y - goal.getY());
+			if(xPos == yPos){
+				if(goal.getX() < this.x && goal.getY() > this.y){//down left
+					direction = 1;
+				}
+				else if(goal.getX() < this.x && goal.getY() < this.y){//up left
+					direction = 2;
+				}
+				else if(goal.getX() > this.x && goal.getY() < this.y){//up right
+					direction = 3;
+				}
+				else if(goal.getX() > this.x && goal.getY() > this.y){//down right
+					direction = 4;
+				}
+				System.out.println("Direction " + direction);
 			}
-			else if(goal.getX() == (this.x - 1) && goal.getY() == 
-			(this.y - 1)){//up left
-				System.out.println("up left");	
-				direction = 2;
-			}
-			else if(goal.getX() == (this.x + 1) && goal.getY() == (this.y - 1)){//up right
-				System.out.println("up right");	
-				direction = 3;
-			}
-			else if(goal.getX() == (this.x + 1) && goal.getY() == (this.y + 1)){//down right
-				System.out.println("down right");	
-				direction = 4;
-			}
-			
-			System.out.println("Direction " + direction);
 			return direction;
 		}
 		public int checkOrth(Tile goal){//checks to see if move is on a vertice
