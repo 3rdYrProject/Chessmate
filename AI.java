@@ -46,7 +46,7 @@ class AI
 					currentY--;
 				}
 				route.add(tiles[currentX][currentY]);
-				System.out.println(currentX+" "+currentY);
+				System.out.println("Next Tile: "+currentX+" "+currentY);
 			}
 		}
 		else {}
