@@ -8,10 +8,13 @@ import javax.swing.*;
 class Board extends JPanel implements MouseListener
 {
 	Tile[][] tiles = new Tile[8][8];//the entire board.
+	AI ai= null;
 	Piece userPiece= null;
+	Tile goal= null;
 	Board()
 	{
 		readLevel();
+		ai= new AI(goal);
 		addMouseListener(this);
 	}	
 	public void paintComponent(Graphics g)
@@ -29,6 +32,7 @@ class Board extends JPanel implements MouseListener
 			}
 			count++;
 		}
+		ai.createPaths(userPiece,tiles);
 	}
 	void readLevel()
 	{
@@ -55,7 +59,11 @@ class Board extends JPanel implements MouseListener
 					tiles[j][i]= userPiece;
 				}
 				else 
+				{
+					if(temp==3)
+						goal= new Tile(j,i,temp);
 					tiles[j][i] = new Tile(j,i,temp);
+				}
 			}
 		}
 		
@@ -77,7 +85,6 @@ class Board extends JPanel implements MouseListener
 	}
 	public void mousePressed(MouseEvent e)
 	{
-		long tStart = System.currentTimeMillis();
 		Tile moveLoc = null;
 		outer: for(int i=0;i<tiles.length;i++)
 		{
@@ -103,9 +110,6 @@ class Board extends JPanel implements MouseListener
 			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
 			repaint();
 		}	
-		long tEnd = System.currentTimeMillis();
-		System.out.println(tEnd+ " " + tStart);
-		System.out.println("Time taken: "+ (tEnd-tStart));
 	}
 	public void mouseExited(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}

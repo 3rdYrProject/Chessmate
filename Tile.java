@@ -81,5 +81,9 @@ class Tile{
 		{
 			g.drawImage(obstacle,x*width,y*width,null);
 		}
+		else if(type==3)
+		{
+		
+		}
 	}
 }
