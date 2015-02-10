@@ -72,11 +72,11 @@ class Tile{
 	{	
 		if(i==0)
 		{
-			g.drawImage(dark,x*width,y*width,null);//g.drawImage(x,y,dark);
+			g.drawImage(dark,x*width,y*width,null);
 		}
 		else 
 		{
-			g.drawImage(light,x*width,y*width,null);//g.drawImage(x,y,bright);
+			g.drawImage(light,x*width,y*width,null);
 		}
 		if(type==0)//not moveable
 		{

@@ -18,7 +18,7 @@ class AI
 		int userX=user.getX() ,userY=user.getY();
 		int goalX=goal.getX() ,goalY=goal.getY();
 		int currentX=userX ,currentY=userY;
-		int[] direction; 
+		int direction; 
 		LinkedList<Tile> route = new LinkedList<>();
 		System.out.println("Start:" +currentX+" "+currentY);
 		if(user.getName().equals("Bishop")||user.getName().equals("Queen"))
@@ -89,19 +89,45 @@ class AI
 			{
 				if(goalX>currentX)
 				{
-					currentX++;
+					if(tiles[currentX+1][currentY].getType()!=0)
+						currentX++;
+					else 
+						direction=0;//will always be relevant
 				}
 				else if(goalX<currentX)
 				{
-					currentX--;
+					if(tiles[currentX-1][currentY].getType()!=0)
+						currentX--;
+					else 
+						direction=1;
 				}
 				else if(goalY>currentY)
 				{
-					currentY++;
+					if(tiles[currentX][currentY+1].getType()!=0)
+						currentY++;
+					else 
+						direction=2;
 				}
 				else if(goalY<currentY)
 				{
-					currentY--;
+					if(tiles[currentX][currentY-1].getType()!=0)
+						currentY--;
+					else 
+						direction=3;
+				}
+				else //can't get closer 
+				{
+					if(direction==0)
+					{
+						
+						//loop
+							
+						//move up until we can move right
+						//count moves
+						//move down until we can move right 
+						//count moves
+						//whichever one is bigger add that to route.
+					}
 				}
 				route.add(tiles[currentX][currentY]);
 				System.out.println("Next Tile: "+currentX+" "+currentY);
