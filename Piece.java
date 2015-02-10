@@ -9,10 +9,16 @@ import javax.swing.*;
 abstract class Piece extends Tile{
 		
 		LinkedList<Tile> route = new LinkedList<>();
-		Piece(int x, int y, int type)
+		String name;
+		Piece(int x, int y, int type, String name)
 		{
 			super(x,y,type);
 			occupied=true;
+			this.name=name;
+		}
+		String getName()
+		{
+			return name;
 		}
 		public abstract Tile move(Tile t, Tile[][] tiles);
 		

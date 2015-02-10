@@ -13,7 +13,7 @@ class Rook extends Piece
 	int color; 
 	Rook(int x, int y, int type, int color)
 	{
-		super(x,y,type);
+		super(x,y,type,"Rook");
 		this.color=color;
 		try
 		{

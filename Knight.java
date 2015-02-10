@@ -13,7 +13,7 @@ class Knight extends Piece
 	int color;
 	Knight(int x,int y, int type, int color)
 	{
-		super(x,y,type);
+		super(x,y,type,"Knight");
 		this.color= color;
 		try
 		{

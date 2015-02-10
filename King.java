@@ -13,7 +13,7 @@ class King extends Piece
 	int color;
 	King(int x,int y, int type, int color)
 	{
-		super(x,y,type);
+		super(x,y,type,"King");
 		this.color= color;
 		try
 		{

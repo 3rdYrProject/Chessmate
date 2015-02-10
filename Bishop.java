@@ -12,7 +12,7 @@ class Bishop extends Piece
 	int color;
 	Bishop(int x,int y, int type, int color)
 	{
-		super(x,y,type);
+		super(x,y,type,"Bishop");
 		this.color= color;
 		try
 		{

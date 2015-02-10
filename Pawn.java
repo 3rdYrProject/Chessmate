@@ -13,7 +13,7 @@ class Pawn extends Piece
 	int color;
 	Pawn(int x,int y, int type, int color)
 	{
-		super(x,y,type);
+		super(x,y,type,"Pawn");
 		this.color= color;
 		try
 		{
