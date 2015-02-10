@@ -11,7 +11,7 @@ class Tile{
 	BufferedImage dark = null;
 	BufferedImage light = null;
 	BufferedImage obstacle = null;
-	
+	BufferedImage goal = null;
 	boolean occupied=false;
 	int x,y;
 	int width=75;
@@ -54,6 +54,7 @@ class Tile{
 			dark = ImageIO.read(new File("images/Dark.png"));
 			light = ImageIO.read(new File("images/Light.png"));
 			obstacle = ImageIO.read(new File("images/tree.png"));
+			goal = ImageIO.read(new File("images/goal.png"));
 		} catch (IOException e) {
 		}
 	}
@@ -80,6 +81,10 @@ class Tile{
 		if(type==0)//not moveable
 		{
 			g.drawImage(obstacle,x*width,y*width,null);
+		}
+		else if(type==3)
+		{
+			g.drawImage(goal,x*width,y*width,null);
 		}
 	}
 }
