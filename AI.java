@@ -23,7 +23,65 @@ class AI
 		System.out.println("Start:" +currentX+" "+currentY);
 		if(user.getName().equals("Bishop")||user.getName().equals("Queen"))
 		{
-				//do diag
+			System.out.println("in bishop");
+			boolean loc =true;
+			while(loc){
+				loc = currentX!=goalX;
+				if(!loc){
+					loc = currentY!=goalY;
+				}
+				if(goalX>currentX){
+					System.out.println("goal greater than current");
+					if(goalY>currentY){
+						currentX++;
+						currentY++;
+					}
+					else{
+						currentX++;
+						currentY--;
+					}
+				}
+				else if(goalX<currentX){
+					System.out.println("goal less than current");
+					if(goalY>currentY){
+						currentX--;
+						currentY++;
+					}
+					else{
+						currentX--;
+						currentY--;
+					}
+				}
+				else if(goalX == currentX){
+					System.out.println("goalX equal to currentX");
+					if(goalY>currentY){
+						currentX++;
+						currentY++;
+					}
+					else{
+						currentX++;
+						currentY--;
+					}
+				}
+				else if(goalY == currentY){
+					System.out.println("goalY equal to currentY");
+					if(goalY>currentY){
+						currentX--;
+						currentY++;
+					}
+					else{
+						currentX--;
+						currentY--;
+					}
+				}
+				else if((goalX == currentX)&&(goalX == currentX)&&{
+					System.out.println("neither statement true");
+					loc = false;
+				}
+				route.add(tiles[currentX][currentY]);
+				System.out.println("Next Tile: "+currentX+" "+currentY);
+			}
+			//do diag
 		}
 		else if(user.getName().equals("Rook")||user.getName().equals("Queen"))
 		{//do orth
