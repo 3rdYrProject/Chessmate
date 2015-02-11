@@ -15,6 +15,7 @@ class Tile{
 	boolean occupied=false;
 	int x,y;
 	int width=75;
+	int g_score=0,h_score=0,f_score=0;
 	int type;//0 unmovable, 1 is normal, 2 is goal and 3 is start.
 	Tile(int x, int y, int type)
 	{
@@ -28,6 +29,30 @@ class Tile{
 		this.x=t.x;
 		this.y=t.y;
 		this.type=t.type;
+	}
+	void setG(int g)
+	{
+		this.g_score= g;
+	}
+	void setH(int h)
+	{
+		this.h_score= h;
+	}
+	void setF(int f)
+	{
+		this.f_score= f;
+	}	
+	int getG()
+	{
+		return g_score;
+	}
+	int getH()
+	{
+		return h_score;
+	}
+	int getF()
+	{
+		return f_score;
 	}
 	int getX()
 	{
@@ -67,6 +92,11 @@ class Tile{
 			return(this);
 		}
 		return null;
+	}
+	@Override
+	public String toString()
+	{
+		return(x+ " " +y);
 	}
 	void draw(Graphics g, int i)//i is 0 or 1 depending on black or white
 	{	

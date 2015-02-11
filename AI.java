@@ -13,128 +13,97 @@ class AI
 	{
 		aiPieces.add(piece);
 	}
-	void createPaths(Piece user,Tile[][] tiles)//generates the path to goal
+	public LinkedList<Tile> getPath(Tile start,Tile goal,Tile[][] tiles)
 	{
-		int userX=user.getX() ,userY=user.getY();
-		int goalX=goal.getX() ,goalY=goal.getY();
-		int currentX=userX ,currentY=userY;
-		int direction; 
-		LinkedList<Tile> route = new LinkedList<>();
-		System.out.println("Start:" +currentX+" "+currentY);
-		if(user.getName().equals("Bishop")||user.getName().equals("Queen"))
+		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
+		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
+		
+		Tree<Tile> came_from = new Tree<>(start);    // The map of navigated nodes.
+	 
+		start.setG(0);   // Cost from start along best known path.
+		// Estimated total cost from start to goal through y.
+		start.setF(heuristic_cost_estimate(start, goal));
+		openset.add(start);
+		
+		while(!openset.isEmpty())
 		{
-			System.out.println("in bishop");
-			boolean loc =true;
-			while(loc){
-				loc = currentX!=goalX;
-				if(!loc){
-					loc = currentY!=goalY;
-				}
-				if(goalX>currentX){
-					System.out.println("goal greater than current");
-					if(goalY>currentY){
-						currentX++;
-						currentY++;
-					}
-					else{
-						currentX++;
-						currentY--;
-					}
-				}
-				else if(goalX<currentX){
-					System.out.println("goal less than current");
-					if(goalY>currentY){
-						currentX--;
-						currentY++;
-					}
-					else{
-						currentX--;
-						currentY--;
-					}
-				}
-				else if(goalX == currentX){
-					System.out.println("goalX equal to currentX");
-					if(goalY>currentY){
-						currentX++;
-						currentY++;
-					}
-					else{
-						currentX++;
-						currentY--;
-					}
-				}
-				else if(goalY == currentY){
-					System.out.println("goalY equal to currentY");
-					if(goalY>currentY){
-						currentX--;
-						currentY++;
-					}
-					else{
-						currentX--;
-						currentY--;
-					}
-				}
-				else if((goalX == currentX)&&(goalX == currentX)&&{
-					System.out.println("neither statement true");
-					loc = false;
-				}
-				route.add(tiles[currentX][currentY]);
-				System.out.println("Next Tile: "+currentX+" "+currentY);
-			}
-			//do diag
-		}
-		else if(user.getName().equals("Rook")||user.getName().equals("Queen"))
-		{//do orth
-			while(currentX!=goalX||currentY!=goalY)
+			Tile current = getLowestF(openset);//lowest f_score 
+			LinkedList<Tile> neighbours= new LinkedList<>();
+			if(current.equals(goal))
+				return reconstruct_path(came_from, goal);
+	 
+			openset.remove(current);
+			closedset.add(current);
+			neighbours= getNeighbours(current,tiles);
+			//
+			for(Tile neighbour:neighbours)
 			{
-				if(goalX>currentX)
+				if(closedset.contains(neighbour))
+					continue;
+				int tentative_g_score = current.getG() + dist_between(current,neighbour);
+				System.out.println(tentative_g_score); 
+				if(!openset.contains(neighbour)||tentative_g_score < neighbour.getG())
 				{
-					if(tiles[currentX+1][currentY].getType()!=0)
-						currentX++;
-					else 
-						direction=0;//will always be relevant
+					came_from.addLeaf(current,neighbour); //next goal in the path
+					neighbour.setG(tentative_g_score);
+					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, goal));
+					if(!openset.contains(neighbour))
+						openset.add(neighbour);
 				}
-				else if(goalX<currentX)
-				{
-					if(tiles[currentX-1][currentY].getType()!=0)
-						currentX--;
-					else 
-						direction=1;
-				}
-				else if(goalY>currentY)
-				{
-					if(tiles[currentX][currentY+1].getType()!=0)
-						currentY++;
-					else 
-						direction=2;
-				}
-				else if(goalY<currentY)
-				{
-					if(tiles[currentX][currentY-1].getType()!=0)
-						currentY--;
-					else 
-						direction=3;
-				}
-				else //can't get closer 
-				{
-					if(direction==0)
-					{
-						
-						//loop
-							
-						//move up until we can move right
-						//count moves
-						//move down until we can move right 
-						//count moves
-						//whichever one is bigger add that to route.
-					}
-				}
-				route.add(tiles[currentX][currentY]);
-				System.out.println("Next Tile: "+currentX+" "+currentY);
 			}
 		}
-		else {}
-				//do knight
+	 
+		return null;
+	}
+	int dist_between(Tile current, Tile neighbour)
+	{
+		return 10;
+	}
+	int heuristic_cost_estimate(Tile start,Tile goal)
+	{
+		return((Math.abs(start.getX() - goal.getX())+ Math.abs(start.getY() - goal.getY()))*10);
+	}
+	
+	LinkedList<Tile> getNeighbours(Tile current, Tile[][] tiles)
+	{
+		LinkedList<Tile> neighbours= new LinkedList<>();
+		for(int x=current.getX()-1;x<=current.getX()+1;x++)
+		{
+			for(int y= current.getY()-1;y<=current.getY()+1;y++)
+				if(!current.equals(tiles[x][y]))
+					neighbours.add(tiles[x][y]);
+		}
+		return neighbours;
+	}
+	Tile getLowestF(LinkedList<Tile> list)
+	{
+		Tile min= null;
+		for(Tile t:list)
+		{
+			if(min==null)
+			{
+				min=t;
+			}
+			else if(t.getF()<min.getF())
+			{
+				min=t;
+			}
+		}
+		return min;
+	}
+	LinkedList<Tile> reconstruct_path(Tree<Tile> came_from,Tile current)
+	{
+		System.out.println(came_from);
+		System.out.println(came_from.getParent());
+		/*
+		LinkedList<Tile> total_path = new LinkedList<>();
+		total_path.add(current);
+		while(came_from.getTree(current)!=null)
+		{
+			current = current;
+			total_path.add(current);
+		}*/
+		return null;
 	}
 	void evaluatePaths()
 	{
