@@ -41,34 +41,25 @@ public class Tree<T> {
     return locate.get(element);
   }
 
-  public Tree<T> getParent(T element) {
-	locate.get(element);//get a tree
-						//check if the element is in it
-	return parent;
-  }
-
-  public Collection<T> getSuccessors(T root) {
-    Collection<T> successors = new ArrayList<T>();
-    Tree<T> tree = getTree(root);
-    if (tree!=null) {
-      for (Tree<T> leaf : tree.leafs) {
-        successors.add(leaf.head);
-      }
+  public T getParent(T element) {//this method is fucked really need to re-think it.
+  //the equals work now
+	if(head.equals(element))
+	{
+		System.out.println("buddy");
+		return null;
+	}
+	System.out.println("HEAD "+ head);
+	for(Tree<T> child : leafs) 
+	{
+	  System.out.println("CHILD "+ child.head+ " ELEMENT "+ element);
+      if((child.head).equals(element))
+	  {
+		System.out.println("YEY");
+		return head;
+	  }
+	  child.getParent(element);
     }
-    return successors;
-  }
-
-  public Collection<Tree<T>> getSubTrees() {
-    return leafs;
-  }
-
-  public static <T> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
-    for (Tree<T> tree : in) {
-      if (tree.locate.containsKey(of)) {
-        return tree.getSuccessors(of);
-      }
-    }
-    return new ArrayList<T>();
+	return null;
   }
 
   @Override
