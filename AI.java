@@ -17,7 +17,7 @@ class AI
 	{
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
-		
+		LinkedList<Tile> shortest = new LinkedList<>();
 		Tree<Tile> came_from = new Tree<>(start);    // The map of navigated nodes.
 	 
 		start.setG(0);   // Cost from start along best known path.
@@ -30,7 +30,7 @@ class AI
 			Tile current = getLowestF(openset);//lowest f_score 
 			LinkedList<Tile> neighbours= new LinkedList<>();
 			if(current.equals(goal))
-				return reconstruct_path(came_from, goal);
+				return shortest;
 	 
 			openset.remove(current);
 			closedset.add(current);
@@ -41,14 +41,16 @@ class AI
 				if(closedset.contains(neighbour))
 					continue;
 				int tentative_g_score = current.getG() + dist_between(current,neighbour);
-				System.out.println(tentative_g_score); 
 				if(!openset.contains(neighbour)||tentative_g_score < neighbour.getG())
-				{
-					came_from.addLeaf(current,neighbour); //next goal in the path
+				{ //next goal in the path
 					neighbour.setG(tentative_g_score);
 					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, goal));
 					if(!openset.contains(neighbour))
+					{
 						openset.add(neighbour);
+						if(!shortest.contains(current))
+							shortest.add(current);
+					}
 				}
 			}
 		}
@@ -59,12 +61,12 @@ class AI
 	{
 		return 10;
 	}
-	int heuristic_cost_estimate(Tile start,Tile goal)
+	int heuristic_cost_estimate(Tile start,Tile goal)//edit here to add an increased value for changing direction
 	{
 		return((Math.abs(start.getX() - goal.getX())+ Math.abs(start.getY() - goal.getY()))*10);
 	}
 	
-	LinkedList<Tile> getNeighbours(Tile current, Tile[][] tiles)
+	LinkedList<Tile> getNeighbours(Tile current, Tile[][] tiles)//edit here for obstacles and to limit moves
 	{
 		LinkedList<Tile> neighbours= new LinkedList<>();
 		for(int x=current.getX()-1;x<=current.getX()+1;x++)
@@ -91,20 +93,7 @@ class AI
 		}
 		return min;
 	}
-	LinkedList<Tile> reconstruct_path(Tree<Tile> came_from,Tile current)
-	{
-		System.out.println(came_from);
-		System.out.println(came_from.getParent());
-		/*
-		LinkedList<Tile> total_path = new LinkedList<>();
-		total_path.add(current);
-		while(came_from.getTree(current)!=null)
-		{
-			current = current;
-			total_path.add(current);
-		}*/
-		return null;
-	}
+	
 	void evaluatePaths()
 	{
 	

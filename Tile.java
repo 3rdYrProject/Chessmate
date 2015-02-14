@@ -70,8 +70,9 @@ class Tile{
 	{
 		return occupied;
 	}
-	public boolean equals(Tile t)
+	public boolean equals(Object obj)
 	{
+		Tile t = (Tile)obj;
 		return(this.x==t.x && this.y==t.y);
 	}
 	public void initImages(){

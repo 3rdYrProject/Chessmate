@@ -33,10 +33,10 @@ class Board extends JPanel implements MouseListener
 			count++;
 		}
 		LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
-		///for(Tile t:neighbours)
-		///{
-		///	System.out.println(t.getX()+ " "+t.getY());
-		///}
+		for(Tile t:neighbours)
+		{
+			System.out.println(t.getX()+ " "+t.getY());
+		}
 	}
 	void readLevel()
 	{
