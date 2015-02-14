@@ -98,8 +98,6 @@ class Board extends JPanel implements MouseListener
 				
 				if(moveLoc!=null)
 				{
-					
-					System.out.println("x:"+j+ " y:" + i);
 					break outer;
 				}
 			}
@@ -109,7 +107,6 @@ class Board extends JPanel implements MouseListener
 		moveLoc = userPiece.move(moveLoc,tiles);
 		if(moveLoc!=null)
 		{
-			System.out.println(temp.getX()+ " "+temp.getY());
 			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
 			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
 			repaint();

@@ -7,7 +7,7 @@ public class Tree<T> {
 
   private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
 
-  private Tree<T> parent = null;
+  private T parent = null;
 
   private HashMap<T, Tree<T>> locate = new HashMap<T, Tree<T>>();
 
@@ -18,21 +18,31 @@ public class Tree<T> {
 
   public void addLeaf(T root, T leaf) {
     if (locate.containsKey(root)) {
-      locate.get(root).addLeaf(leaf);
+      locate.get(root).add(leaf,locate.get(root).head);
     } else {
-      addLeaf(root).addLeaf(leaf);
+      add(root,null).add(leaf,head);
     }
+	System.out.println("Parent: "+locate.get(root).head);
+  } 
+  public T getLast()
+  {
+	return(leafs.get(leafs.size()-1).head);
   }
-
-  public Tree<T> addLeaf(T leaf) {
+  public Tree<T> add(T leaf, T parent) {
     Tree<T> t = new Tree<T>(leaf);
+	t.parent=parent;
     leafs.add(t);
-    t.parent = this;
     t.locate = this.locate;
     locate.put(leaf, t);
     return t;
   }
-
+  public void printData()
+  {
+	for(Tree<T> leaf: leafs)
+	{
+		System.out.println(leaf.leafs);
+	}
+  }
   public T getHead() {
     return head;
   }
@@ -40,26 +50,20 @@ public class Tree<T> {
   public Tree<T> getTree(T element) {
     return locate.get(element);
   }
-
-  public T getParent(T element) {//this method is fucked really need to re-think it.
-  //the equals work now
-	if(head.equals(element))
+  public int indexOf(T element)
+  {	
+	int count=0;
+	for(Tree<T> leaf:leafs)
 	{
-		System.out.println("buddy");
-		return null;
+		if(leaf.head.equals(element))
+			return count;
+		count++;
 	}
-	System.out.println("HEAD "+ head);
-	for(Tree<T> child : leafs) 
-	{
-	  System.out.println("CHILD "+ child.head+ " ELEMENT "+ element);
-      if((child.head).equals(element))
-	  {
-		System.out.println("YEY");
-		return head;
-	  }
-	  child.getParent(element);
-    }
-	return null;
+	return -1;
+  }	
+  public T getParent(T element) {//this method is fucked really need to re-think it.
+	System.out.println("Parent of "+ element+ " "+leafs.get(indexOf(element)).parent);
+	return parent;
   }
 
   @Override

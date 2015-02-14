@@ -6,7 +6,7 @@ import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
 
-class Tile{
+class Tile implements Comparable{
 	
 	BufferedImage dark = null;
 	BufferedImage light = null;
@@ -70,10 +70,17 @@ class Tile{
 	{
 		return occupied;
 	}
+	@Override
 	public boolean equals(Object obj)
 	{
 		Tile t = (Tile)obj;
 		return(this.x==t.x && this.y==t.y);
+	}
+	@Override
+	public int compareTo(Object obj)
+	{
+		Tile t = (Tile)obj;
+		return((this.x-t.x)+(this.y-t.y));
 	}
 	public void initImages(){
 		try {
