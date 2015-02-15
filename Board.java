@@ -99,19 +99,21 @@ class Board extends JPanel implements MouseListener
 			}
 		}
 		Tile temp= new Tile(userPiece);
-		
+		ai.moveUser();
 		moveLoc = userPiece.move(moveLoc,tiles);
 		if(moveLoc!=null)
 		{
 			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
 			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
-			ai.moveUser(userPiece);
+			System.out.println(userPiece);
+			
 			LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
 			System.out.println("LE PATH: ");
 			for(Tile t:neighbours)
 			{
 				System.out.println("\t"+t.getX()+ " "+t.getY());
 			}
+			
 			repaint();
 		}	
 	}

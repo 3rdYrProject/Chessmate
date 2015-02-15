@@ -10,6 +10,7 @@ class AI
 {
 	Tile goal;
 	Piece user;
+	Tile oldUser;
 	int direction=3;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
@@ -24,17 +25,16 @@ class AI
 	{
 		aiPieces.add(piece);
 	}
-	void moveUser(Piece user)
+	void moveUser()
 	{
-		direction= getDirection(this.user,user);
-		this.user=user;
+		oldUser= new Tile(user);
 	}
 	public LinkedList<Tile> getPath(Tile start,Tile goal,Tile[][] tiles)
 	{
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
-	 
+		direction= getDirection(oldUser,user);
 		start.setG(0);   // Cost from start along best known path.
 		// Estimated total cost from start to goal through y.
 		start.setF(heuristic_cost_estimate(start, goal));
@@ -43,9 +43,8 @@ class AI
 		while(!openset.isEmpty())
 		{
 			Tile current = getLowestF(openset);//lowest f_score 
-			if(lastCurrent!=null)
-				direction =getDirection(lastCurrent,current);
-			System.out.println(lastCurrent+ " " +current);
+			
+			//System.out.println(lastCurrent+ " " +current);
 			LinkedList<Tile> neighbours= new LinkedList<>();
 			if(current.equals(goal))
 			{
@@ -59,10 +58,12 @@ class AI
 			{
 				if(closedset.contains(neighbour))
 					continue;
-				int tentative_g_score = current.getG() + dist_between(current,neighbour,direction,goal,tiles);
+				int tentative_g_score = current.getG() + dist_between(current,neighbour,goal,tiles);
 				
 				if(!openset.contains(neighbour)||tentative_g_score < neighbour.getG())
 				{ //next goal in the path
+					if(lastCurrent!=null)
+						direction =getDirection(current,neighbour);
 					came_from.put(neighbour,current);
 					neighbour.setG(tentative_g_score);
 					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, goal));
@@ -85,15 +86,31 @@ class AI
 		else 
 			return direction;
 	}
-	int dist_between(Tile current, Tile neighbour, int direction, Tile goal, Tile[][] tiles)
+	String printDirection(int direction)
 	{
-		System.out.println("Direction: "+ direction +" from: "+current+ " to: " + neighbour+ " new direction:" +getDirection(current,neighbour));
+		if(direction==1)
+			return("DOWN");
+		else if(direction==2)
+			return("UP");
+		else if(direction==3)
+			return("RIGHT");
+		else 
+			return("LEFT");
+	}
+	int dist_between(Tile current, Tile neighbour, Tile goal, Tile[][] tiles)
+	{
+		System.out.println("Direction: "+ printDirection(direction) +" from: "+current+
+			" to: " + neighbour+ " new direction:" +printDirection(getDirection(current,neighbour)));
 		int penalty= 10;
 		if(getDirection(current,neighbour)!=direction)
-			penalty= 50;
+			penalty= 30;
 		//if we are on the same x or y we don't want to penalise the path
+		//might move this into cost_estimate, might.
 		if(user.getName().equals("Rook")&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
+		{
+			//System.out.println("ok");
 			penalty= 5;
+		}
 		return penalty;
 	}
 	

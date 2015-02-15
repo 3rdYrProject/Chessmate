@@ -129,11 +129,11 @@ class Tile implements Comparable{
 			if(direction==0)
 				return null;
 			int distance = 0;
-			System.out.println(direction);
+			//System.out.println(direction);
 			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
 			int inc = 1;
 			//down up right left
-			System.out.println(direction+ " " +distance);
+			//System.out.println(direction+ " " +distance);
 			while(inc <= distance){
 				if(direction == 1){
 					if(tiles[this.x][this.y + inc].getType()==0)
@@ -198,7 +198,7 @@ class Tile implements Comparable{
 		{
 			g.drawImage(goal,x*width,y*width,null);
 		}
-		g.drawString(""+g_score,x*width,y*width);
+		g.drawString(""+g_score,x*width,(y*width)+10);
 	}
 }
 
