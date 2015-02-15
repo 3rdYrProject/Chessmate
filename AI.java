@@ -5,14 +5,17 @@ class AI
 	Tile goal;
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
+	
 	AI(Tile goal)
 	{
 		this.goal= goal;
 	}
+	
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
 	}
+	
 	public LinkedList<Tile> getPath(Tile start,Tile goal,Tile[][] tiles)
 	{
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
@@ -57,10 +60,12 @@ class AI
 	 
 		return null;
 	}
+	
 	int dist_between(Tile current, Tile neighbour)
 	{
 		return 10;
 	}
+	
 	int heuristic_cost_estimate(Tile start,Tile goal)//edit here to add an increased value for changing direction
 	{
 		return((Math.abs(start.getX() - goal.getX())+ Math.abs(start.getY() - goal.getY()))*10);
@@ -86,6 +91,7 @@ class AI
 		}
 		return neighbours;
 	}
+	
 	Tile getLowestF(LinkedList<Tile> list)
 	{
 		Tile min= null;
@@ -102,6 +108,7 @@ class AI
 		}
 		return min;
 	}
+	
 	LinkedList<Tile> reconstruct_path(HashMap<Tile,Tile> came_from,Tile current)
 	{
 		LinkedList<Tile> total_path = new LinkedList<>();
@@ -115,6 +122,7 @@ class AI
 		Collections.reverse(total_path);
 		return total_path;
 	}
+	
 	void evaluatePaths()
 	{
 	

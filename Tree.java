@@ -11,12 +11,14 @@ public class Tree<T> {
 
   private HashMap<T, Tree<T>> locate = new HashMap<T, Tree<T>>();
 
-  public Tree(T head) {
+  public Tree(T head) 
+  {
     this.head = head;
     locate.put(head, this);
   }
 
-  public void addLeaf(T root, T leaf) {
+  public void addLeaf(T root, T leaf) 
+  {
     if (locate.containsKey(root)) {
       locate.get(root).add(leaf,locate.get(root).head);
     } else {
@@ -24,18 +26,23 @@ public class Tree<T> {
     }
 	System.out.println("Parent: "+locate.get(root).head);
   } 
+  
   public T getLast()
   {
 	return(leafs.get(leafs.size()-1).head);
   }
-  public Tree<T> add(T leaf, T parent) {
+  
+  public Tree<T> add(T leaf, T parent) 
+  {
     Tree<T> t = new Tree<T>(leaf);
 	t.parent=parent;
     leafs.add(t);
     t.locate = this.locate;
     locate.put(leaf, t);
+    
     return t;
   }
+  
   public void printData()
   {
 	for(Tree<T> leaf: leafs)
@@ -43,13 +50,16 @@ public class Tree<T> {
 		System.out.println(leaf.leafs);
 	}
   }
+  
   public T getHead() {
     return head;
   }
 
-  public Tree<T> getTree(T element) {
+  public Tree<T> getTree(T element) 
+  {
     return locate.get(element);
   }
+  
   public int indexOf(T element)
   {	
 	int count=0;
@@ -61,28 +71,37 @@ public class Tree<T> {
 	}
 	return -1;
   }	
-  public T getParent(T element) {//this method is fucked really need to re-think it.
+  
+  public T getParent(T element) 
+  {//this method is fucked really need to re-think it.
 	System.out.println("Parent of "+ element+ " "+leafs.get(indexOf(element)).parent);
 	return parent;
   }
 
   @Override
-  public String toString() {
+  public String toString() 
+  {
     return printTree(0);
   }
 
   private static final int indent = 2;
 
-  private String printTree(int increment) {
+  private String printTree(int increment) 
+  {
     String s = "";
     String inc = "";
-    for (int i = 0; i < increment; ++i) {
+    
+    for (int i = 0; i < increment; ++i) 
+    {
       inc = inc + " ";
     }
     s = inc + head;
-    for (Tree<T> child : leafs) {
+    
+    for (Tree<T> child : leafs) 
+    {
       s += "\n" + child.printTree(increment + indent);
     }
     return s;
   }
 }
+
