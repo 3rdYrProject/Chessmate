@@ -13,11 +13,13 @@ class AI
 	int direction=3;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
+	
 	AI(Tile goal,Piece user)
 	{
 		this.user= user;
 		this.goal= goal;
 	}
+	
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
@@ -94,6 +96,7 @@ class AI
 			penalty= 5;
 		return penalty;
 	}
+	
 	int heuristic_cost_estimate(Tile start,Tile goal)//edit here to add an increased value for changing direction
 	{
 		return((Math.abs(start.getX() - goal.getX())+ Math.abs(start.getY() - goal.getY()))*10);
@@ -131,6 +134,7 @@ class AI
 		}
 		return neighbours;
 	}
+	
 	Tile getLowestF(LinkedList<Tile> list)
 	{
 		Tile min= null;
@@ -147,6 +151,7 @@ class AI
 		}
 		return min;
 	}
+	
 	LinkedList<Tile> reconstruct_path(HashMap<Tile,Tile> came_from,Tile current)
 	{
 		LinkedList<Tile> total_path = new LinkedList<>();
@@ -159,6 +164,7 @@ class AI
 		Collections.reverse(total_path);
 		return total_path;
 	}
+	
 	void evaluatePaths()
 	{
 	

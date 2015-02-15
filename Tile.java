@@ -12,11 +12,13 @@ class Tile implements Comparable{
 	BufferedImage light = null;
 	BufferedImage obstacle = null;
 	BufferedImage goal = null;
+	
 	boolean occupied=false;
 	int x,y;
 	int width=75;
 	int g_score=0,f_score=0;
 	int type;//0 unmovable, 1 is normal, 2 is goal and 3 is start.
+	
 	Tile(int x, int y, int type)
 	{
 		initImages();
@@ -74,6 +76,7 @@ class Tile implements Comparable{
 		Tile t = (Tile)obj;
 		return((this.x-t.x)+(this.y-t.y));
 	}
+	
 	public void initImages(){
 		try {
 			dark = ImageIO.read(new File("images/Dark.png"));
@@ -170,11 +173,13 @@ class Tile implements Comparable{
 		}
 		return null;
 	}
+	
 	@Override
 	public String toString()
 	{
 		return(x+ " " +y);
 	}
+	
 	void draw(Graphics g, int i)//i is 0 or 1 depending on black or white
 	{	
 		if(i==0)
@@ -196,3 +201,4 @@ class Tile implements Comparable{
 		g.drawString(""+g_score,x*width,y*width);
 	}
 }
+
