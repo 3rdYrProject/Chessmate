@@ -15,7 +15,7 @@ class Tile implements Comparable{
 	boolean occupied=false;
 	int x,y;
 	int width=75;
-	int g_score=0,h_score=0,f_score=0;
+	int g_score=0,f_score=0;
 	int type;//0 unmovable, 1 is normal, 2 is goal and 3 is start.
 	Tile(int x, int y, int type)
 	{
@@ -34,10 +34,6 @@ class Tile implements Comparable{
 	{
 		this.g_score= g;
 	}
-	void setH(int h)
-	{
-		this.h_score= h;
-	}
 	void setF(int f)
 	{
 		this.f_score= f;
@@ -45,10 +41,6 @@ class Tile implements Comparable{
 	int getG()
 	{
 		return g_score;
-	}
-	int getH()
-	{
-		return h_score;
 	}
 	int getF()
 	{
@@ -91,7 +83,84 @@ class Tile implements Comparable{
 		} catch (IOException e) {
 		}
 	}
+	int checkDiag(Tile goal){//checks to see if move is diagonal
+		int direction = 0;//down left is 1, up left is 2, up right is 3, down right is 4
+					
+		int xPos = Math.abs(this.x - goal.getX());
+		int yPos = Math.abs(this.y - goal.getY());
+		if(xPos == yPos){
+			if(goal.getX() < this.x && goal.getY() > this.y){//down left
+				direction = 1;
+			}
+			else if(goal.getX() < this.x && goal.getY() < this.y){//up left
+				direction = 2;
+			}
+			else if(goal.getX() > this.x && goal.getY() < this.y){//up right
+				direction = 3;
+			}
+			else if(goal.getX() > this.x && goal.getY() > this.y){//down right
+				direction = 4;
+			}
+		}
+		return direction;
+	}
+	public int checkOrth(Tile goal){//checks to see if move is on a vertice
 	
+		int direction = 0;//down is 1, up is 2, right is 3, left is 4]
+		if(goal.getX() == (this.x) && goal.getY()>(this.y)){//down 
+			direction = 1;
+		}
+		else if(goal.getX() == (this.x) && goal.getY()<(this.y)){//up
+			direction = 2;
+		}
+		else if(goal.getX()>(this.x) && goal.getY() == (this.y)){//right
+			direction = 3;
+		}
+		else if(goal.getX()<(this.x) && goal.getY() == (this.y)){//left
+			direction = 4;
+		}
+		
+		return direction;
+	}
+	public Tile checkRoute(Tile goal, int direction, Tile[][] tiles){//needs to be generic
+			if(direction==0)
+				return null;
+			int distance = 0;
+			System.out.println(direction);
+			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
+			int inc = 1;
+			//down up right left
+			System.out.println(direction+ " " +distance);
+			while(inc <= distance){
+				if(direction == 1){
+					if(tiles[this.x][this.y + inc].getType()==0)
+						return null;
+					else if(tiles[this.x][this.y + inc].getOccupied())
+						return tiles[this.x][this.y + inc];
+				}
+				else if(direction == 2){
+					if(tiles[this.x][this.y - inc].getType()==0)
+						return null;
+					else if(tiles[this.x][this.y - inc].getOccupied())
+						return tiles[this.x][this.y - inc];
+				}
+				else if(direction == 3){
+					if(tiles[this.x + inc][this.y].getType()==0)
+						return null;
+					else if(tiles[this.x + inc][this.y].getOccupied())
+						return tiles[this.x + inc][this.y];
+				}
+				else if(direction == 4)
+				{
+					if(tiles[this.x - inc][this.y].getType()==0)
+						return null;
+					else if(tiles[this.x - inc][this.y].getOccupied())
+						return tiles[this.x - inc][this.y];
+				}
+				inc++;
+			}
+			return goal;
+		}
 	Tile check(MouseEvent e)
 	{
 		int tempX=e.getX(), tempY=e.getY();
@@ -124,5 +193,6 @@ class Tile implements Comparable{
 		{
 			g.drawImage(goal,x*width,y*width,null);
 		}
+		g.drawString(""+g_score,x*width,y*width);
 	}
 }

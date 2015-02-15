@@ -1,17 +1,31 @@
+/* Things to do: 
+*	
+* Implement a direction change penalty
+*
+*
+*/
 import java.util.*;
 
 class AI
 {
 	Tile goal;
+	Piece user;
+	int direction=3;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
-	AI(Tile goal)
+	AI(Tile goal,Piece user)
 	{
+		this.user= user;
 		this.goal= goal;
 	}
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
+	}
+	void moveUser(Piece user)
+	{
+		direction= getDirection(this.user,user);
+		this.user=user;
 	}
 	public LinkedList<Tile> getPath(Tile start,Tile goal,Tile[][] tiles)
 	{
@@ -23,10 +37,13 @@ class AI
 		// Estimated total cost from start to goal through y.
 		start.setF(heuristic_cost_estimate(start, goal));
 		openset.add(start);
-		
+		Tile lastCurrent= null;
 		while(!openset.isEmpty())
 		{
 			Tile current = getLowestF(openset);//lowest f_score 
+			if(lastCurrent!=null)
+				direction =getDirection(lastCurrent,current);
+			System.out.println(lastCurrent+ " " +current);
 			LinkedList<Tile> neighbours= new LinkedList<>();
 			if(current.equals(goal))
 			{
@@ -40,11 +57,11 @@ class AI
 			{
 				if(closedset.contains(neighbour))
 					continue;
-				int tentative_g_score = current.getG() + dist_between(current,neighbour);
+				int tentative_g_score = current.getG() + dist_between(current,neighbour,direction,goal,tiles);
+				
 				if(!openset.contains(neighbour)||tentative_g_score < neighbour.getG())
 				{ //next goal in the path
 					came_from.put(neighbour,current);
-					
 					neighbour.setG(tentative_g_score);
 					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, goal));
 					if(!openset.contains(neighbour))
@@ -53,13 +70,29 @@ class AI
 					}
 				}
 			}
+			lastCurrent= current;
 		}
 	 
 		return null;
 	}
-	int dist_between(Tile current, Tile neighbour)
+	int getDirection(Tile lastCurrent, Tile current)
 	{
-		return 10;
+		int direction= lastCurrent.checkOrth(current);
+		if(direction==0&&user.getName().equals("Queen")||user.getName().equals("Bishop"))
+			return lastCurrent.checkDiag(current);
+		else 
+			return direction;
+	}
+	int dist_between(Tile current, Tile neighbour, int direction, Tile goal, Tile[][] tiles)
+	{
+		System.out.println("Direction: "+ direction +" from: "+current+ " to: " + neighbour+ " new direction:" +getDirection(current,neighbour));
+		int penalty= 10;
+		if(getDirection(current,neighbour)!=direction)
+			penalty= 50;
+		//if we are on the same x or y we don't want to penalise the path
+		if(user.getName().equals("Rook")&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
+			penalty= 5;
+		return penalty;
 	}
 	int heuristic_cost_estimate(Tile start,Tile goal)//edit here to add an increased value for changing direction
 	{
@@ -78,10 +111,22 @@ class AI
 					continue;
 				if(current.getType()==0)
 					continue;
-				if(x==current.getX()&&y!=current.getY()||x!=current.getX()&&y==current.getX())//we assume the piece is a bishop
+				int temp= Math.abs(current.getX()-x)+Math.abs(current.getY()-y);
+				String name= user.getName();
+				if(name.equals("Bishop"))
+				{
+					if(temp!=2)//we assume the piece is a bishop
+						continue;
+				}
+				else if(name.equals("Rook"))
+				{
+					if(temp!=1)
+						continue;
+				}
+				else if(current.equals(tiles[x][y]))
 					continue;
-				if(!current.equals(tiles[x][y]))
-					neighbours.add(tiles[x][y]);
+				
+				neighbours.add(tiles[x][y]);
 			}
 		}
 		return neighbours;
@@ -106,7 +151,6 @@ class AI
 	{
 		LinkedList<Tile> total_path = new LinkedList<>();
 		total_path.add(current);
-		System.out.println("Last one "+ current);
 		while(came_from.get(current)!=null)
 		{
 			current= came_from.get(current);

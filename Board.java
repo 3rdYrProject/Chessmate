@@ -14,7 +14,7 @@ class Board extends JPanel implements MouseListener
 	Board()
 	{
 		readLevel();
-		ai= new AI(goal);
+		ai= new AI(goal,userPiece);
 		addMouseListener(this);
 	}	
 	public void paintComponent(Graphics g)
@@ -30,12 +30,7 @@ class Board extends JPanel implements MouseListener
 				tiles[i][j].draw(g,count);
 				count++;
 			}
-			count++;
-		}
-		LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
-		for(Tile t:neighbours)
-		{
-			System.out.println(t.getX()+ " "+t.getY());
+			count++; 
 		}
 	}
 	void readLevel()
@@ -89,6 +84,7 @@ class Board extends JPanel implements MouseListener
 	}
 	public void mousePressed(MouseEvent e)
 	{
+		
 		Tile moveLoc = null;
 		outer: for(int i=0;i<tiles.length;i++)
 		{
@@ -109,6 +105,13 @@ class Board extends JPanel implements MouseListener
 		{
 			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
 			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
+			ai.moveUser(userPiece);
+			LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
+			System.out.println("LE PATH: ");
+			for(Tile t:neighbours)
+			{
+				System.out.println("\t"+t.getX()+ " "+t.getY());
+			}
 			repaint();
 		}	
 	}
