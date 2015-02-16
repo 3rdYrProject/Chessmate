@@ -2,7 +2,6 @@
 *	
 * Implement a direction change penalty
 *
-*
 */
 import java.util.*;
 
@@ -11,7 +10,7 @@ class AI
 	Tile goal;
 	Piece user;
 	Tile oldUser;
-	int direction=3;//initial direction for the level
+	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
 	
@@ -101,14 +100,13 @@ class AI
 	{
 		System.out.println("Direction: "+ printDirection(direction) +" from: "+current+
 			" to: " + neighbour+ " new direction:" +printDirection(getDirection(current,neighbour)));
-		int penalty= 10;
+		int penalty= 15;
 		if(getDirection(current,neighbour)!=direction)
-			penalty= 30;
+			penalty= 40;
 		//if we are on the same x or y we don't want to penalise the path
 		//might move this into cost_estimate, might.
 		if(user.getName().equals("Rook")&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
 		{
-			//System.out.println("ok");
 			penalty= 5;
 		}
 		return penalty;
@@ -182,12 +180,28 @@ class AI
 		return total_path;
 	}
 	
-	void evaluatePaths()
+	LinkedList<Tile> evaluatePaths(LinkedList<Tile> path)//returns a list of vertices for the ai to block
 	{
-	
-	}
-	void blockPaths()
+		Tile current = null;
+		int direction= 0;
+		LinkedList<Tile> vertices = new LinkedList<>();
+		for(Tile t:path)
+		{
+			if(current!=null)
+			{
+				if(direction!=0&&direction!=getDirection(current,t)) 
+				{
+					vertices.add(current);
+				}
+				direction= getDirection(current,t);
+			}
+		
+			current= t;
+		}
+		return vertices;
+	}	
+	void blockPaths(LinkedList<Tile> vertices,Tile[][] tiles)
 	{
-	
+		aiPieces.get(0).move(vertices.get(0),tiles);
 	}
 }

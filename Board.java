@@ -51,6 +51,7 @@ class Board extends JPanel implements MouseListener
 				if(temp>3)//AI tile
 				{
 					tiles[j][i] = getPiece(j,i,temp,0);
+					//ai.addPiece(getPiece(j,i,temp,0));
 				}
 				else if(temp==2)//0 is immovable, 1 is regular
 				{
@@ -101,21 +102,32 @@ class Board extends JPanel implements MouseListener
 		Tile temp= new Tile(userPiece);
 		ai.moveUser();
 		moveLoc = userPiece.move(moveLoc,tiles);
+		LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
+		System.out.println("LE PATH: ");
+		if(neighbours!=null)
+		{
+			for(Tile t:neighbours)
+			{
+				System.out.println("\t"+t.getX()+ " "+t.getY());
+			}
+			LinkedList<Tile> vertices = ai.evaluatePaths(neighbours);
+			System.out.println("LE VERTICES: ");
+			for(Tile t:vertices)
+			{
+				System.out.println("\t"+t.getX()+ " "+t.getY());
+			}
+		}
 		if(moveLoc!=null)
 		{
 			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
 			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
 			System.out.println(userPiece);
 			
-			LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
-			System.out.println("LE PATH: ");
-			for(Tile t:neighbours)
-			{
-				System.out.println("\t"+t.getX()+ " "+t.getY());
-			}
 			
-			repaint();
+			
+			
 		}	
+		repaint();
 	}
 	public void mouseExited(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}

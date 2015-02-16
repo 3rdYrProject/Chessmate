@@ -198,7 +198,7 @@ class Tile implements Comparable{
 		{
 			g.drawImage(goal,x*width,y*width,null);
 		}
-		g.drawString(""+g_score,x*width,(y*width)+10);
+		g.drawString(""+f_score,x*width,(y*width)+10);
 	}
 }
 
