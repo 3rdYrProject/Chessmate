@@ -14,15 +14,34 @@ class AI
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile> > path;
 	
-	AI(Tile goal,Piece user)
+	AI()
 	{
-		this.user= user;
-		this.goal= goal;
+		aiPieces= new LinkedList<>();
+		path= new LinkedList<>();
 	}
-	
+	void removePiece(Tile t)
+	{
+		for(Piece temp:aiPieces)
+		{
+			if(t.getX()==temp.getX()&&t.getY()==temp.getY())
+			{
+				aiPieces.remove(temp);
+				System.out.println("Took him bitch");
+			}
+		}
+	}
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
+	}
+	void addUser(Piece user)
+	{
+		this.user=user;
+		System.out.println("I added a user");
+	}
+	void addGoal(Tile goal)
+	{
+		this.goal=goal;
 	}
 	void moveUser()
 	{
@@ -200,8 +219,21 @@ class AI
 		}
 		return vertices;
 	}	
-	void blockPaths(LinkedList<Tile> vertices,Tile[][] tiles)
+	Tile[][] blockPaths(LinkedList<Tile> vertices,Tile[][] tiles)
 	{
-		aiPieces.get(0).move(vertices.get(0),tiles);
+		if(aiPieces.isEmpty())
+		{
+			System.out.println("AI has been defeated");
+			return tiles;
+		}
+		Tile temp= new Tile(aiPieces.get(0));
+		System.out.println("I try to block paths");
+		if(aiPieces.get(0).move(vertices.get(0),tiles)!=null)
+		{
+			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
+			tiles[vertices.get(0).getX()][vertices.get(0).getY()]= aiPieces.get(0);
+		}
+		return tiles;
 	}
+	
 }

@@ -29,6 +29,8 @@ class Rook extends Piece
 	}
 	public Tile move(Tile t, Tile[][] tiles)
 	{
+		if(t==null)
+			return null;
 		if(t.getType()==0)
 			return null;
 		int dir = checkOrth(t);
@@ -38,6 +40,7 @@ class Rook extends Piece
 			
 			//need to check each square in route to see if AI piece or obstacle
 			temp = checkRoute(t,dir,tiles);
+			
 			if(temp!=null)
 			{
 				this.x= temp.getX();

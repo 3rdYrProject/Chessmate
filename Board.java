@@ -13,8 +13,8 @@ class Board extends JPanel implements MouseListener
 	Tile goal= null;
 	Board()
 	{
+		ai= new AI();
 		readLevel();
-		ai= new AI(goal,userPiece);
 		addMouseListener(this);
 	}	
 	public void paintComponent(Graphics g)
@@ -51,17 +51,24 @@ class Board extends JPanel implements MouseListener
 				if(temp>3)//AI tile
 				{
 					tiles[j][i] = getPiece(j,i,temp,0);
-					//ai.addPiece(getPiece(j,i,temp,0));
+					ai.addPiece((Piece)tiles[j][i]);
+					System.out.println(tiles[j][i]);
 				}
 				else if(temp==2)//0 is immovable, 1 is regular
 				{
 					userPiece= getPiece(j,i,token,1);
 					tiles[j][i]= userPiece;
+					ai.addUser(userPiece);
+					System.out.println(userPiece);
 				}
 				else 
 				{
 					if(temp==3)
+					{
 						goal= new Tile(j,i,temp);
+						ai.addGoal(goal);
+						System.out.println(goal);
+					}
 					tiles[j][i] = new Tile(j,i,temp);
 				}
 			}
@@ -99,10 +106,17 @@ class Board extends JPanel implements MouseListener
 				}
 			}
 		}
-		Tile temp= new Tile(userPiece);
+		Tile previousLoc= new Tile(userPiece);
 		ai.moveUser();
-		moveLoc = userPiece.move(moveLoc,tiles);
+		Tile temp = userPiece.move(moveLoc,tiles);
+		if(temp==null)
+			return;
+		if(temp.getOccupied())
+		{
+			ai.removePiece(userPiece);
+		}
 		LinkedList<Tile> neighbours = ai.getPath(userPiece,goal,tiles);
+		LinkedList<Tile> vertices = new LinkedList<>();
 		System.out.println("LE PATH: ");
 		if(neighbours!=null)
 		{
@@ -110,23 +124,20 @@ class Board extends JPanel implements MouseListener
 			{
 				System.out.println("\t"+t.getX()+ " "+t.getY());
 			}
-			LinkedList<Tile> vertices = ai.evaluatePaths(neighbours);
+			vertices = ai.evaluatePaths(neighbours);
 			System.out.println("LE VERTICES: ");
 			for(Tile t:vertices)
 			{
 				System.out.println("\t"+t.getX()+ " "+t.getY());
 			}
 		}
-		if(moveLoc!=null)
-		{
-			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
-			tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
-			System.out.println(userPiece);
-			
-			
-			
-			
-		}	
+		if(!vertices.isEmpty())
+			tiles= ai.blockPaths(vertices,tiles);
+		
+		tiles[previousLoc.getX()][previousLoc.getY()]= new Tile(previousLoc.getX(),previousLoc.getY(),previousLoc.getType());
+		tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
+		System.out.println(userPiece);
+		
 		repaint();
 	}
 	public void mouseExited(MouseEvent e){}
