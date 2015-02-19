@@ -42,22 +42,18 @@ public class Tree<T> {
     
     return t;
   }
-  
-  public void printData()
+  public int getLength()
   {
-	for(Tree<T> leaf: leafs)
-	{
-		System.out.println(leaf.leafs);
-	}
+	return leafs.size();
   }
   
   public T getHead() {
     return head;
   }
 
-  public Tree<T> getTree(T element) 
+  public Tree<T> getTree(int i) 
   {
-    return locate.get(element);
+    return leafs.get(i);
   }
   
   public int indexOf(T element)
@@ -71,19 +67,14 @@ public class Tree<T> {
 	}
 	return -1;
   }	
-  
-  public T getParent(T element) 
-  {//this method is fucked really need to re-think it.
-	System.out.println("Parent of "+ element+ " "+leafs.get(indexOf(element)).parent);
-	return parent;
-  }
+ 
 
   @Override
   public String toString() 
   {
     return printTree(0);
   }
-
+  
   private static final int indent = 2;
 
   private String printTree(int increment) 
