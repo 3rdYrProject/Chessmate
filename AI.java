@@ -43,16 +43,18 @@ class AI
 	{
 		this.goal=goal;
 	}
-	void moveUser()
+	void updateUser(Piece user)
 	{
-		oldUser= new Tile(user);
+		oldUser= new Tile(this.user);
+		this.user=user;
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
-		direction= getDirection(oldUser,piece);
+		if(oldUser!=null)
+			direction= getDirection(oldUser,piece);
 		piece.setG(0);   // Cost from start along best known path.
 		// Estimated total cost from start to goal through y.
 		piece.setF(heuristic_cost_estimate(piece, goal));
