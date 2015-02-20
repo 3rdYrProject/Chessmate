@@ -47,16 +47,16 @@ class AI
 	{
 		oldUser= new Tile(user);
 	}
-	public LinkedList<Tile> getPath(Tile[][] tiles)
+	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
-		direction= getDirection(oldUser,user);
-		user.setG(0);   // Cost from start along best known path.
+		direction= getDirection(oldUser,piece);
+		piece.setG(0);   // Cost from start along best known path.
 		// Estimated total cost from start to goal through y.
-		user.setF(heuristic_cost_estimate(user, goal));
-		openset.add(user);
+		piece.setF(heuristic_cost_estimate(piece, goal));
+		openset.add(piece);
 		Tile lastCurrent= null;
 		while(!openset.isEmpty())
 		{
@@ -197,9 +197,9 @@ class AI
 		return total_path;
 	}
 	
-	LinkedList<Tile> evaluatePaths(Tile[][] tiles)//returns a list of vertices for the ai to block
+	LinkedList<Tile> evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
 	{
-		LinkedList<Tile> path=getPath(tiles);
+		LinkedList<Tile> path=getPath(tiles,user);
 		for(Tile t:path)
 		{
 			System.out.println(t);
@@ -225,43 +225,59 @@ class AI
 	}	
 	void decision(Tile[][] tiles)
 	{
-		(aiPieces.get(0)).move(minimax(tiles,populate(tiles,4),4,false).getTile(),tiles);//should change the 4 here to a variable depth and pass it in as a parameter
+		System.out.println("OH SHIET");
+		System.out.println("Le decision: "+minmax(2,user,aiPieces.get(0),tiles));//aiPieces.get(0)).move(minmax(4,user,aiPieces.get(0)).getTile(),tiles);//should change the 4 here to a variable depth and pass it in as a parameter
 	}
 	Tree<Node> populate(Tile[][] tiles, int depth)//generate moves for each ply
 	{
 		aiPieces.get(0).getMoves(tiles,1);//We need to get all possible ai moves from the current user location. 
 		return null;
 	}
-	Node minimax(Tile[][] tiles,Tree<Node> nodes,int depth, boolean maximizingPlayer)//this returns the best action
+	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
-		if(depth == 0||nodes.isEmpty())
+		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
+			return Max(depth,user,piece,tiles);
+		//else                          // Black is the "minimizing" player.
+		//	return Min(depth,user,piece);
+	}
+	 
+	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
+	{
+		Node best = new Node((int)Double.NEGATIVE_INFINITY);
+	 
+		if(depth <= 0)
+			return(new Node(user,evaluatePaths(tiles,user).size()+1));
+		LinkedList<Tile> moves =user.getMoves(tiles,1);
+		for(Tile t:moves)
 		{
-			nodes.getHead().addValue(evaluatePaths(tiles).size()+1);
-			return(nodes.getHead());//node heuristic evaluation
-		}
-		if(maximizingPlayer)
-		{
-			Node bestValue = new Node((int)Double.NEGATIVE_INFINITY);
+			Tile temp= new Tile(user.getX(),user.getY(),user.getType());
+			user.move(t,tiles);
+			int val = Min(depth - 1, user, piece,tiles);
+			user.move(temp,tiles);
+			if(val > best.getValue())
+				best = new Node(t,val);
 			
-			for(int i=0; i<nodes.getLength();i++)
-			{
-				Tree<Node> child = nodes.getTree(i);
-				Node val = minimax(tiles,child, depth - 1, false);    
-				//bestValue = max(bestValue, val);
-			}
-			return bestValue;
 		}
-		else
+		return best;
+	}
+	int Min(int depth, Piece user, Piece piece, Tile[][] tiles)
+	{
+		int best = (int)Double.POSITIVE_INFINITY;  // <-- Note that this is different than in "Max".
+	 
+		if(depth <= 0)
+			return evaluatePaths(tiles, piece).size()+1;
+		LinkedList<Tile> moves =piece.getMoves(tiles,1);
+		for(Tile t:moves)
 		{
-			Node bestValue = new Node((int)Double.POSITIVE_INFINITY);
-			for(int i=0; i<nodes.getLength();i++)
-			{
-				Tree<Node> child = nodes.getTree(i);
-				Node val = minimax(tiles,child, depth - 1, true);
-				//bestValue = min(bestValue, val);
-			}
-			return bestValue;
+			Tile temp= new Tile(piece.getX(),piece.getY(),piece.getType());
+			piece.move(t,tiles);
+			
+			int val = Max(depth - 1, user, piece,tiles);
+			user.move(temp,tiles);
+			if(val < best)  // <-- Note that this is different than in "Max".
+				best = val;
 		}
+		return best;
 	}
 	//(* Initial call for maximizing player *)
 	//minimax(origin, depth, TRUE)//supply how deep you want the search to go

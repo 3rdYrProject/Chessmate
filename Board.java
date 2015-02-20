@@ -106,6 +106,7 @@ class Board extends JPanel implements MouseListener
 				}
 			}
 		}
+		System.out.println("HEY");
 		Tile previousLoc= new Tile(userPiece);
 		ai.moveUser();
 		Tile temp = userPiece.move(moveLoc,tiles);
@@ -115,8 +116,8 @@ class Board extends JPanel implements MouseListener
 		{
 			ai.removePiece(userPiece);
 		}
-		//ai.minimax(null,4,false);
-		ai.evaluatePaths(tiles);
+		ai.decision(tiles);
+		//ai.evaluatePaths(tiles);
 		tiles[previousLoc.getX()][previousLoc.getY()]= new Tile(previousLoc.getX(),previousLoc.getY(),previousLoc.getType());
 		tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
 		System.out.println(userPiece);

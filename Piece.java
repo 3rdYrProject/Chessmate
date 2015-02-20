@@ -31,7 +31,7 @@ abstract class Piece extends Tile{
 			else 
 				g.drawImage(WPiece,x*width,y*width,null);
 		}
-		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
+		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)//rook
 		{
 			if(direction==0||direction>4)
 				return(new LinkedList<Tile>());
