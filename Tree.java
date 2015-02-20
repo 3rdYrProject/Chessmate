@@ -16,7 +16,10 @@ public class Tree<T> {
     this.head = head;
     locate.put(head, this);
   }
-
+  public boolean isEmpty()
+  {
+	return leafs.isEmpty();
+  }
   public void addLeaf(T root, T leaf) 
   {
     if (locate.containsKey(root)) {

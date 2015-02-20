@@ -26,6 +26,10 @@ class King extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
+	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
+	{
+		return null;
+	}
 	public Tile move(Tile t, Tile[][] tiles)
 	{
 		return null;

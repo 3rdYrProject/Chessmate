@@ -30,6 +30,10 @@ class Pawn extends Piece
 	{
 		return null;
 	}
+	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
+	{
+		return null;
+	}
 	public void draw(Graphics g, int i)
 	{
 		super.draw(g,i,BPawn,WPawn,color);

@@ -41,6 +41,10 @@ class Knight extends Piece
 		}
 		return null;
 	}
+	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
+	{
+		return null;
+	}
 	public boolean checkRoute(int tempX, int tempY)
 	{
 		int xNum= 2, yNum=1;

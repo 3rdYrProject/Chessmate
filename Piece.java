@@ -21,6 +21,7 @@ abstract class Piece extends Tile{
 			return name;
 		}
 		public abstract Tile move(Tile t, Tile[][] tiles);
+		//can probably use checkRoute to check how far we 
 		
 		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
 		{
@@ -30,7 +31,51 @@ abstract class Piece extends Tile{
 			else 
 				g.drawImage(WPiece,x*width,y*width,null);
 		}
-		
+		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
+		{
+			if(direction==0||direction>4)
+				return(new LinkedList<Tile>());
+			int tempX=x;
+			int tempY=y;
+			LinkedList<Tile> moves = new LinkedList<>();
+			boolean occupied= false;
+			boolean outOfBounds=false;
+			while(true)
+			{
+				if(direction==1)//down,up,right,left
+				{
+					tempY+=1;
+				}
+				else if(direction==2)
+				{
+					tempY-=1;
+				}
+				else if(direction==3)
+				{
+					tempX+=1;
+				}
+				else if(direction==4)
+				{
+					tempX-=1;
+				}
+				outOfBounds=tempY>=tiles.length||tempX>=tiles[0].length||tempY<0||tempX<0;
+				if(!outOfBounds)
+					occupied= tiles[tempX][tempY].getOccupied();
+				
+				if(outOfBounds||occupied||(tiles[tempX][tempY].getType()==0)||tiles[tempX][tempY].getType()==3)
+				{
+					System.out.println(tempX+ " "+tempY );//tiles[tempX][tempY].getOccupied());
+					if(occupied)
+					{
+						moves.add(tiles[tempX][tempY]);
+					}
+					moves.addAll(getMoves(tiles,(direction+1)));
+					return moves;
+				}
+				
+				moves.add(tiles[tempX][tempY]);
+			}
+		}
 		public Tile checkRouteDiag(Tile goal, int direction, Tile[][] tiles){
 			int distance = 0;
 			distance = Math.abs(this.x - goal.getX());

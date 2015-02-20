@@ -117,8 +117,6 @@ class AI
 	}
 	int dist_between(Tile current, Tile neighbour, Tile goal, Tile[][] tiles)
 	{
-		System.out.println("Direction: "+ printDirection(direction) +" from: "+current+
-			" to: " + neighbour+ " new direction:" +printDirection(getDirection(current,neighbour)));
 		int penalty= 15;
 		if(getDirection(current,neighbour)!=direction)
 			penalty= 40;
@@ -206,6 +204,7 @@ class AI
 		{
 			System.out.println(t);
 		}
+		System.out.println("\n");
 		Tile current = null;
 		int direction= 0;
 		LinkedList<Tile> vertices = new LinkedList<>();
@@ -224,50 +223,46 @@ class AI
 		}
 		return vertices;
 	}	
-	Tile[][] blockPaths(LinkedList<Tile> vertices,Tile[][] tiles)
+	void decision(Tile[][] tiles)
 	{
-		if(aiPieces.isEmpty())
-		{
-			System.out.println("AI has been defeated");
-			return tiles;
-		}
-		Tile temp= new Tile(aiPieces.get(0));
-		System.out.println("I try to block paths");
-		if(aiPieces.get(0).move(vertices.get(0),tiles)!=null)
-		{
-			tiles[temp.getX()][temp.getY()]= new Tile(temp.getX(),temp.getY(),temp.getType());
-			tiles[vertices.get(0).getX()][vertices.get(0).getY()]= aiPieces.get(0);
-		}
-		return tiles;
+		(aiPieces.get(0)).move(minimax(tiles,populate(tiles,4),4,false).getTile(),tiles);//should change the 4 here to a variable depth and pass it in as a parameter
 	}
-		int minimax(Tile[][] tiles,Tree<Tile,value> node,int depth, boolean maximizingPlayer)//this returns the best action
+	Tree<Node> populate(Tile[][] tiles, int depth)//generate moves for each ply
+	{
+		aiPieces.get(0).getMoves(tiles,1);//We need to get all possible ai moves from the current user location. 
+		return null;
+	}
+	Node minimax(Tile[][] tiles,Tree<Node> nodes,int depth, boolean maximizingPlayer)//this returns the best action
+	{
+		if(depth == 0||nodes.isEmpty())
 		{
-			if(depth == 0||node==null)
-				return(evaluatePaths(tiles).size()+1);//node heuristic evaluation
-			if(maximizingPlayer)
-			{
-				int bestValue = (int)Double.NEGATIVE_INFINITY;
-				
-				for(int i=0; i<node.getLength();i++)
-				{
-					Tree<Tile> child = node.getTree(i);
-					int val = minimax(tiles,child, depth - 1, false);    
-					//bestValue = max(bestValue, val);
-				}
-				return bestValue;
-			}
-			else
-			{
-				int bestValue = (int)Double.POSITIVE_INFINITY;
-				for(int i=0; i<node.getLength();i++)
-				{
-					Tree<Tile> child = node.getTree(i);
-					int val = minimax(tiles,child, depth - 1, true);
-					//bestValue = min(bestValue, val);
-				}
-				return bestValue;
-			}
+			nodes.getHead().addValue(evaluatePaths(tiles).size()+1);
+			return(nodes.getHead());//node heuristic evaluation
 		}
-		//(* Initial call for maximizing player *)
-		//minimax(origin, depth, TRUE)//supply how deep you want the search to go
+		if(maximizingPlayer)
+		{
+			Node bestValue = new Node((int)Double.NEGATIVE_INFINITY);
+			
+			for(int i=0; i<nodes.getLength();i++)
+			{
+				Tree<Node> child = nodes.getTree(i);
+				Node val = minimax(tiles,child, depth - 1, false);    
+				//bestValue = max(bestValue, val);
+			}
+			return bestValue;
+		}
+		else
+		{
+			Node bestValue = new Node((int)Double.POSITIVE_INFINITY);
+			for(int i=0; i<nodes.getLength();i++)
+			{
+				Tree<Node> child = nodes.getTree(i);
+				Node val = minimax(tiles,child, depth - 1, true);
+				//bestValue = min(bestValue, val);
+			}
+			return bestValue;
+		}
+	}
+	//(* Initial call for maximizing player *)
+	//minimax(origin, depth, TRUE)//supply how deep you want the search to go
 }

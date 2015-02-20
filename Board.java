@@ -120,7 +120,10 @@ class Board extends JPanel implements MouseListener
 		tiles[previousLoc.getX()][previousLoc.getY()]= new Tile(previousLoc.getX(),previousLoc.getY(),previousLoc.getType());
 		tiles[moveLoc.getX()][moveLoc.getY()]= userPiece;
 		System.out.println(userPiece);
-		
+		LinkedList<Tile> moves = userPiece.getMoves(tiles,1);
+		System.out.println("I can move to: ");
+		for(Tile t: moves)
+			System.out.println("\t"+ t);
 		repaint();
 	}
 	public void mouseExited(MouseEvent e){}
