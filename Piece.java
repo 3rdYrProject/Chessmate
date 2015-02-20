@@ -20,7 +20,18 @@ abstract class Piece extends Tile{
 		{
 			return name;
 		}
-		public abstract Tile move(Tile t, Tile[][] tiles);
+		public Tile[][] move(Tile t, Tile[][] tiles)
+		{
+			Tile temp = tiles[this.x][this.y];
+			tiles[this.x][this.y] = tiles[t.x][t.y];
+			tiles[t.x][t.y]= temp;
+			int tempX=this.x, tempY=this.y;
+			this.x=t.x;
+			t.x=tempX;
+			this.y=t.y;
+			t.y=tempY;
+			return tiles;
+		}
 		//can probably use checkRoute to check how far we 
 		
 		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)

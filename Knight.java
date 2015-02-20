@@ -26,7 +26,7 @@ class Knight extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile move(Tile t, Tile[][] tiles)//once the destination tile is valid the knight can move there regardless.
+	public Tile[][] move(Tile t, Tile[][] tiles)//once the destination tile is valid the knight can move there regardless.
 	{
 		int tempX = t.getX();
 		int tempY = t.getY();
@@ -37,7 +37,7 @@ class Knight extends Piece
 		{	
 			this.x= t.getX();
 			this.y= t.getY();
-			return t;
+			return(super.move(t,tiles));
 		}
 		return null;
 	}

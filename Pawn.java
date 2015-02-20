@@ -26,7 +26,7 @@ class Pawn extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles)
 	{
 		return null;
 	}

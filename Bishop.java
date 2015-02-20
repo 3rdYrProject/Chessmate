@@ -25,7 +25,7 @@ class Bishop extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles)
 	{
 		if(t.getType()==0)
 			return null;
@@ -37,7 +37,7 @@ class Bishop extends Piece
 			{
 				this.x= temp.getX();
 				this.y= temp.getY();
-				return temp;
+				return(super.move(t,tiles));
 			}
 		}
 		return null;	

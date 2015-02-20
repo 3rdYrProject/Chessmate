@@ -200,11 +200,7 @@ class AI
 	LinkedList<Tile> evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
 	{
 		LinkedList<Tile> path=getPath(tiles,user);
-		for(Tile t:path)
-		{
-			System.out.println(t);
-		}
-		System.out.println("\n");
+		
 		Tile current = null;
 		int direction= 0;
 		LinkedList<Tile> vertices = new LinkedList<>();
@@ -226,13 +222,9 @@ class AI
 	void decision(Tile[][] tiles)
 	{
 		System.out.println("OH SHIET");
-		System.out.println("Le decision: "+minmax(2,user,aiPieces.get(0),tiles));//aiPieces.get(0)).move(minmax(4,user,aiPieces.get(0)).getTile(),tiles);//should change the 4 here to a variable depth and pass it in as a parameter
+		System.out.println("Le decision: "+aiPieces.get(0).move((minmax(2,user,aiPieces.get(0),tiles)).getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter
 	}
-	Tree<Node> populate(Tile[][] tiles, int depth)//generate moves for each ply
-	{
-		aiPieces.get(0).getMoves(tiles,1);//We need to get all possible ai moves from the current user location. 
-		return null;
-	}
+	
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
 		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
@@ -246,35 +238,34 @@ class AI
 		Node best = new Node((int)Double.NEGATIVE_INFINITY);
 	 
 		if(depth <= 0)
-			return(new Node(user,evaluatePaths(tiles,user).size()+1));
+			return(new Node(evaluatePaths(tiles,user).size()+1,user));
 		LinkedList<Tile> moves =user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(user.getX(),user.getY(),user.getType());
 			user.move(t,tiles);
-			int val = Min(depth - 1, user, piece,tiles);
+			Node val = Min(depth - 1, user, piece,tiles);
 			user.move(temp,tiles);
-			if(val > best.getValue())
-				best = new Node(t,val);
+			if(val.getValue() > best.getValue())
+				best = val;
 			
 		}
 		return best;
 	}
-	int Min(int depth, Piece user, Piece piece, Tile[][] tiles)
+	Node Min(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
-		int best = (int)Double.POSITIVE_INFINITY;  // <-- Note that this is different than in "Max".
+		Node best = new Node((int)Double.POSITIVE_INFINITY);  // <-- Note that this is different than in "Max".
 	 
 		if(depth <= 0)
-			return evaluatePaths(tiles, piece).size()+1;
+			return(new Node(evaluatePaths(tiles, piece).size()+1,piece));
 		LinkedList<Tile> moves =piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece.getX(),piece.getY(),piece.getType());
 			piece.move(t,tiles);
-			
-			int val = Max(depth - 1, user, piece,tiles);
+			Node val = Max(depth - 1, user, piece,tiles);
 			user.move(temp,tiles);
-			if(val < best)  // <-- Note that this is different than in "Max".
+			if(val.getValue() < best.getValue())  // <-- Note that this is different than in "Max".
 				best = val;
 		}
 		return best;

@@ -18,6 +18,10 @@ class Node
 	{
 		this.value=value;
 	}
+	int getValue()
+	{
+		return value;
+	}
 	Tile getTile()
 	{
 		return t;

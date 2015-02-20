@@ -27,7 +27,7 @@ class Rook extends Piece
 		catch(IOException e){}
 		
 	}
-	public Tile move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles)
 	{
 		if(t==null)
 			return null;
@@ -43,9 +43,7 @@ class Rook extends Piece
 			
 			if(temp!=null)
 			{
-				this.x= temp.getX();
-				this.y= temp.getY();
-				return temp;
+				tiles=(super.move(t,tiles));
 			}
 		}
 		return null;	
