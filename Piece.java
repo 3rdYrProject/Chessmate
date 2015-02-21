@@ -20,6 +20,11 @@ abstract class Piece extends Tile{
 		{
 			return name;
 		}
+		public void changePos(Tile t)
+		{
+			x=t.x;
+			y=t.y;
+		}
 		public Tile[][] move(Tile t, Tile[][] tiles)
 		{
 			Tile temp = tiles[this.x][this.y];

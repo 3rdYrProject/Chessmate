@@ -223,37 +223,38 @@ class AI
 	}	
 	void decision(Tile[][] tiles)
 	{
-		Tile temp= (minmax(2,user,aiPieces.get(0),tiles)).getTile();
+		Tile temp= (minmax(3,user,aiPieces.get(0),tiles)).getTile();
 		System.out.println("Le decision: "+ temp+ " " +aiPieces.get(0).move(temp,tiles));//should change the 4 here to a variable depth and pass it in as a parameter
 	}
 	
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
 		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
-		return Max(depth,user,piece,tiles);
+		return Min(depth,user,piece,tiles);
 		//else                          // Black is the "minimizing" player.
 		//	return Min(depth,user,piece);
 	}
 	 
 	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
-		Node best = new Node((int)Double.POSITIVE_INFINITY);
+		Node best = new Node((int)Double.NEGATIVE_INFINITY);
 	 
 		if(depth <= 0)
 		{
 			System.out.println(" "+user);
-			return(new Node(evaluatePaths(tiles,user).size()+1,user));
+			int value=evaluatePaths(tiles, user).size();
+			if(value==0)
+				return(new Node(best.getValue(),user));
+			else return(new Node((10-value)*10,user));
 		}
 		LinkedList<Tile> moves =user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(user);
-			tiles=user.move(t,tiles);
-			System.out.println("\t"+temp);
+			user.changePos(t);
 			Node val = Min(depth - 1, user, piece,tiles);
-			tiles=user.move(temp,tiles);
-			System.out.println("\t"+temp);
-			if(val.getValue() < best.getValue())
+			user.changePos(temp);
+			if(val.getValue() > best.getValue())
 				best = val;
 			
 		}
@@ -266,17 +267,23 @@ class AI
 		if(depth <= 0)
 		{
 			System.out.println(piece);
-			return(new Node(evaluatePaths(tiles, piece).size()+1,piece));
+			int value=evaluatePaths(tiles, piece).size();//need to separate from ai and user as they both search for shortest path to goal.
+			if(value==0)
+				return(new Node(best.getValue(),piece));
+			else return(new Node(-((10-value)*10),piece));
 		}
 		LinkedList<Tile> moves =piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece);
-			tiles=piece.move(t,tiles);
+			piece.changePos(t);
 			Node val = Max(depth - 1, user, piece,tiles);
-			tiles=piece.move(temp,tiles);
+			piece.changePos(temp);
 			if(val.getValue() < best.getValue())  // <-- Note that this is different than in "Max".
+			{
 				best = val;
+				System.out.println(best+ " " +best.getValue());
+			}
 		}
 		return best;
 	}

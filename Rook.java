@@ -27,6 +27,7 @@ class Rook extends Piece
 		catch(IOException e){}
 		
 	}
+	
 	public Tile[][] move(Tile t, Tile[][] tiles)
 	{
 		if(t==null)
