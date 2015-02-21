@@ -52,14 +52,14 @@ class Board extends JPanel implements MouseListener
 				{
 					tiles[j][i] = getPiece(j,i,temp,0);
 					ai.addPiece((Piece)tiles[j][i]);
-					System.out.println(tiles[j][i]);
+					//System.out.println(tiles[j][i]);
 				}
 				else if(temp==2)//0 is immovable, 1 is regular
 				{
 					userPiece= getPiece(j,i,token,1);
 					tiles[j][i]= userPiece;
 					ai.addUser(userPiece);
-					System.out.println(userPiece);
+					//System.out.println(userPiece);
 				}
 				else 
 				{
@@ -67,7 +67,7 @@ class Board extends JPanel implements MouseListener
 					{
 						goal= new Tile(j,i,temp);
 						ai.addGoal(goal);
-						System.out.println(goal);
+						//System.out.println(goal);
 					}
 					tiles[j][i] = new Tile(j,i,temp);
 				}
@@ -108,9 +108,19 @@ class Board extends JPanel implements MouseListener
 		}
 		Tile[][] temp= userPiece.move(moveLoc,tiles);
 		if(temp!=null)
+		{
 			tiles=temp;
-		ai.updateUser();
-		ai.decision(tiles);
+			ai.updateUser(userPiece);
+			ai.decision(tiles);
+			for(int i=0;i<tiles.length;i++)
+			{
+				for(int j=0;j<tiles[i].length;j++)
+				{
+					System.out.print(tiles[j][i]+ ", ");
+				}
+				System.out.println();
+			}
+		}
 		repaint();
 	}
 	public void mouseExited(MouseEvent e){}

@@ -25,6 +25,7 @@ abstract class Piece extends Tile{
 			Tile temp = tiles[this.x][this.y];
 			tiles[this.x][this.y] = tiles[t.x][t.y];
 			tiles[t.x][t.y]= temp;
+			
 			int tempX=this.x, tempY=this.y;
 			this.x=t.x;
 			t.x=tempX;
@@ -75,7 +76,7 @@ abstract class Piece extends Tile{
 				
 				if(outOfBounds||occupied||(tiles[tempX][tempY].getType()==0)||tiles[tempX][tempY].getType()==3)
 				{
-					System.out.println(tempX+ " "+tempY );//tiles[tempX][tempY].getOccupied());
+					//System.out.println(tempX+ " "+tempY );//tiles[tempX][tempY].getOccupied());
 					if(occupied)
 					{
 						moves.add(tiles[tempX][tempY]);

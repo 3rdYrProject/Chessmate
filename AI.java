@@ -26,7 +26,7 @@ class AI
 			if(t.getX()==temp.getX()&&t.getY()==temp.getY())
 			{
 				aiPieces.remove(temp);
-				System.out.println("Took him bitch");
+				//System.out.println("Took him bitch");
 			}
 		}
 	}
@@ -37,7 +37,7 @@ class AI
 	void addUser(Piece user)
 	{
 		this.user=user;
-		System.out.println("I added a user");
+		//System.out.println("I added a user");
 	}
 	void addGoal(Tile goal)
 	{
@@ -64,7 +64,6 @@ class AI
 		{
 			Tile current = getLowestF(openset);//lowest f_score 
 			
-			//System.out.println(lastCurrent+ " " +current);
 			LinkedList<Tile> neighbours= new LinkedList<>();
 			if(current.equals(goal))
 			{
@@ -202,7 +201,8 @@ class AI
 	LinkedList<Tile> evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
 	{
 		LinkedList<Tile> path=getPath(tiles,user);
-		
+		if(path==null)
+			return(new LinkedList<>());
 		Tile current = null;
 		int direction= 0;
 		LinkedList<Tile> vertices = new LinkedList<>();
@@ -223,32 +223,37 @@ class AI
 	}	
 	void decision(Tile[][] tiles)
 	{
-		System.out.println("OH SHIET");
-		System.out.println("Le decision: "+aiPieces.get(0).move((minmax(2,user,aiPieces.get(0),tiles)).getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter
+		Tile temp= (minmax(2,user,aiPieces.get(0),tiles)).getTile();
+		System.out.println("Le decision: "+ temp+ " " +aiPieces.get(0).move(temp,tiles));//should change the 4 here to a variable depth and pass it in as a parameter
 	}
 	
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
 		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
-			return Max(depth,user,piece,tiles);
+		return Max(depth,user,piece,tiles);
 		//else                          // Black is the "minimizing" player.
 		//	return Min(depth,user,piece);
 	}
 	 
 	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
-		Node best = new Node((int)Double.NEGATIVE_INFINITY);
+		Node best = new Node((int)Double.POSITIVE_INFINITY);
 	 
 		if(depth <= 0)
+		{
+			System.out.println(" "+user);
 			return(new Node(evaluatePaths(tiles,user).size()+1,user));
+		}
 		LinkedList<Tile> moves =user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
-			Tile temp= new Tile(user.getX(),user.getY(),user.getType());
-			user.move(t,tiles);
+			Tile temp= new Tile(user);
+			tiles=user.move(t,tiles);
+			System.out.println("\t"+temp);
 			Node val = Min(depth - 1, user, piece,tiles);
-			user.move(temp,tiles);
-			if(val.getValue() > best.getValue())
+			tiles=user.move(temp,tiles);
+			System.out.println("\t"+temp);
+			if(val.getValue() < best.getValue())
 				best = val;
 			
 		}
@@ -259,14 +264,17 @@ class AI
 		Node best = new Node((int)Double.POSITIVE_INFINITY);  // <-- Note that this is different than in "Max".
 	 
 		if(depth <= 0)
+		{
+			System.out.println(piece);
 			return(new Node(evaluatePaths(tiles, piece).size()+1,piece));
+		}
 		LinkedList<Tile> moves =piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
-			Tile temp= new Tile(piece.getX(),piece.getY(),piece.getType());
-			piece.move(t,tiles);
+			Tile temp= new Tile(piece);
+			tiles=piece.move(t,tiles);
 			Node val = Max(depth - 1, user, piece,tiles);
-			user.move(temp,tiles);
+			tiles=piece.move(temp,tiles);
 			if(val.getValue() < best.getValue())  // <-- Note that this is different than in "Max".
 				best = val;
 		}

@@ -46,7 +46,7 @@ class Rook extends Piece
 				tiles=(super.move(t,tiles));
 			}
 		}
-		return null;	
+		return tiles;	
 	}
 	
 	public int checkOrth(Tile goal){

@@ -177,7 +177,7 @@ class Tile implements Comparable{
 	@Override
 	public String toString()
 	{
-		return(x+ " " +y);
+		return("("+x+ "," +y+")");
 	}
 	
 	void draw(Graphics g, int i)//i is 0 or 1 depending on black or white
