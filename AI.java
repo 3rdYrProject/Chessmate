@@ -47,9 +47,17 @@ class AI
 	{
 		oldUser= new Tile(this.user);
 		this.user=user;
+		System.out.println("UPDATED: "+user);
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
+		Tile tempGoal=null;
+		if(piece.equals(aiPieces.get(0)))
+		{
+		//	System.out.println("PIECE "+piece);
+			tempGoal=new Tile(goal);
+			goal=user;
+		}	
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
@@ -67,6 +75,8 @@ class AI
 			LinkedList<Tile> neighbours= new LinkedList<>();
 			if(current.equals(goal))
 			{
+				if(tempGoal!=null)
+					goal= tempGoal;
 				return reconstruct_path(came_from,current);
 			}
 			openset.remove(current);
@@ -104,17 +114,6 @@ class AI
 			return lastCurrent.checkDiag(current);
 		else 
 			return direction;
-	}
-	String printDirection(int direction)
-	{
-		if(direction==1)
-			return("DOWN");
-		else if(direction==2)
-			return("UP");
-		else if(direction==3)
-			return("RIGHT");
-		else 
-			return("LEFT");
 	}
 	int dist_between(Tile current, Tile neighbour, Tile goal, Tile[][] tiles)
 	{
@@ -221,70 +220,77 @@ class AI
 		}
 		return vertices;
 	}	
-	void decision(Tile[][] tiles)
+	Tile[][] decision(Tile[][] tiles)
 	{
-		Tile temp= (minmax(3,user,aiPieces.get(0),tiles)).getTile();
-		System.out.println("Le decision: "+ temp+ " " +aiPieces.get(0).move(temp,tiles));//should change the 4 here to a variable depth and pass it in as a parameter
+		Node temp= minmax(4,user,aiPieces.get(0),tiles);//.getTile();
+		System.out.println("Le decision: "+ temp.getTile());
+		return(aiPieces.get(0).move(temp.getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter	}
 	}
-	
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
 		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
-		return Min(depth,user,piece,tiles);
+		return(Min(depth,user,piece,tiles));
 		//else                          // Black is the "minimizing" player.
 		//	return Min(depth,user,piece);
 	}
 	 
 	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
+		//System.out.println("MAX");
 		Node best = new Node((int)Double.NEGATIVE_INFINITY);
 	 
 		if(depth <= 0)
 		{
-			System.out.println(" "+user);
 			int value=evaluatePaths(tiles, user).size();
 			if(value==0)
-				return(new Node(best.getValue(),user));
-			else return(new Node((10-value)*10,user));
+				return(new Node(-best.getValue()));
+			else return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves =user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
+		//	System.out.println("USER: "+t);
 			Tile temp= new Tile(user);
 			user.changePos(t);
 			Node val = Min(depth - 1, user, piece,tiles);
+			val.addTile(t);
 			user.changePos(temp);
 			if(val.getValue() > best.getValue())
+			{
 				best = val;
-			
+		//		System.out.println("USER: " +best.getTile()+ " " +best.getValue());
+			}
 		}
 		return best;
 	}
 	Node Min(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
+		//System.out.println("MIN");
 		Node best = new Node((int)Double.POSITIVE_INFINITY);  // <-- Note that this is different than in "Max".
 	 
 		if(depth <= 0)
 		{
-			System.out.println(piece);
 			int value=evaluatePaths(tiles, piece).size();//need to separate from ai and user as they both search for shortest path to goal.
 			if(value==0)
-				return(new Node(best.getValue(),piece));
-			else return(new Node(-((10-value)*10),piece));
+				return(new Node(-best.getValue()));
+			else return(new Node(-((10-value)*10)));
 		}
 		LinkedList<Tile> moves =piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
+		//	System.out.println("AI: "+t);
 			Tile temp= new Tile(piece);
 			piece.changePos(t);
 			Node val = Max(depth - 1, user, piece,tiles);
+			val.addTile(t);
 			piece.changePos(temp);
 			if(val.getValue() < best.getValue())  // <-- Note that this is different than in "Max".
 			{
 				best = val;
-				System.out.println(best+ " " +best.getValue());
+		//		System.out.println("AI: "+best.getTile()+ " " +best.getValue());
 			}
 		}
+		//System.out.println(best.getTile());
 		return best;
 	}
 	//(* Initial call for maximizing player *)

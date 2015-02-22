@@ -14,6 +14,10 @@ class Node
 		this.value= value;
 		this.t=t;
 	}
+	void addTile(Tile t)
+	{
+		this.t=t;
+	}
 	void addValue(int value)
 	{
 		this.value=value;

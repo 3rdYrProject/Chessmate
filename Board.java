@@ -111,7 +111,7 @@ class Board extends JPanel implements MouseListener
 		{
 			tiles=temp;
 			ai.updateUser(userPiece);
-			ai.decision(tiles);
+			tiles= ai.decision(tiles);
 			for(int i=0;i<tiles.length;i++)
 			{
 				for(int j=0;j<tiles[i].length;j++)
