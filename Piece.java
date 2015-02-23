@@ -27,15 +27,29 @@ abstract class Piece extends Tile{
 		}
 		public Tile[][] move(Tile t, Tile[][] tiles)
 		{
-			Tile temp = tiles[this.x][this.y];
-			tiles[this.x][this.y] = tiles[t.x][t.y];
-			tiles[t.x][t.y]= temp;
+			//need to check if we reached the goal or took a piece
+			if(t.getType()==3)
+			{
+				JOptionPane.showMessageDialog(null,"You completed the level.");
+				tiles[t.x][t.y]= tiles[this.x][this.y];
+				tiles[this.x][this.y] = new Tile(this.x,this.y,1);
+			}
+			else if(t.getType()==2)
+			{
 			
+			}
+			else
+			{
+				Tile temp = tiles[this.x][this.y];
+				tiles[this.x][this.y] = tiles[t.x][t.y];
+				tiles[t.x][t.y]= temp;
+			}
 			int tempX=this.x, tempY=this.y;
 			this.x=t.x;
 			t.x=tempX;
 			this.y=t.y;
 			t.y=tempY;
+			
 			return tiles;
 		}
 		//can probably use checkRoute to check how far we 
