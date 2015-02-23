@@ -17,7 +17,7 @@ class Tile implements Comparable{
 	int x,y;
 	int width=75;
 	int g_score=0,f_score=0;
-	int type;//0 unmovable, 1 is normal, 2 is goal and 3 is start.
+	int type;//0 unmovable, 1 is normal, 3 is goal and 2 is start.
 	
 	Tile(int x, int y, int type)
 	{

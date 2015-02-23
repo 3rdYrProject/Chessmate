@@ -47,6 +47,8 @@ class Rook extends Piece
 				tiles=(super.move(t,tiles));
 			}
 		}
+		else 
+			return null;
 		return tiles;	
 	}
 	

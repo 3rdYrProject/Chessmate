@@ -30,7 +30,7 @@ class King extends Piece
 	{
 		return null;
 	}
-	public Tile move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles)
 	{
 		return null;
 	}

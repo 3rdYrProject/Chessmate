@@ -9,6 +9,7 @@ class AI
 {
 	Tile goal;
 	Piece user;
+	Tile tempUser;
 	Tile oldUser;
 	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
@@ -47,6 +48,7 @@ class AI
 	{
 		oldUser= new Tile(this.user);
 		this.user=user;
+		tempUser= new Tile(this.user);
 		System.out.println("UPDATED: "+user);
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
@@ -54,7 +56,6 @@ class AI
 		Tile tempGoal=null;
 		if(piece.equals(aiPieces.get(0)))
 		{
-		//	System.out.println("PIECE "+piece);
 			tempGoal=new Tile(goal);
 			goal=user;
 		}	
@@ -150,7 +151,7 @@ class AI
 				String name= user.getName();
 				if(name.equals("Bishop"))
 				{
-					if(temp!=2)//we assume the piece is a bishop
+					if(temp!=2)
 						continue;
 				}
 				else if(name.equals("Rook"))
@@ -218,38 +219,43 @@ class AI
 		
 			current= t;
 		}
+		
 		return vertices;
 	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
-		Node temp= minmax(4,user,aiPieces.get(0),tiles);//.getTile();
-		System.out.println("Le decision: "+ temp.getTile());
-		return(aiPieces.get(0).move(temp.getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter	}
+		Tile check = (aiPieces.get(0)).checkRoute(user,aiPieces.get(0).checkOrth(user),tiles);
+		if(check!=null&&check.equals(user))//take the user
+		{
+			System.out.println("Took the user");
+			return aiPieces.get(0).move((Tile)user,tiles);
+		}
+		else
+		{
+			Node temp= minmax(4,user,aiPieces.get(0),tiles);
+			System.out.println("Le decision: "+ temp.getTile());
+			return(aiPieces.get(0).move(temp.getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter	
+		}
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
-		//if(SideToMove() == WHITE)    // White is the "maximizing" player.
 		return(Min(depth,user,piece,tiles));
-		//else                          // Black is the "minimizing" player.
-		//	return Min(depth,user,piece);
 	}
 	 
 	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
-		//System.out.println("MAX");
 		Node best = new Node((int)Double.NEGATIVE_INFINITY);
 	 
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, user).size();
-			if(value==0)
+			if(value==0&&user.equals(goal))
 				return(new Node(-best.getValue()));
 			else return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves =user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
-		//	System.out.println("USER: "+t);
 			Tile temp= new Tile(user);
 			user.changePos(t);
 			Node val = Min(depth - 1, user, piece,tiles);
@@ -258,41 +264,37 @@ class AI
 			if(val.getValue() > best.getValue())
 			{
 				best = val;
-		//		System.out.println("USER: " +best.getTile()+ " " +best.getValue());
 			}
 		}
 		return best;
 	}
 	Node Min(int depth, Piece user, Piece piece, Tile[][] tiles)
 	{
-		//System.out.println("MIN");
-		Node best = new Node((int)Double.POSITIVE_INFINITY);  // <-- Note that this is different than in "Max".
+		Node best = new Node((int)Double.POSITIVE_INFINITY); 
 	 
 		if(depth <= 0)
 		{
-			int value=evaluatePaths(tiles, piece).size();//need to separate from ai and user as they both search for shortest path to goal.
-			if(value==0)
+			int value=evaluatePaths(tiles, piece).size();
+			if(value==0&&piece.equals(this.tempUser))
+			{
+				System.out.println(piece+ " " +this.tempUser);
 				return(new Node(-best.getValue()));
+			}
 			else return(new Node(-((10-value)*10)));
 		}
 		LinkedList<Tile> moves =piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
-		//	System.out.println("AI: "+t);
 			Tile temp= new Tile(piece);
 			piece.changePos(t);
 			Node val = Max(depth - 1, user, piece,tiles);
 			val.addTile(t);
 			piece.changePos(temp);
-			if(val.getValue() < best.getValue())  // <-- Note that this is different than in "Max".
+			if(val.getValue() < best.getValue())  
 			{
 				best = val;
-		//		System.out.println("AI: "+best.getTile()+ " " +best.getValue());
 			}
 		}
-		//System.out.println(best.getTile());
 		return best;
 	}
-	//(* Initial call for maximizing player *)
-	//minimax(origin, depth, TRUE)//supply how deep you want the search to go
 }
