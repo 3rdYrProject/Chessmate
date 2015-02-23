@@ -116,7 +116,7 @@ class Board extends JPanel implements MouseListener
 			{
 				for(int j=0;j<tiles[i].length;j++)
 				{
-					System.out.print(tiles[j][i]+ ", ");
+					System.out.print(tiles[j][i].getType()+ ", ");
 				}
 				System.out.println();
 			}

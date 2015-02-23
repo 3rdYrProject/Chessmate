@@ -28,15 +28,22 @@ abstract class Piece extends Tile{
 		public Tile[][] move(Tile t, Tile[][] tiles)
 		{
 			//need to check if we reached the goal or took a piece
+			System.out.println("TYPE: "+t.getType());
 			if(t.getType()==3)
 			{
 				JOptionPane.showMessageDialog(null,"You completed the level.");
 				tiles[t.x][t.y]= tiles[this.x][this.y];
 				tiles[this.x][this.y] = new Tile(this.x,this.y,1);
 			}
-			else if(t.getType()==2)
+			else if(t.getOccupied())
 			{
-			
+				JOptionPane.showMessageDialog(null,"Hard luck you're shit.");
+				tiles[t.x][t.y]= tiles[this.x][this.y];
+				tiles[this.x][this.y] = new Tile(this.x,this.y,1);
+			}
+			else if(t.getType()>=4)
+			{
+				
 			}
 			else
 			{
