@@ -249,7 +249,7 @@ class AI
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, user).size();
-			if(value==0&&user.equals(goal))
+			if(value==0)
 				return(new Node(-best.getValue()));
 			else return(new Node((10-value)*10));
 		}
@@ -275,7 +275,7 @@ class AI
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, piece).size();
-			if(value==0&&piece.equals(this.tempUser))
+			if(value==0)
 			{
 				System.out.println(piece+ " " +this.tempUser);
 				return(new Node(-best.getValue()));
