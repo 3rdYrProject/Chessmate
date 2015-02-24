@@ -20,6 +20,10 @@ class AI
 		aiPieces= new LinkedList<>();
 		path= new LinkedList<>();
 	}
+	boolean isEmpty()
+	{
+		return aiPieces.isEmpty();
+	}
 	void removePiece(Tile t)
 	{
 		for(Piece temp:aiPieces)
@@ -27,7 +31,6 @@ class AI
 			if(t.getX()==temp.getX()&&t.getY()==temp.getY())
 			{
 				aiPieces.remove(temp);
-				//System.out.println("Took him bitch");
 			}
 		}
 	}
@@ -38,7 +41,6 @@ class AI
 	void addUser(Piece user)
 	{
 		this.user=user;
-		//System.out.println("I added a user");
 	}
 	void addGoal(Tile goal)
 	{
@@ -228,13 +230,13 @@ class AI
 		if(check!=null&&check.equals(user))//take the user
 		{
 			System.out.println("Took the user");
-			return aiPieces.get(0).move((Tile)user,tiles);
+			return aiPieces.get(0).move((Tile)user,tiles,this);
 		}
 		else
 		{
 			Node temp= minmax(4,user,aiPieces.get(0),tiles);
 			System.out.println("Le decision: "+ temp.getTile());
-			return(aiPieces.get(0).move(temp.getTile(),tiles));//should change the 4 here to a variable depth and pass it in as a parameter	
+			return(aiPieces.get(0).move(temp.getTile(),tiles,this));//should change the 4 here to a variable depth and pass it in as a parameter	
 		}
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)

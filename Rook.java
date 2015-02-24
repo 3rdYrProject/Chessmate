@@ -10,10 +10,10 @@ class Rook extends Piece
 {
 	BufferedImage BRook = null;
 	BufferedImage WRook = null;
-	int color; 
+	
 	Rook(int x, int y, int type, int color)
 	{
-		super(x,y,type,"Rook");
+		super(x,y,type,"Rook",color);
 		this.color=color;
 		try
 		{
@@ -28,7 +28,7 @@ class Rook extends Piece
 		
 	}
 	
-	public Tile[][] move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles,AI ai)
 	{
 		if(t==null)
 			return null;
@@ -44,7 +44,7 @@ class Rook extends Piece
 			
 			if(temp!=null)
 			{
-				tiles=(super.move(t,tiles));
+				tiles=(super.move(t,tiles,ai));
 			}
 		}
 		else 

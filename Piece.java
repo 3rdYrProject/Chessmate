@@ -8,12 +8,13 @@ import javax.swing.*;
 
 abstract class Piece extends Tile{
 		
-		LinkedList<Tile> route = new LinkedList<>();
 		String name;
-		Piece(int x, int y, int type, String name)
+		
+		Piece(int x, int y, int type, String name, int color)
 		{
 			super(x,y,type);
 			occupied=true;
+			this.color=color;
 			this.name=name;
 		}
 		String getName()
@@ -25,7 +26,7 @@ abstract class Piece extends Tile{
 			x=t.x;
 			y=t.y;
 		}
-		public Tile[][] move(Tile t, Tile[][] tiles)
+		public Tile[][] move(Tile t, Tile[][] tiles,AI ai)
 		{
 			//need to check if we reached the goal or took a piece
 			System.out.println("TYPE: "+t.getType());
@@ -37,13 +38,16 @@ abstract class Piece extends Tile{
 			}
 			else if(t.getOccupied())
 			{
-				JOptionPane.showMessageDialog(null,"Hard luck you're shit.");
+				if(t.color==1)
+				{
+					JOptionPane.showMessageDialog(null,"Hard luck.");
+				}
+				else 
+				{
+					ai.removePiece(t);
+				}
 				tiles[t.x][t.y]= tiles[this.x][this.y];
 				tiles[this.x][this.y] = new Tile(this.x,this.y,1);
-			}
-			else if(t.getType()>=4)
-			{
-				
 			}
 			else
 			{
