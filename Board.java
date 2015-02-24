@@ -50,7 +50,7 @@ class Board extends JPanel implements MouseListener
 				int temp = sc.nextInt();
 				if(temp>3)//AI tile
 				{
-					tiles[j][i] = getPiece(j,i,temp,0);
+					tiles[j][i]= getPiece(j,i,temp,0);
 					ai.addPiece((Piece)tiles[j][i]);
 					//System.out.println(tiles[j][i]);
 				}
@@ -82,11 +82,11 @@ class Board extends JPanel implements MouseListener
 		//i is greater than 3. 
 		switch(i)
 		{
-			case(4):return(new Rook(x,y,1,color));
-			case(5):return(new Knight(x,y,1,color));
-			case(6):return(new Bishop(x,y,1,color));
-			case(7):return(new Queen(x,y,1,color));
-			case(8):return(new King(x,y,1,color));
+			case(4):return(new Rook(x,y,4,color));
+			case(5):return(new Knight(x,y,5,color));
+			case(6):return(new Bishop(x,y,6,color));
+			case(7):return(new Queen(x,y,7,color));
+			case(8):return(new King(x,y,8,color));
 		}
 		return null;
 	}
@@ -106,12 +106,15 @@ class Board extends JPanel implements MouseListener
 				}
 			}
 		}
-		Tile[][] temp= userPiece.move(moveLoc,tiles);
+		Tile[][] temp= userPiece.move(moveLoc,tiles,ai);
 		if(temp!=null)
 		{
 			tiles=temp;
-			ai.updateUser(userPiece);
-			tiles= ai.decision(tiles);
+			if(!ai.isEmpty())
+			{
+				ai.updateUser(userPiece);
+				tiles= ai.decision(tiles);
+			}
 			for(int i=0;i<tiles.length;i++)
 			{
 				for(int j=0;j<tiles[i].length;j++)
