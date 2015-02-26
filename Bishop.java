@@ -40,10 +40,6 @@ class Bishop extends Piece
 		}
 		return null;	
 	}
-	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
-	{
-		return null;
-	}
 	int checkDiag(Tile goal){
 		return super.checkDiag(goal);
 	}
