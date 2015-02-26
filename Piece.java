@@ -83,22 +83,43 @@ abstract class Piece extends Tile{
 			boolean occupied= false;
 			boolean outOfBounds=false;
 			while(true)
-			{
+			{				
+						//down left, up left, up right, down right
 				if(direction==1)//down,up,right,left
 				{
-					tempY+=1;
+					if(this.getName().equals("Rook"))
+						tempY+=1;
+					else if(this.getName().equals("Bishop")){
+						tempX-=1;
+						tempY+=1; 
+					}
 				}
 				else if(direction==2)
 				{
-					tempY-=1;
+					if(this.getName().equals("Rook"))
+						tempY-=1;
+					else if(this.getName().equals("Bishop")){
+						tempX-=1;
+						tempY-=1; 
+					}
 				}
 				else if(direction==3)
 				{
-					tempX+=1;
+					if(this.getName().equals("Rook"))
+						tempX+=1;
+					else if(this.getName().equals("Bishop")){
+						tempX+=1;
+						tempY-=1; 
+					}
 				}
 				else if(direction==4)
 				{
-					tempX-=1;
+					if(this.getName().equals("Rook"))
+						tempX-=1;
+					else if(this.getName().equals("Bishop")){
+						tempX+=1;
+						tempY+=1; 
+					}
 				}
 				outOfBounds=tempY>=tiles.length||tempX>=tiles[0].length||tempY<0||tempX<0;
 				if(!outOfBounds)
