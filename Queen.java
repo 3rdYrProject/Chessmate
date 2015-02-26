@@ -41,12 +41,15 @@ class Queen extends Piece
 				tiles = (super.move(t,tiles,ai));
 			}
 		}
+		else
+			return null;
 		return tiles;
 	}
 	public void draw(Graphics g, int i)
 	{
 		super.draw(g,i,BQueen,WQueen,color);
 	}
+	
 	int checkDirQ(Tile goal){
 		if(super.checkDiag(goal)==0)
 			return super.checkOrth(goal);

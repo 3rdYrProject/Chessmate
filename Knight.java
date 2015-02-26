@@ -28,25 +28,26 @@ class Knight extends Piece
 	}
 	public Tile[][] move(Tile t, Tile[][] tiles,AI ai)//once the destination tile is valid the knight can move there regardless.
 	{
+		if(t==null)
+			return null;
 		int tempX = t.getX();
 		int tempY = t.getY();
 		
-		if(t.getType()!=1)
+		if(t.getType()==0)
 			return null;
-		if(checkRoute(tempX,tempY))
+		if(checkRouteK(tempX,tempY))
 		{	
-			this.x= t.getX();
-			this.y= t.getY();
-			return(super.move(t,tiles,ai));
+			tiles =(super.move(t,tiles,ai));
 		}
-		return null;
+		return tiles;
 	}
 	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
 	{
 		return null;
 	}
-	public boolean checkRoute(int tempX, int tempY)
+	public boolean checkRouteK(int tempX, int tempY)
 	{
+		System.out.println("test");
 		int xNum= 2, yNum=1;
 		for(int i=0; i<2; i++)//8 possible positions for a knight to move.
 		{

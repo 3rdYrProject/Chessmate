@@ -1,8 +1,3 @@
-/* Things to do: 
-*	
-* Implement a direction change penalty
-*
-*/
 import java.util.*;
 
 class AI
@@ -125,24 +120,13 @@ class AI
 			penalty= 40;
 		//if we are on the same x or y we don't want to penalise the path
 		//might move this into cost_estimate, might.
-		if(user.getName().equals("Rook")&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
+		if((user.getName().equals("Rook")||user.getName().equals("Queen"))&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
 		}
-		if(user.getName().equals("Bishop")&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
+		if((user.getName().equals("Bishop")||user.getName().equals("Queen"))&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
-		}
-		if(user.getName().equals("Queen"))
-		{
-			if(getDirection(current,goal)>4&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null){
-				System.out.println("in checkRouteDiag for Queen");
-				penalty= 5;
-			}
-			else if(current.checkRoute(goal,getDirection(current,goal),tiles)!=null){
-				System.out.println("in checkRoute for Queen");
-				penalty= 5;
-			}
 		}
 		return penalty;
 	}
@@ -168,19 +152,17 @@ class AI
 				String name= user.getName();
 				if(name.equals("Bishop"))
 				{
-					if(temp!=2)
+					if(temp!=2)//diag
 						continue;
 				}
 				else if(name.equals("Rook"))
 				{
-					if(temp!=1)
+					if(temp!=1)//orth
 						continue;
 				}
-				else if(name.equals("Queen"))
-				{
-					if(temp!=1||temp!=2)
+				else if(name.equals("Knight"))
+					if(user.checkRouteK(current.getX(),current.getY()))
 						continue;
-				}
 				else if(current.equals(tiles[x][y]))
 					continue;
 				
@@ -275,7 +257,7 @@ class AI
 				return(new Node(-best.getValue()));
 			else return(new Node((10-value)*10));
 		}
-		LinkedList<Tile> moves =user.getMoves(tiles,1);
+		LinkedList<Tile> moves = user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(user);
@@ -304,7 +286,7 @@ class AI
 			}
 			else return(new Node(-((10-value)*10)));
 		}
-		LinkedList<Tile> moves =piece.getMoves(tiles,1);
+		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece);
