@@ -29,7 +29,7 @@ abstract class Piece extends Tile{
 		public Tile[][] move(Tile t, Tile[][] tiles,AI ai)
 		{
 			//need to check if we reached the goal or took a piece
-			System.out.println("TYPE: "+t.getType());
+			//System.out.println("TYPE: "+t.getType());
 			if(t.getType()==3)
 			{
 				JOptionPane.showMessageDialog(null,"You completed the level.");
@@ -139,37 +139,5 @@ abstract class Piece extends Tile{
 				moves.add(tiles[tempX][tempY]);
 			}
 		}
-		public Tile checkRouteDiag(Tile goal, int direction, Tile[][] tiles){
-			int distance = 0;
-			distance = Math.abs(this.x - goal.getX());
-			int inc = 1;
-			while(inc <= distance){
-				if(direction == 1){
-					if(tiles[this.x - inc][this.y + inc].getType()==0)
-						return null;
-					else if(tiles[this.x - inc][this.y + inc].getOccupied())
-						return tiles[this.x - inc][this.y + inc];
-				}
-				else if(direction == 2){
-					if(tiles[this.x - inc][this.y - inc].getType()==0)
-						return null;
-					else if(tiles[this.x - inc][this.y - inc].getOccupied())
-						return tiles[this.x - inc][this.y - inc];
-				}
-				else if(direction == 3){
-					if(tiles[this.x + inc][this.y - inc].getType()==0)
-						return null;
-					else if(tiles[this.x + inc][this.y - inc].getOccupied())
-						return tiles[this.x + inc][this.y - inc];
-				}
-				else if(direction == 4){
-					if(tiles[this.x + inc][this.y + inc].getType()==0)
-						return null;
-					else if(tiles[this.x + inc][this.y + inc].getOccupied())
-						return tiles[this.x + inc][this.y + inc];
-				}
-				inc++;
-			}
-			return goal;
-		}
+		
 	}

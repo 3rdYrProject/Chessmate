@@ -13,7 +13,7 @@ class Queen extends Piece
 	int color;
 	Queen(int x,int y, int type, int color)
 	{
-		super(x,y,type,"Queen");
+		super(x,y,type,"Queen",color);
 		this.color= color;
 		try
 		{
@@ -26,7 +26,7 @@ class Queen extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile[][] move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles, AI ai)
 	{
 		if(t.getType()==0)
 			return null;
@@ -38,13 +38,9 @@ class Queen extends Piece
 			{
 				this.x= temp.getX();
 				this.y= temp.getY();
-				return(super.move(t,tiles));
+				return(super.move(t,tiles,ai));
 			}
 		}
-		return null;
-	}
-	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
-	{
 		return null;
 	}
 	public void draw(Graphics g, int i)

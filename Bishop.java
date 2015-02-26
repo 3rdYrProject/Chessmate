@@ -12,7 +12,7 @@ class Bishop extends Piece
 	int color;
 	Bishop(int x,int y, int type, int color)
 	{
-		super(x,y,type,"Bishop");
+		super(x,y,type,"Bishop",color);
 		this.color= color;
 		try
 		{
@@ -25,7 +25,7 @@ class Bishop extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile[][] move(Tile t, Tile[][] tiles)
+	public Tile[][] move(Tile t, Tile[][] tiles, AI ai)
 	{
 		if(t.getType()==0)
 			return null;
@@ -35,7 +35,7 @@ class Bishop extends Piece
 			temp= checkRouteDiag(t,diag,tiles);
 			if(temp!=null)
 			{
-				return(super.move(t,tiles));
+				return(super.move(t,tiles,ai));
 			}
 		}
 		return null;	

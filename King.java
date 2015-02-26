@@ -13,7 +13,7 @@ class King extends Piece
 	int color;
 	King(int x,int y, int type, int color)
 	{
-		super(x,y,type,"King");
+		super(x,y,type,"King",color);
 		this.color= color;
 		try
 		{
@@ -25,10 +25,6 @@ class King extends Piece
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
-	}
-	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
-	{
-		return null;
 	}
 	public Tile[][] move(Tile t, Tile[][] tiles)
 	{

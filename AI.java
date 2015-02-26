@@ -129,6 +129,10 @@ class AI
 		{
 			penalty= 5;
 		}
+		if(user.getName().equals("Bishop")&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
+		{
+			penalty= 5;
+		}
 		return penalty;
 	}
 	
@@ -279,7 +283,7 @@ class AI
 			int value=evaluatePaths(tiles, piece).size();
 			if(value==0)
 			{
-				System.out.println(piece+ " " +this.tempUser);
+				//System.out.println(piece+ " " +this.tempUser);
 				return(new Node(-best.getValue()));
 			}
 			else return(new Node(-((10-value)*10)));

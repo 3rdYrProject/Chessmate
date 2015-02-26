@@ -13,7 +13,7 @@ class Pawn extends Piece
 	int color;
 	Pawn(int x,int y, int type, int color)
 	{
-		super(x,y,type,"Pawn");
+		super(x,y,type,"Pawn",color);
 		this.color= color;
 		try
 		{
@@ -25,10 +25,6 @@ class Pawn extends Piece
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
-	}
-	public Tile[][] move(Tile t, Tile[][] tiles)
-	{
-		return null;
 	}
 	public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
 	{

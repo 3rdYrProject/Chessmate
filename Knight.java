@@ -13,7 +13,7 @@ class Knight extends Piece
 	int color;
 	Knight(int x,int y, int type, int color)
 	{
-		super(x,y,type,"Knight");
+		super(x,y,type,"Knight",color);
 		this.color= color;
 		try
 		{
@@ -26,7 +26,7 @@ class Knight extends Piece
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
 	}
-	public Tile[][] move(Tile t, Tile[][] tiles)//once the destination tile is valid the knight can move there regardless.
+	public Tile[][] move(Tile t, Tile[][] tiles,AI ai)//once the destination tile is valid the knight can move there regardless.
 	{
 		int tempX = t.getX();
 		int tempY = t.getY();
@@ -37,7 +37,7 @@ class Knight extends Piece
 		{	
 			this.x= t.getX();
 			this.y= t.getY();
-			return(super.move(t,tiles));
+			return(super.move(t,tiles,ai));
 		}
 		return null;
 	}
