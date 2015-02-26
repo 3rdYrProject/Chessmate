@@ -94,16 +94,16 @@ class Tile implements Comparable{
 		int yPos = Math.abs(this.y - goal.getY());
 		if(xPos == yPos){
 			if(goal.getX() < this.x && goal.getY() > this.y){//down left
-				direction = 1;
+				direction = 5;//direction = 1;
 			}
 			else if(goal.getX() < this.x && goal.getY() < this.y){//up left
-				direction = 2;
+				direction = 6;//direction = 2;
 			}
 			else if(goal.getX() > this.x && goal.getY() < this.y){//up right
-				direction = 3;
+				direction = 7;//direction = 3;
 			}
 			else if(goal.getX() > this.x && goal.getY() > this.y){//down right
-				direction = 4;
+				direction = 8;//direction = 4;
 			}
 		}
 		return direction;
@@ -171,25 +171,25 @@ class Tile implements Comparable{
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
 			while(inc <= distance){
-				if(direction == 1){
+				if(direction == 5){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
 						return null;
 					else if(tiles[this.x - inc][this.y + inc].getOccupied())
 						return tiles[this.x - inc][this.y + inc];
 				}
-				else if(direction == 2){
+				else if(direction == 6){
 					if(tiles[this.x - inc][this.y - inc].getType()==0)
 						return null;
 					else if(tiles[this.x - inc][this.y - inc].getOccupied())
 						return tiles[this.x - inc][this.y - inc];
 				}
-				else if(direction == 3){
+				else if(direction == 7){
 					if(tiles[this.x + inc][this.y - inc].getType()==0)
 						return null;
 					else if(tiles[this.x + inc][this.y - inc].getOccupied())
 						return tiles[this.x + inc][this.y - inc];
 				}
-				else if(direction == 4){
+				else if(direction == 8){
 					if(tiles[this.x + inc][this.y + inc].getType()==0)
 						return null;
 					else if(tiles[this.x + inc][this.y + inc].getOccupied())

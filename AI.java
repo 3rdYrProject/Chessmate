@@ -133,6 +133,17 @@ class AI
 		{
 			penalty= 5;
 		}
+		if(user.getName().equals("Queen"))
+		{
+			if(getDirection(current,goal)>4&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null){
+				System.out.println("in checkRouteDiag for Queen");
+				penalty= 5;
+			}
+			else if(current.checkRoute(goal,getDirection(current,goal),tiles)!=null){
+				System.out.println("in checkRoute for Queen");
+				penalty= 5;
+			}
+		}
 		return penalty;
 	}
 	
@@ -163,6 +174,11 @@ class AI
 				else if(name.equals("Rook"))
 				{
 					if(temp!=1)
+						continue;
+				}
+				else if(name.equals("Queen"))
+				{
+					if(temp!=1||temp!=2)
 						continue;
 				}
 				else if(current.equals(tiles[x][y]))

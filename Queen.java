@@ -28,6 +28,8 @@ class Queen extends Piece
 	}
 	public Tile[][] move(Tile t, Tile[][] tiles, AI ai)
 	{
+		if(t==null)
+			return null;
 		if(t.getType()==0)
 			return null;
 		int diag = checkDirQ(t);
@@ -36,12 +38,10 @@ class Queen extends Piece
 			temp= checkRouteQ(t,diag, tiles);
 			if(temp!=null)
 			{
-				this.x= temp.getX();
-				this.y= temp.getY();
-				return(super.move(t,tiles,ai));
+				tiles = (super.move(t,tiles,ai));
 			}
 		}
-		return null;
+		return tiles;
 	}
 	public void draw(Graphics g, int i)
 	{
@@ -50,12 +50,12 @@ class Queen extends Piece
 	int checkDirQ(Tile goal){
 		if(super.checkDiag(goal)==0)
 			return super.checkOrth(goal);
-		else return (super.checkDiag(goal)+4);
+		else return (super.checkDiag(goal));
 	}
 	
 	Tile checkRouteQ(Tile goal, int direction, Tile[][] tiles){
 		if(direction > 4)
-			return super.checkRouteDiag(goal, (direction-4), tiles);
+			return super.checkRouteDiag(goal, direction, tiles);
 		else
 			return super.checkRoute(goal, direction, tiles);
 	}
