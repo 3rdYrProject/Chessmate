@@ -33,6 +33,10 @@ class Tile implements Comparable{
 		this.y=t.y;
 		this.type=t.type;
 	}
+	int getColor()
+	{
+		return color;
+	}
 	void setG(int g)
 	{
 		this.g_score= g;

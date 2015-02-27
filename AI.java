@@ -51,11 +51,14 @@ class AI
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
 		Tile tempGoal=null;
-		if(piece.equals(aiPieces.get(0)))
+		for(Piece p:aiPieces)
 		{
-			tempGoal=new Tile(goal);
-			goal=user;
-		}	
+			if(piece.equals(p))
+			{
+				tempGoal=new Tile(goal);
+				goal=user;
+			}	
+		}
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
@@ -150,6 +153,8 @@ class AI
 					continue;
 				int temp= Math.abs(current.getX()-x)+Math.abs(current.getY()-y);
 				String name= user.getName();
+				if(tiles[x][y].getOccupied()&&tiles[x][y].getColor()==current.getColor())//user 1, ai 0
+					continue;
 				if(name.equals("Bishop"))
 				{
 					if(temp!=2)//diag
@@ -228,77 +233,82 @@ class AI
 	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
-		Tile check = (aiPieces.get(0)).checkRoute(user,aiPieces.get(0).checkOrth(user),tiles);
-		if(check!=null&&check.equals(user))//take the user
+		for(Piece p:aiPieces)
 		{
-			System.out.println("Took the user");
-			return aiPieces.get(0).move((Tile)user,tiles,this);
+			Tile check = (p).checkRoute(user,p.checkOrth(user),tiles);
+			if(check!=null&&check.equals(user))//take the user
+			{
+				System.out.println("Took the user");
+				
+				tiles= p.move((Tile)user,tiles,this);
+			}
+			else
+			{
+				System.out.println("NEXT DECISION");
+				Node temp= minmax(4,user,p,tiles);
+				System.out.println("Le decision: "+ temp.getTile());
+				tiles= (p.move(temp.getTile(),tiles,this));
+			}
 		}
-		else
-		{
-			Node temp= minmax(4,user,aiPieces.get(0),tiles);
-			System.out.println("Le decision: "+ temp.getTile());
-			return(aiPieces.get(0).move(temp.getTile(),tiles,this));//should change the 4 here to a variable depth and pass it in as a parameter	
-		}
+		return tiles;
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
-		return(Min(depth,user,piece,tiles));
+		return(Min(depth,user,piece,new Node((int)(Double.NEGATIVE_INFINITY)),new Node((int)Double.POSITIVE_INFINITY),tiles));
 	}
 	 
-	Node Max(int depth, Piece user, Piece piece, Tile[][] tiles)
+	Node Max(int depth, Piece user, Piece piece,Node alpha, Node beta, Tile[][] tiles)
 	{
-		Node best = new Node((int)Double.NEGATIVE_INFINITY);
-	 
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, user).size();
 			if(value==0)
-				return(new Node(-best.getValue()));
-			else return(new Node((10-value)*10));
+				return(new Node((int)(Double.POSITIVE_INFINITY)));
+			return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(user);
 			user.changePos(t);
-			Node val = Min(depth - 1, user, piece,tiles);
+			Node val = Min(depth - 1, user, piece, alpha, beta,tiles);
 			val.addTile(t);
 			user.changePos(temp);
-			if(val.getValue() > best.getValue())
+			if(val.getValue() >= beta.getValue())
+				return beta;
+			if(val.getValue() > alpha.getValue())
 			{
-				best = val;
+				alpha = val;
 			}
 		}
-		return best;
+		return alpha;
 	}
-	Node Min(int depth, Piece user, Piece piece, Tile[][] tiles)
+	Node Min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
 	{
-		Node best = new Node((int)Double.POSITIVE_INFINITY); 
-	 
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, piece).size();
 			if(value==0)
 			{
-				//System.out.println(piece+ " " +this.tempUser);
-				return(new Node(-best.getValue()));
+				return(new Node((int)(Double.NEGATIVE_INFINITY)));
 			}
-			else return(new Node(-((10-value)*10)));
+			return(new Node(-((10-value)*10)));
 		}
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece);
 			piece.changePos(t);
-			Node val = Max(depth - 1, user, piece,tiles);
+			Node val = Max(depth - 1, user, piece, alpha, beta,tiles);
 			val.addTile(t);
 			piece.changePos(temp);
-			if(val.getValue() < best.getValue())  
+			if(val.getValue() <= alpha.getValue())
+				return(alpha);
+			if(val.getValue() < beta.getValue())  
 			{
-				best = val;
+				beta = val;
 			}
 		}
-		return best;
+		return beta;
 	}
 }

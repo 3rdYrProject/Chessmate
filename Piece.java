@@ -42,7 +42,7 @@ abstract class Piece extends Tile{
 				{
 					JOptionPane.showMessageDialog(null,"Hard luck.");
 				}
-				else 
+				else if(t.color!=this.color)
 				{
 					ai.removePiece(t);
 				}
@@ -60,7 +60,6 @@ abstract class Piece extends Tile{
 			t.x=tempX;
 			this.y=t.y;
 			t.y=tempY;
-			
 			return tiles;
 		}
 		//can probably use checkRoute to check how far we 
@@ -79,7 +78,7 @@ abstract class Piece extends Tile{
 		}
 		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)//rook
 		{
-			if(direction==0||direction>4)
+			if(direction==0||direction>4)//>4 means bishop will never work
 				return(new LinkedList<Tile>());
 			int tempX=x;
 			int tempY=y;
@@ -88,7 +87,7 @@ abstract class Piece extends Tile{
 			boolean outOfBounds=false;
 			while(true)
 			{				
-						//down left, up left, up right, down right
+				//down left, up left, up right, down right
 				if(direction==1)//down,up,right,left
 				{
 						tempY+=1;
@@ -127,11 +126,7 @@ abstract class Piece extends Tile{
 				
 				if(outOfBounds||occupied||(tiles[tempX][tempY].getType()==0)||tiles[tempX][tempY].getType()==3)
 				{
-					//System.out.println(tempX+ " "+tempY );//tiles[tempX][tempY].getOccupied());
-					if(occupied)
-					{
-						moves.add(tiles[tempX][tempY]);
-					}
+					
 					moves.addAll(getMoves(tiles,(direction+1)));
 					return moves;
 				}

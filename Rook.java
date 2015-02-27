@@ -31,9 +31,9 @@ class Rook extends Piece
 	public Tile[][] move(Tile t, Tile[][] tiles,AI ai)
 	{
 		if(t==null)
-			return null;
+			return tiles;
 		if(t.getType()==0)
-			return null;
+			return tiles;
 		int dir = checkOrth(t);
 		Tile temp = null;
 		if(dir > 0){//if on a direction allow move
@@ -47,8 +47,6 @@ class Rook extends Piece
 				tiles=(super.move(t,tiles,ai));
 			}
 		}
-		else 
-			return null;
 		return tiles;	
 	}
 	
