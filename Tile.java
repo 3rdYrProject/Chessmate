@@ -171,6 +171,8 @@ class Tile implements Comparable{
 		}
 		
 		public Tile checkRouteDiag(Tile goal, int direction, Tile[][] tiles){
+			if(direction==0)
+				return null;
 			int distance = 0;
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;

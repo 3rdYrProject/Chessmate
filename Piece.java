@@ -78,7 +78,7 @@ abstract class Piece extends Tile{
 		}
 		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)//rook
 		{
-			if(direction==0||direction>4)//>4 means bishop will never work
+			if(direction==0||direction>4)
 				return(new LinkedList<Tile>());
 			int tempX=x;
 			int tempY=y;
@@ -91,34 +91,35 @@ abstract class Piece extends Tile{
 				if(direction==1)//down,up,right,left
 				{
 						tempY+=1;
+						if(name.equals("Bishop"))
+						{
+							tempX-=1;
+						}
 				}
 				else if(direction==2)
 				{
 						tempY-=1;
+						if(name.equals("Bishop"))
+						{
+							tempX-=1;
+						}
 				}
 				else if(direction==3)
 				{
 						tempX+=1;
+						if(name.equals("Bishop"))
+						{
+							tempY-=1;
+						}
 				}
 				else if(direction==4)
 				{
 						tempX-=1;
-				}
-				else if(direction==5){
-					tempX-=1;
-					tempY+=1; 
-				}
-				else if(direction==6){
-					tempX-=1;
-					tempY-=1; 
-				}
-				else if(direction==7){
-					tempX+=1;
-					tempY-=1;					
-				}
-				else if(direction==8){	
-					tempX+=1;
-					tempY+=1; 			
+						if(name.equals("Bishop"))
+						{	
+							tempX+=2;
+							tempY+=1;
+						}
 				}
 				outOfBounds=tempY>=tiles.length||tempX>=tiles[0].length||tempY<0||tempX<0;
 				if(!outOfBounds)

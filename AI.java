@@ -21,13 +21,7 @@ class AI
 	}
 	void removePiece(Tile t)
 	{
-		for(Piece temp:aiPieces)
-		{
-			if(t.getX()==temp.getX()&&t.getY()==temp.getY())
-			{
-				aiPieces.remove(temp);
-			}
-		}
+		aiPieces.remove(t);
 	}
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
@@ -235,7 +229,13 @@ class AI
 	{
 		for(Piece p:aiPieces)
 		{
-			Tile check = (p).checkRoute(user,p.checkOrth(user),tiles);
+			Tile check=null;
+			String name= p.getName();
+			if(name.equals("Rook")||name.equals("Queen"))
+				check = (p).checkRoute(user,p.checkOrth(user),tiles);
+			if(check==null&&name.equals("Bishop")||name.equals("Queen"))
+				check = (p).checkRouteDiag(user,p.checkDiag(user),tiles);
+			System.out.println("Check: "+check);
 			if(check!=null&&check.equals(user))//take the user
 			{
 				System.out.println("Took the user");
@@ -245,7 +245,7 @@ class AI
 			else
 			{
 				System.out.println("NEXT DECISION");
-				Node temp= minmax(4,user,p,tiles);
+				Node temp= minmax(8,user,p,tiles);
 				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
@@ -262,8 +262,10 @@ class AI
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, user).size();
+			//if I can be taken but am protected return best value
 			if(value==0)
 				return(new Node((int)(Double.POSITIVE_INFINITY)));
+			//if I can be taken but am not protected return worst value
 			return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves = user.getMoves(tiles,1);

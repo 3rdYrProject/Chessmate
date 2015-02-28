@@ -28,7 +28,7 @@ class Bishop extends Piece
 	public Tile[][] move(Tile t, Tile[][] tiles, AI ai)
 	{
 		if(t.getType()==0)
-			return null;
+			return tiles;
 		int diag = checkDiag(t);
 		Tile temp= null;
 		if(diag > 0){//if on a diagonal allow move
@@ -38,7 +38,7 @@ class Bishop extends Piece
 				return(super.move(t,tiles,ai));
 			}
 		}
-		return null;	
+		return tiles;	
 	}
 	int checkDiag(Tile goal){
 		return super.checkDiag(goal);
