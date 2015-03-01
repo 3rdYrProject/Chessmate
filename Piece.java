@@ -76,7 +76,7 @@ abstract class Piece extends Tile{
 		public boolean checkRouteK(int x, int y){
 			return false;
 		}
-		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)//rook
+		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
 		{
 			if(direction==0||direction>4)
 				return(new LinkedList<Tile>());
