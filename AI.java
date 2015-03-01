@@ -1,5 +1,10 @@
 import java.util.*;
-
+/*	This is here to keep me on track, will delete when they are done
+*	Get pieces to protect themselves
+*	Get knight to work 
+*	Move AI only with valid clicks
+*	Don't allow user to move through pieces
+*/
 class AI
 {
 	Tile goal;
@@ -137,36 +142,40 @@ class AI
 	//needs to know the piece in order to enforce the rules
 	{
 		LinkedList<Tile> neighbours= new LinkedList<>();
-		for(int x=current.getX()-1;x<=current.getX()+1;x++)
+		String name= user.getName();
+		if(!name.equals("Knight"))
 		{
-			for(int y= current.getY()-1;y<=current.getY()+1;y++)
+			for(int x=current.getX()-1;x<=current.getX()+1;x++)
 			{
-				if(x<0||x>=tiles[0].length||y<0||y>=tiles.length)
-					continue;
-				if(current.getType()==0)
-					continue;
-				int temp= Math.abs(current.getX()-x)+Math.abs(current.getY()-y);
-				String name= user.getName();
-				if(tiles[x][y].getOccupied()&&tiles[x][y].getColor()==current.getColor())//user 1, ai 0
-					continue;
-				if(name.equals("Bishop"))
+				for(int y= current.getY()-1;y<=current.getY()+1;y++)
 				{
-					if(temp!=2)//diag
+					if(x<0||x>=tiles[0].length||y<0||y>=tiles.length)
 						continue;
+					if(current.getType()==0)
+						continue;
+					if(current.equals(tiles[x][y]))
+						continue;
+					if(tiles[x][y].getOccupied()&&tiles[x][y].getColor()==current.getColor())//user 1, ai 0
+						continue;
+						
+					int temp= Math.abs(current.getX()-x)+Math.abs(current.getY()-y);
+					if(name.equals("Bishop"))
+					{
+						if(temp!=2)//diag
+							continue;
+					}
+					else if(name.equals("Rook"))
+					{
+						if(temp!=1)//orth
+							continue;
+					}
+					neighbours.add(tiles[x][y]);
 				}
-				else if(name.equals("Rook"))
-				{
-					if(temp!=1)//orth
-						continue;
-				}
-				else if(name.equals("Knight"))
-					if(user.checkRouteK(current.getX(),current.getY()))
-						continue;
-				else if(current.equals(tiles[x][y]))
-					continue;
-				
-				neighbours.add(tiles[x][y]);
 			}
+		}
+		else 
+		{
+			neighbours= user.getMoves(tiles,0);
 		}
 		return neighbours;
 	}
@@ -245,7 +254,7 @@ class AI
 			else
 			{
 				System.out.println("NEXT DECISION");
-				Node temp= minmax(8,user,p,tiles);
+				Node temp= minmax(2,user,p,tiles);
 				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
@@ -296,6 +305,7 @@ class AI
 			}
 			return(new Node(-((10-value)*10)));
 		}
+		System.out.println(piece.getName());
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
