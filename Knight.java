@@ -62,7 +62,7 @@ class Knight extends Piece
 		}
 		return moves;
 	}
-	public boolean checkRouteK(int tempX, int tempY)
+	public boolean checkRoute(int tempX, int tempY)
 	{
 		System.out.println("test");
 		int xNum= 2, yNum=1;

@@ -106,8 +106,9 @@ class Board extends JPanel implements MouseListener
 				}
 			}
 		}
+		Tile tempPiece = new Tile(userPiece);
 		Tile[][] temp= userPiece.move(moveLoc,tiles,ai);
-		if(temp!=null)
+		if(moveLoc.equals(tempPiece))
 		{
 			tiles=temp;
 			if(!ai.isEmpty())

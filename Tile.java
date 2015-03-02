@@ -132,7 +132,7 @@ class Tile implements Comparable{
 	}
 	public Tile checkRoute(Tile goal, int direction, Tile[][] tiles){//needs to be generic
 			if(direction==0)
-				return null;
+				return tiles[x][y];
 			int distance = 0;
 			//System.out.println(direction);
 			distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
@@ -142,26 +142,26 @@ class Tile implements Comparable{
 			while(inc <= distance){
 				if(direction == 1){
 					if(tiles[this.x][this.y + inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x][this.y + inc].getOccupied())
 						return tiles[this.x][this.y + inc];
 				}
 				else if(direction == 2){
 					if(tiles[this.x][this.y - inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x][this.y - inc].getOccupied())
 						return tiles[this.x][this.y - inc];
 				}
 				else if(direction == 3){
 					if(tiles[this.x + inc][this.y].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x + inc][this.y].getOccupied())
 						return tiles[this.x + inc][this.y];
 				}
 				else if(direction == 4)
 				{
 					if(tiles[this.x - inc][this.y].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x - inc][this.y].getOccupied())
 						return tiles[this.x - inc][this.y];
 				}
@@ -172,32 +172,32 @@ class Tile implements Comparable{
 		
 		public Tile checkRouteDiag(Tile goal, int direction, Tile[][] tiles){
 			if(direction==0)
-				return null;
+				return tiles[x][y];
 			int distance = 0;
 			distance = Math.abs(this.x - goal.getX());
 			int inc = 1;
 			while(inc <= distance){
 				if(direction == 5){
 					if(tiles[this.x - inc][this.y + inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x - inc][this.y + inc].getOccupied())
 						return tiles[this.x - inc][this.y + inc];
 				}
 				else if(direction == 6){
 					if(tiles[this.x - inc][this.y - inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x - inc][this.y - inc].getOccupied())
 						return tiles[this.x - inc][this.y - inc];
 				}
 				else if(direction == 7){
 					if(tiles[this.x + inc][this.y - inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x + inc][this.y - inc].getOccupied())
 						return tiles[this.x + inc][this.y - inc];
 				}
 				else if(direction == 8){
 					if(tiles[this.x + inc][this.y + inc].getType()==0)
-						return null;
+						return tiles[x][y];
 					else if(tiles[this.x + inc][this.y + inc].getOccupied())
 						return tiles[this.x + inc][this.y + inc];
 				}

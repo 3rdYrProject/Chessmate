@@ -1,9 +1,13 @@
+
 import java.util.*;
-/*	This is here to keep me on track, will delete when they are done
-*	Get pieces to protect themselves
-*	Get knight to work 
-*	Move AI only with valid clicks
-*	Don't allow user to move through pieces
+/*	This is here to keep me on track, you can delete when they are done
+*	Get pieces to protect themselves, done
+*   Pieces sometimes think they are protected because of an ai piece that hasn't moved yet, will try to fix tomorrow.
+*   An AI piece should take the user regardless of a piece being in the way since they all move at the same time.
+*	AI pieces have been improved hugely thanks to a fix I found by increasing the vertices by 1 see below
+*	Get knight to work, not done, tomorrow I'll do it
+*	Move AI only with valid clicks, done
+*	Don't allow user to move through pieces, tomorrow.
 */
 class AI
 {
@@ -11,14 +15,16 @@ class AI
 	Piece user;
 	Tile tempUser;
 	Tile oldUser;
+	int depth;
 	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
-	LinkedList<LinkedList<Tile> > path;
+	LinkedList<LinkedList<Tile>> path;
 	
 	AI()
 	{
 		aiPieces= new LinkedList<>();
 		path= new LinkedList<>();
+		depth=4;//change later
 	}
 	boolean isEmpty()
 	{
@@ -40,6 +46,7 @@ class AI
 	{
 		this.goal=goal;
 	}
+
 	void updateUser(Piece user)
 	{
 		oldUser= new Tile(this.user);
@@ -231,7 +238,7 @@ class AI
 		
 			current= t;
 		}
-		
+		vertices.add(tiles[0][0]);//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
 		return vertices;
 	}	
 	Tile[][] decision(Tile[][] tiles)
@@ -254,16 +261,30 @@ class AI
 			else
 			{
 				System.out.println("NEXT DECISION");
-<<<<<<< HEAD
-				Node temp= minmax(4,user,p,tiles);
-=======
-				Node temp= minmax(2,user,p,tiles);
->>>>>>> origin/master
+				Node temp= minmax(depth,user,p,tiles);
 				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
 		}
 		return tiles;
+	}
+	boolean isProtected(Piece piece, Tile[][] tiles)
+	{	
+		for(Piece p:aiPieces)
+		{
+			String name = p.getName();
+			if(p.equals(piece))
+				continue;
+			if(name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
+			{
+				return true;
+			}
+			else if(name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
@@ -275,10 +296,8 @@ class AI
 		if(depth <= 0)
 		{
 			int value=evaluatePaths(tiles, user).size();
-			//if I can be taken but am protected return best value
-			if(value==0)
-				return(new Node((int)(Double.POSITIVE_INFINITY)));
-			//if I can be taken but am not protected return worst value
+			if(value==0)//I reached the goal
+				return(new Node((int)(Double.POSITIVE_INFINITY)));//reached goal
 			return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
@@ -305,7 +324,16 @@ class AI
 			int value=evaluatePaths(tiles, piece).size();
 			if(value==0)
 			{
-				return(new Node((int)(Double.NEGATIVE_INFINITY)));
+				return new Node((int)(Double.NEGATIVE_INFINITY));
+			}
+			else if(value==1&&isProtected(piece,tiles))//I can take the user, I can be taken too though
+			{
+				return(new Node(-100000));
+			}
+			else if(value==1)//I can be taken
+			{
+				System.out.println("I can be taken "+piece.getName());
+				return(new Node((int)(Double.POSITIVE_INFINITY)-1));
 			}
 			return(new Node(-((10-value)*10)));
 		}
