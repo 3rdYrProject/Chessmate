@@ -254,11 +254,7 @@ class AI
 			else
 			{
 				System.out.println("NEXT DECISION");
-<<<<<<< HEAD
 				Node temp= minmax(4,user,p,tiles);
-=======
-				Node temp= minmax(2,user,p,tiles);
->>>>>>> origin/master
 				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
