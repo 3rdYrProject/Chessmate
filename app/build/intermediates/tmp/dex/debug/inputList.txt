@@ -1,5 +1,0 @@
-/home/araic/AndroidStudioProjects/Tapley/app/build/intermediates/classes/debug
-/home/araic/AndroidStudioProjects/Tapley/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-df72caeb260a6eea0cb8322caa460f7e3d90eeb4.jar
-/home/araic/AndroidStudioProjects/Tapley/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-4cb180bc1aa15ab525bdece1a7d6fb64de5bf84f.jar
-/home/araic/AndroidStudioProjects/Tapley/app/build/intermediates/pre-dexed/debug/classes-039e5870766f8f5dabc8dafdcb350a8ade868cba.jar
-/home/araic/AndroidStudioProjects/Tapley/app/build/intermediates/pre-dexed/debug/classes-71b56c6443a5ce3e887b364c931733492d3bae68.jar
