@@ -332,7 +332,6 @@ class AI
 			}
 			else if(value==1)//I can be taken
 			{
-				System.out.println("I can be taken "+piece.getName());
 				return(new Node((int)(Double.POSITIVE_INFINITY)-1));
 			}
 			return(new Node(-((10-value)*10)));
