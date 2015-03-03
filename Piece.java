@@ -73,9 +73,6 @@ abstract class Piece extends Tile{
 				g.drawImage(WPiece,x*width,y*width,null);
 		}
 		
-		public boolean checkRouteK(int x, int y){
-			return false;
-		}
 		public LinkedList<Tile> getMoves(Tile[][] tiles, int direction)
 		{
 			if(direction==0||direction>4)

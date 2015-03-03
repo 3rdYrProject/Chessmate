@@ -1,12 +1,20 @@
 
 import java.util.*;
 /*	This is here to keep me on track, you can delete when they are done
+*
+*   Monday:
 *	Get pieces to protect themselves, done
+*	AI pieces have been improved hugely thanks to a fix I found by increasing the vertices by 1 see below
+*	Move AI only with valid clicks, done
+*
+*   Tuesday:
+*   Found some huge bugs that are now fixed. The ai is so good now. 
+*	Get knight to work, done.
 *   Pieces sometimes think they are protected because of an ai piece that hasn't moved yet, will try to fix tomorrow.
 *   An AI piece should take the user regardless of a piece being in the way since they all move at the same time.
-*	AI pieces have been improved hugely thanks to a fix I found by increasing the vertices by 1 see below
-*	Get knight to work, not done, tomorrow I'll do it
-*	Move AI only with valid clicks, done
+*
+
+*
 *	Don't allow user to move through pieces, tomorrow.
 */
 class AI
@@ -14,6 +22,7 @@ class AI
 	Tile goal;
 	Piece user;
 	Tile tempUser;
+	Piece currentPiece;
 	Tile oldUser;
 	int depth;
 	int direction=2;//initial direction for the level
@@ -24,7 +33,7 @@ class AI
 	{
 		aiPieces= new LinkedList<>();
 		path= new LinkedList<>();
-		depth=4;//change later
+		depth=8;//change later
 	}
 	boolean isEmpty()
 	{
@@ -46,7 +55,6 @@ class AI
 	{
 		this.goal=goal;
 	}
-
 	void updateUser(Piece user)
 	{
 		oldUser= new Tile(this.user);
@@ -56,6 +64,7 @@ class AI
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
+		currentPiece= piece;
 		Tile tempGoal=null;
 		for(Piece p:aiPieces)
 		{
@@ -125,15 +134,15 @@ class AI
 	int dist_between(Tile current, Tile neighbour, Tile goal, Tile[][] tiles)
 	{
 		int penalty= 15;
-		if(getDirection(current,neighbour)!=direction)
+		if(currentPiece.getName()!="Knight"&&getDirection(current,neighbour)!=direction)
 			penalty= 40;
 		//if we are on the same x or y we don't want to penalise the path
 		//might move this into cost_estimate, might.
-		if((user.getName().equals("Rook")||user.getName().equals("Queen"))&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
+		if((currentPiece.getName().equals("Rook")||currentPiece.getName().equals("Queen"))&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
 		}
-		if((user.getName().equals("Bishop")||user.getName().equals("Queen"))&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
+		if((currentPiece.getName().equals("Bishop")||currentPiece.getName().equals("Queen"))&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
 		}
@@ -149,7 +158,7 @@ class AI
 	//needs to know the piece in order to enforce the rules
 	{
 		LinkedList<Tile> neighbours= new LinkedList<>();
-		String name= user.getName();
+		String name= currentPiece.getName();
 		if(!name.equals("Knight"))
 		{
 			for(int x=current.getX()-1;x<=current.getX()+1;x++)
@@ -182,7 +191,7 @@ class AI
 		}
 		else 
 		{
-			neighbours= user.getMoves(tiles,0);
+			neighbours= currentPiece.getMoves(tiles,0);
 		}
 		return neighbours;
 	}
@@ -217,11 +226,11 @@ class AI
 		return total_path;
 	}
 	
-	LinkedList<Tile> evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
+	int evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
 	{
 		LinkedList<Tile> path=getPath(tiles,user);
 		if(path==null)
-			return(new LinkedList<>());
+			return(0);
 		Tile current = null;
 		int direction= 0;
 		LinkedList<Tile> vertices = new LinkedList<>();
@@ -238,8 +247,8 @@ class AI
 		
 			current= t;
 		}
-		vertices.add(tiles[0][0]);//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
-		return vertices;
+		//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
+		return vertices.size()+1;
 	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
@@ -247,15 +256,14 @@ class AI
 		{
 			Tile check=null;
 			String name= p.getName();
-			if(name.equals("Rook")||name.equals("Queen"))
+			if(!name.equals("Bishop"))
 				check = (p).checkRoute(user,p.checkOrth(user),tiles);
-			if(check==null&&name.equals("Bishop")||name.equals("Queen"))
+			if(name.equals("Bishop")||name.equals("Queen"))
 				check = (p).checkRouteDiag(user,p.checkDiag(user),tiles);
 			System.out.println("Check: "+check);
 			if(check!=null&&check.equals(user))//take the user
 			{
 				System.out.println("Took the user");
-				
 				tiles= p.move((Tile)user,tiles,this);
 			}
 			else
@@ -295,7 +303,7 @@ class AI
 	{
 		if(depth <= 0)
 		{
-			int value=evaluatePaths(tiles, user).size();
+			int value=evaluatePaths(tiles, user);
 			if(value==0)//I reached the goal
 				return(new Node((int)(Double.POSITIVE_INFINITY)));//reached goal
 			return(new Node((10-value)*10));
@@ -321,7 +329,7 @@ class AI
 	{
 		if(depth <= 0)
 		{
-			int value=evaluatePaths(tiles, piece).size();
+			int value=evaluatePaths(tiles, piece);
 			if(value==0)
 			{
 				return new Node((int)(Double.NEGATIVE_INFINITY));

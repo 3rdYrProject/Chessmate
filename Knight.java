@@ -35,7 +35,7 @@ class Knight extends Piece
 		
 		if(t.getType()==0)
 			return tiles;
-		if(checkRouteK(tempX,tempY))
+		if(checkRoute(t,0,tiles).equals(t))
 		{	
 			tiles =(super.move(t,tiles,ai));
 		}
@@ -51,7 +51,9 @@ class Knight extends Piece
 		{
 			int newX = x+ knightX[i];
 			int newY = y+ knightY[i];
-			if(newX<0||newX>=tiles[0].length||newY<0||newY>=tiles.length)
+			if(newX<0||newX>=tiles[0].length||newY<0||newY>=tiles.length||tiles[newX][newY].getType()==0)
+				continue;
+			if(tiles[newX][newY].getOccupied()&&color==tiles[newX][newY].getColor())
 				continue;
 			moves.add(tiles[newX][newY]);
 		}
@@ -62,25 +64,26 @@ class Knight extends Piece
 		}
 		return moves;
 	}
-	public boolean checkRoute(int tempX, int tempY)
+	@Override
+	public Tile checkRoute(Tile t,int dir,Tile[][] tiles)//generic sake
 	{
-		System.out.println("test");
 		int xNum= 2, yNum=1;
+		int tempX=t.getX(), tempY=t.getY();
 		for(int i=0; i<2; i++)//8 possible positions for a knight to move.
 		{
 			if(x-xNum==tempX&&y-yNum==tempY)
-				return true;
+				return t;
 			else if(x-xNum==tempX&&y+yNum==tempY)
-				return true;
+				return t;
 			else if(x+xNum==tempX&&y-yNum==tempY)
-				return true;
+				return t;
 			else if(x+xNum==tempX&&y+yNum==tempY)
-				return true;
+				return t;
 			
 			xNum=1;
 			yNum=2;
 		}
-		return false;
+		return null;
 	}
 	public void draw(Graphics g, int i)
 	{
