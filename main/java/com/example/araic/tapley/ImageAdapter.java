@@ -2,6 +2,8 @@ package com.example.araic.tapley;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,7 +21,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return tiles.length;
     }
 
     public Object getItem(int position) {
@@ -30,14 +32,82 @@ public class ImageAdapter extends BaseAdapter {
         return 0;
     }
 
-    //Resources res = mContext.getResources();
-    //int[] mapValues = res.getIntArray(R.array.bits);
+    private int[][] array =
+            {{1, 1, 1, 0, 0, 1, 1, 1},
+            {1, 1, 1, 0, 0, 1, 3, 1},
+            {1, 1, 1, 0, 0, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 4, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 0, 0, 1, 1, 1},
+            {1, 2, 1, 0, 0, 1, 1, 1},
+            {1, 1, 1, 0, 0, 1, 1, 1}};
+    void print(){
+        System.out.println("array length: " + array.length);
+    }
 
-    private Integer[] mThumbIds = new Integer[64];
-    public void setThumbs(){
-        for(int i = 0; i < 64; i=i+2){
-            mThumbIds[i] = R.drawable.sample_20;
-            mThumbIds[i+1] = R.drawable.sample_21;
+    private Integer[] tiles = new Integer[64];
+    int count = 0;
+    public void setMap(){
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++) {
+                count %= 2;
+                tiles[(i*8)+j] = getImage(i,j,count);
+                //tiles[i] = R.drawable.sample_20;
+                count++;
+            }
+            count++;
+        }
+    }
+
+    public Integer getImage(int x, int y, int count){
+        //Resources r = mContext.getResources();
+        //int[] array = r.getIntArray(R.array.bits);
+        if(count == 0) {
+            if (array[x][y] == 1) {
+                return R.drawable.darktile;
+            }
+            else if(array[x][y] == 4) {//only ai tiles
+                return R.drawable.darkrook;
+            }
+            else if(array[x][y] == 5) {//only ai tiles
+                return R.drawable.darkknight;
+            }
+            else if(array[x][y] == 6) {//only ai tiles
+                return R.drawable.darkbishop;
+            }
+            else if(array[x][y] == 7) {//only ai tiles
+                return R.drawable.darkqueen;
+            }
+            else if(array[x][y] == 8) {//only ai tiles
+                return R.drawable.darkking;
+            }
+            else {//if (array[x][y] == 0)
+                return R.drawable.darktree;
+            }
+        }
+        else {
+            if(array[x][y] == 1) {
+                return R.drawable.lighttile;
+            }
+            else if(array[x][y]==4){//only ai tiles
+                return R.drawable.lightrook;
+            }
+            else if(array[x][y]==5){//only ai tiles
+                return R.drawable.lightknight;
+            }
+            else if(array[x][y]==6){//only ai tiles
+                return R.drawable.lightbishop;
+            }
+            else if(array[x][y]==7){//only ai tiles
+                return R.drawable.lightqueen;
+            }
+            else if(array[x][y]==8){//only ai tiles
+                return R.drawable.lightking;
+            }
+            else { // if (array[x][y] == 0)
+                return R.drawable.lighttree;
+            }
         }
     }
 
@@ -46,45 +116,15 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
+            imageView.setLayoutParams(new GridView.LayoutParams(140, 140));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(0, 0, 0, 0);
         } else {
             imageView = (ImageView) convertView;
         }
-        setThumbs();
-        imageView.setImageResource(mThumbIds[position]);
-        System.out.println("test");
+        setMap();
+        //print();
+        imageView.setImageResource(tiles[position]);
         return imageView;
     }
-
-
-
-    // references to our images
-   /* private Integer[] mThumbIds= {
-            //Row 0
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            //Row 1
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            //Row 2
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            //Row 3
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            //Row 4
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            //Row 5
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            //Row 6
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            R.drawable.sample_20, R.drawable.sample_21,R.drawable.sample_20, R.drawable.sample_21,
-            //Row 7
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20,
-            R.drawable.sample_21, R.drawable.sample_20,R.drawable.sample_21, R.drawable.sample_20
-    };*/
 }

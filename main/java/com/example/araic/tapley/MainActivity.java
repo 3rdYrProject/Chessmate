@@ -24,9 +24,9 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu_main);
+        setContentView(R.layout.activity_main);
 
-        spinner1 = (Spinner) findViewById(R.id.spinner1);
+        /*spinner1 = (Spinner) findViewById(R.id.spinner1);
         List<String> list = new ArrayList<String>();
         list.add("Level 1");
         list.add("Level 2");
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         addListenerOnSpinnerItemSelection();
 
         // Button click Listener
-        addListenerOnButton();
+        addListenerOnButton();*/
 
 
     }
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
     // Add spinner data
-
+/*
     public void addListenerOnSpinnerItemSelection(){
 
         spinner1.setOnItemSelectedListener(new CustomOnItemSelectedListener());
@@ -82,6 +82,6 @@ public class MainActivity extends Activity {
 
         });
 
-    }
+    }*/
 
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tapley</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="welcomeString">Welcome to ChessMate</string>
+    <string name="action_settings">Settings</string>
+    <string name="spinner_prompt">Hey</string>
+
+    <string-array name="levelsChoice">
+        <item>Level 1</item>
+        <item>Level 2</item>
+    </string-array>
+
+    <string name="title_activity_button">ButtonActivity</string>
+    <string name="title_activity_test_checkers">testCheckers</string>
+    <string name="template_capture_amounts">x0</string>
+    <string name="template_current_player">Current Player</string>
+    <string name="template_opposing_player">Opposing Player</string>
+    <string name="button_send">Send Message</string>
+
+
+</resources>
