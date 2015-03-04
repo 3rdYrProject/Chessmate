@@ -57,11 +57,6 @@ class Knight extends Piece
 				continue;
 			moves.add(tiles[newX][newY]);
 		}
-		System.out.println("KNIGHT: ");
-		for(Tile t:moves)
-		{
-			System.out.println("\t"+t);
-		}
 		return moves;
 	}
 	@Override
@@ -83,7 +78,7 @@ class Knight extends Piece
 			xNum=1;
 			yNum=2;
 		}
-		return null;
+		return this;
 	}
 	public void draw(Graphics g, int i)
 	{

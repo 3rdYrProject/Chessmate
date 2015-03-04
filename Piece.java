@@ -62,8 +62,6 @@ abstract class Piece extends Tile{
 			t.y=tempY;
 			return tiles;
 		}
-		//can probably use checkRoute to check how far we 
-		
 		public void draw(Graphics g, int i, BufferedImage BPiece, BufferedImage WPiece, int color)
 		{
 			super.draw(g,i);
