@@ -35,7 +35,7 @@ class AI
 		aiPieces= new LinkedList<>();
 		moved = new LinkedList<>();
 		copyMoved = new LinkedList<>();
-		depth=8;//change later
+		depth=6;//change later
 	}
 	boolean isEmpty()
 	{
@@ -97,7 +97,6 @@ class AI
 				if(tempGoal!=null)
 				{
 					goal= new Tile(tempGoal);
-					tempGoal=null;
 				}
 				return reconstruct_path(came_from,current);
 			}
@@ -243,8 +242,6 @@ class AI
 		LinkedList<Tile> vertices = new LinkedList<>();
 		for(Tile t:path)
 		{
-			if(piece.getName().equals("Bishop"))
-				System.out.print(t+"\t");
 			if(current!=null)
 			{
 				if(direction!=0&&direction!=getDirection(current,t))
@@ -256,7 +253,6 @@ class AI
 		
 			current= t;
 		}
-		System.out.println();
 		//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
 		return vertices.size()+1;
 	}	
@@ -297,12 +293,12 @@ class AI
 			if(p.equals(piece))
 				continue;
 			String name = p.getName();
-			boolean hasMoved=!moved.get(count);
-			if(!name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))//&&hasMoved)
+			boolean hasMoved=moved.get(count);
+			if(!name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece)&&hasMoved)
 			{
 				return true;
 			}
-			else if((name.equals("Bishop")||name.equals("Queen"))&&p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))//&&hasMoved)
+			else if((name.equals("Bishop")||name.equals("Queen"))&&p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece)&&hasMoved)
 			{
 				return true;
 			}
@@ -311,28 +307,19 @@ class AI
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
-		return(Min(depth,user,piece,new Node((int)(Double.NEGATIVE_INFINITY)),new Node((int)Double.POSITIVE_INFINITY),tiles));
+		return(min(depth,user,piece,new Node((int)(Double.NEGATIVE_INFINITY)),new Node((int)Double.POSITIVE_INFINITY),tiles));
 	}
 	 
-	Node Max(int depth, Piece user, Piece piece,Node alpha, Node beta, Tile[][] tiles)
+	Node max(int depth, Piece user, Piece piece,Node alpha, Node beta, Tile[][] tiles)
 	{
-		if(depth <= 0)
-		{
-			int value=evaluatePaths(tiles, user);
-			if(value==0)//I reached the goal
-				return(new Node((int)(Double.POSITIVE_INFINITY)));//reached goal
-			else if(isProtected(user,tiles)&&!isProtected(piece,tiles))
-				return(new Node(100000));
-			
-			
-			return(new Node((10-value)*10));
-		}
+		if(user.equals(goal))//or user has been taken
+			return alpha;
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(user);
 			user.changePos(t);
-			Node val = Min(depth - 1, user, piece, alpha, beta,tiles);
+			Node val = min(depth - 1, user, piece, alpha, beta,tiles);
 			val.addTile(t);
 			user.changePos(temp);
 			if(val.getValue() >= beta.getValue())
@@ -344,33 +331,38 @@ class AI
 		}
 		return alpha;
 	}
-	Node Min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
+	Node min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
 	{
+		//if(user.equals(goal))
+		//	return beta;
 		if(depth <= 0)
 		{
-			int value=evaluatePaths(tiles, piece);
-			if(value==0)
+			int pieceValue=evaluatePaths(tiles, piece);
+			int userValue=evaluatePaths(tiles,user);
+			if(pieceValue==0)
 			{
 				return new Node((int)(Double.NEGATIVE_INFINITY));
 			}
-			else if(value==1&&isProtected(piece,tiles))
+			else if(pieceValue==1&&isProtected(piece,tiles))
 			{
-				return(new Node(-100000));
+				return(new Node((int)(Double.NEGATIVE_INFINITY+1)));
 			}
-			else if(isProtected(piece,tiles))
-				return(new Node(-10000));
-			//else if(value==1)//I can be taken
-			//{
-			//	return(new Node((int)(Double.POSITIVE_INFINITY)-1));
-			//}
-			return(new Node(-((10-value)*10)));
+			else if(userValue==1)
+			{
+				return(new Node((int)(Double.POSITIVE_INFINITY)));
+			}
+			else if(pieceValue==1)//I can be taken
+			{
+				return(new Node((int)(Double.POSITIVE_INFINITY)-1));
+			}
+			return(new Node(0));
 		}
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece);
 			piece.changePos(t);
-			Node val = Max(depth - 1, user, piece, alpha, beta,tiles);
+			Node val = max(depth - 1, user, piece, alpha, beta,tiles);
 			val.addTile(t);
 			piece.changePos(temp);
 			if(val.getValue() <= alpha.getValue())
