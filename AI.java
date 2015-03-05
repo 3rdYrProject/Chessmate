@@ -10,11 +10,11 @@ import java.util.*;
 *   Tuesday:
 *   Found some huge bugs that are now fixed. The ai is so good now. 
 *	Get knight to work, done.
-*
-*	To do still, once these are done we are finished with all of the mechanics!!!!!! :D
-*
 *   Pieces sometimes think they are protected because of an ai piece that hasn't moved yet, will try to fix tomorrow.
 *   An AI piece should take the user regardless of a piece being in the way since they all move at the same time.
+*
+
+*
 *	Don't allow user to move through pieces, tomorrow.
 */
 class AI
@@ -27,14 +27,12 @@ class AI
 	int depth;
 	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
-	LinkedList<Boolean> moved;
-	LinkedList<Boolean> copyMoved;
+	LinkedList<LinkedList<Tile>> path;
 	
 	AI()
 	{
 		aiPieces= new LinkedList<>();
-		moved = new LinkedList<>();
-		copyMoved = new LinkedList<>();
+		path= new LinkedList<>();
 		depth=8;//change later
 	}
 	boolean isEmpty()
@@ -48,8 +46,6 @@ class AI
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
-		moved.add(false);
-		copyMoved.add(false);
 	}
 	void addUser(Piece user)
 	{
@@ -64,6 +60,7 @@ class AI
 		oldUser= new Tile(this.user);
 		this.user=user;
 		tempUser= new Tile(this.user);
+		System.out.println("UPDATED: "+user);
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
@@ -74,7 +71,7 @@ class AI
 			if(piece.equals(p))
 			{
 				tempGoal=new Tile(goal);
-				goal=this.user;
+				goal=user;
 			}	
 		}
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
@@ -95,10 +92,7 @@ class AI
 			if(current.equals(goal))
 			{
 				if(tempGoal!=null)
-				{
-					goal= new Tile(tempGoal);
-					tempGoal=null;
-				}
+					goal= tempGoal;
 				return reconstruct_path(came_from,current);
 			}
 			openset.remove(current);
@@ -132,7 +126,7 @@ class AI
 	int getDirection(Tile lastCurrent, Tile current)
 	{
 		int direction= lastCurrent.checkOrth(current);
-		if(direction==0&&(currentPiece.getName().equals("Queen")||currentPiece.getName().equals("Bishop")))
+		if(direction==0&&user.getName().equals("Queen")||user.getName().equals("Bishop"))
 			return lastCurrent.checkDiag(current);
 		else 
 			return direction;
@@ -140,23 +134,22 @@ class AI
 	int dist_between(Tile current, Tile neighbour, Tile goal, Tile[][] tiles)
 	{
 		int penalty= 15;
-		String name = currentPiece.getName();
-		if(!name.equals("Knight")&&getDirection(current,neighbour)!=direction)
+		if(currentPiece.getName()!="Knight"&&getDirection(current,neighbour)!=direction)
 			penalty= 40;
 		//if we are on the same x or y we don't want to penalise the path
 		//might move this into cost_estimate, might.
-		if(!(name.equals("Bishop"))&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
+		if((currentPiece.getName().equals("Rook")||currentPiece.getName().equals("Queen"))&&current.checkRoute(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
 		}
-		else if((name.equals("Bishop")||name.equals("Queen"))&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
+		if((currentPiece.getName().equals("Bishop")||currentPiece.getName().equals("Queen"))&&current.checkRouteDiag(goal,getDirection(current,goal),tiles)!=null)
 		{
 			penalty= 5;
 		}
 		return penalty;
 	}
 	
-	int heuristic_cost_estimate(Tile start,Tile goal)
+	int heuristic_cost_estimate(Tile start,Tile goal)//edit here to add an increased value for changing direction
 	{
 		return((Math.abs(start.getX() - goal.getX())+ Math.abs(start.getY() - goal.getY()))*10);
 	}
@@ -233,9 +226,9 @@ class AI
 		return total_path;
 	}
 	
-	int evaluatePaths(Tile[][] tiles, Piece piece)//returns a list of vertices for the ai to block
+	int evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
 	{
-		LinkedList<Tile> path=getPath(tiles,piece);
+		LinkedList<Tile> path=getPath(tiles,user);
 		if(path==null)
 			return(0);
 		Tile current = null;
@@ -243,8 +236,6 @@ class AI
 		LinkedList<Tile> vertices = new LinkedList<>();
 		for(Tile t:path)
 		{
-			if(piece.getName().equals("Bishop"))
-				System.out.print(t+"\t");
 			if(current!=null)
 			{
 				if(direction!=0&&direction!=getDirection(current,t))
@@ -256,53 +247,47 @@ class AI
 		
 			current= t;
 		}
-		System.out.println();
 		//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
 		return vertices.size()+1;
 	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
-		int count=0;
-		moved.clear();
-		moved.addAll(copyMoved);
 		for(Piece p:aiPieces)
 		{
 			Tile check=null;
 			String name= p.getName();
 			if(!name.equals("Bishop"))
 				check = (p).checkRoute(user,p.checkOrth(user),tiles);
-			if(check==null&&(name.equals("Bishop")||name.equals("Queen")))
+			if(name.equals("Bishop")||name.equals("Queen"))
 				check = (p).checkRouteDiag(user,p.checkDiag(user),tiles);
+			System.out.println("Check: "+check);
 			if(check!=null&&check.equals(user))//take the user
 			{
+				System.out.println("Took the user");
 				tiles= p.move((Tile)user,tiles,this);
 			}
 			else
 			{
+				System.out.println("NEXT DECISION");
 				Node temp= minmax(depth,user,p,tiles);
+				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
-			moved.set(count,true);
-			count++;
 		}
-		
 		return tiles;
 	}
 	boolean isProtected(Piece piece, Tile[][] tiles)
 	{	
-		int count=-1;
 		for(Piece p:aiPieces)
 		{
-			count++;
+			String name = p.getName();
 			if(p.equals(piece))
 				continue;
-			String name = p.getName();
-			boolean hasMoved=!moved.get(count);
-			if(!name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))//&&hasMoved)
+			if(name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
-			else if((name.equals("Bishop")||name.equals("Queen"))&&p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))//&&hasMoved)
+			else if(name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
@@ -321,10 +306,6 @@ class AI
 			int value=evaluatePaths(tiles, user);
 			if(value==0)//I reached the goal
 				return(new Node((int)(Double.POSITIVE_INFINITY)));//reached goal
-			else if(isProtected(user,tiles)&&!isProtected(piece,tiles))
-				return(new Node(100000));
-			
-			
 			return(new Node((10-value)*10));
 		}
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
@@ -353,18 +334,17 @@ class AI
 			{
 				return new Node((int)(Double.NEGATIVE_INFINITY));
 			}
-			else if(value==1&&isProtected(piece,tiles))
+			else if(value==1&&isProtected(piece,tiles))//I can take the user, I can be taken too though
 			{
 				return(new Node(-100000));
 			}
-			else if(isProtected(piece,tiles))
-				return(new Node(-10000));
-			//else if(value==1)//I can be taken
-			//{
-			//	return(new Node((int)(Double.POSITIVE_INFINITY)-1));
-			//}
+			else if(value==1)//I can be taken
+			{
+				return(new Node((int)(Double.POSITIVE_INFINITY)-1));
+			}
 			return(new Node(-((10-value)*10)));
 		}
+		System.out.println(piece.getName());
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
