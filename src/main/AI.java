@@ -1,3 +1,5 @@
+package org.Chessmate;
+
 import java.util.*;
 /*	This is here to keep me on track, you can delete when they are done
 *

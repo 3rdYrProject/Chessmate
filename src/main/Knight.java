@@ -1,3 +1,5 @@
+package org.Chessmate
+
 import java.util.*;
 import java.io.*;
 import java.awt.*;

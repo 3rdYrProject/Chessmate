@@ -1,0 +1,14 @@
+import java.awt.*
+import java.util.List
+
+apply plugin: 'groovy'
+
+version = '0.5'
+
+compileSourceSetJava  = '.'
+
+
+repositories {
+    mavenCentral()
+}
+

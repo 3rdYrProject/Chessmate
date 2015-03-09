@@ -1,3 +1,5 @@
+package org.Chessmate
+
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -10,7 +12,7 @@ public class main
 	{
 		JFrame f= new JFrame();
 		f.add(new Board());
-        f.setVisible(true);
+		f.setVisible(true);
 		f.setSize(600,700);
 	}
 }

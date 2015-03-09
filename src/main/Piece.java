@@ -1,3 +1,6 @@
+package org.Chessmate;
+
+
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -29,9 +32,7 @@ abstract class Piece extends Tile{
 		public Tile[][] move(Tile t, Tile[][] tiles,AI ai)
 		{
 			//need to check if we reached the goal or took a piece
-            if(t.equals(this))
-                return tiles;
-			System.out.println("piece "+t);
+			//System.out.println("TYPE: "+t.getType());
 			if(t.getType()==3)
 			{
 				JOptionPane.showMessageDialog(null,"You completed the level.");
@@ -42,13 +43,12 @@ abstract class Piece extends Tile{
 			{
 				if(t.color==1)
 				{
-					System.out.println("Hard luck.");
+					JOptionPane.showMessageDialog(null,"Hard luck.");
 				}
 				else if(t.color!=this.color)
 				{
 					ai.removePiece(t);
 				}
-                System.out.println("It was occupied");
 				tiles[t.x][t.y]= tiles[this.x][this.y];
 				tiles[this.x][this.y] = new Tile(this.x,this.y,1);
 			}
