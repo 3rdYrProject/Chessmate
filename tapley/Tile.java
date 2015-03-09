@@ -130,32 +130,41 @@ class Tile implements Comparable{
         if(direction==0)
             return tiles[x][y];
         int distance = 0;
-        //System.out.println(direction);
+        //System.out.println("dir" +direction+" goal " + goal);
         distance = Math.abs(this.x - goal.getX())+ Math.abs(this.y - goal.getY());
         int inc = 1;
         //down up right left
-        //System.out.println(direction+ " " +distance);
+        //System.out.println("distance: " + distance + " direction: " + direction);
         while(inc <= distance){
+            //System.out.println("inc: " + inc);
             if(direction == 1){
-                if(tiles[this.x][this.y + inc].getType()==0)
-                    return tiles[x][y];
+                //System.out.println("type: " + tiles[this.x][this.y + inc].getType());
+                if(tiles[this.x][this.y + inc].getType()==0) {
+                    //System.out.println("Returning current");
+                    return null;
+                }
                 else if(tiles[this.x][this.y + inc].getOccupied())
                     return tiles[this.x][this.y + inc];
             }
             else if(direction == 2){
+                //System.out.println("type: " + tiles[this.x][this.y - inc].getType());
+                //System.out.println("2");
                 if(tiles[this.x][this.y - inc].getType()==0)
                     return tiles[x][y];
                 else if(tiles[this.x][this.y - inc].getOccupied())
                     return tiles[this.x][this.y - inc];
             }
             else if(direction == 3){
+                //System.out.println("type: " + tiles[this.x + inc][this.y].getType());
+                //System.out.println("3");
                 if(tiles[this.x + inc][this.y].getType()==0)
                     return tiles[x][y];
                 else if(tiles[this.x + inc][this.y].getOccupied())
                     return tiles[this.x + inc][this.y];
             }
-            else if(direction == 4)
-            {
+            else if(direction == 4){
+                //System.out.println("type: " + tiles[this.x - inc][this.y].getType());
+                //System.out.println("4");
                 if(tiles[this.x - inc][this.y].getType()==0)
                     return tiles[x][y];
                 else if(tiles[this.x - inc][this.y].getOccupied())
@@ -163,6 +172,7 @@ class Tile implements Comparable{
             }
             inc++;
         }
+        System.out.println("returning goal");
         return goal;
     }
 

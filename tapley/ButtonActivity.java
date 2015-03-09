@@ -19,10 +19,10 @@ public class ButtonActivity extends ActionBarActivity {
         {{1, 1, 1, 0, 0, 1, 1, 1},
         {1, 1, 1, 0, 0, 1, 3, 1},
         {1, 1, 1, 0, 0, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 4, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 0, 0, 1, 1, 1},
-        {1, 9, 1, 0, 0, 1, 1, 1},
+        {1, 9, 1, 0, 0, 4, 1, 1},
         {1, 1, 1, 0, 0, 1, 1, 1}};
 
     ImageAdapter img = new ImageAdapter(this, map);
@@ -57,7 +57,7 @@ public class ButtonActivity extends ActionBarActivity {
 
                 Tile moveLoc = tiles[x][y];//new userTile
 
-                if(moveLoc.getType()!=0) {
+                if(moveLoc.getType()!=0&&!(userPiece.getX()==moveLoc.getX()&&userPiece.getY()==moveLoc.getY())) {
                     Tile tempPiece = new Tile(userPiece);
                     Tile[][] temp = userPiece.move(moveLoc, tiles, ai);
                     if(moveLoc.equals(tempPiece)){
@@ -65,15 +65,17 @@ public class ButtonActivity extends ActionBarActivity {
 
                         if(!ai.isEmpty()){
                             ai.updateUser(userPiece);
+                            //System.out.println("Going into decision");
                             tiles = ai.decision(tiles);
+                            System.out.println("Returned from decision");
                         }
                     }
                     for(int i = 0; i < tiles.length; i++){
                         for(int j = 0; j < tiles[0].length; j++){
                             map[i][j] = tiles[i][j].getType();
                         }
-                    }
-                    img.notifyDataSetChanged();//repaint
+                    }//repaint
+                    img.notifyDataSetChanged();
                 }
             }
         });

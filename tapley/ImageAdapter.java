@@ -58,7 +58,7 @@ public class ImageAdapter extends BaseAdapter {
                 int temp = array[i][j];
                 if(temp>8) {//userPiece
                     userPiece = getPiece(i, j, temp, 0);
-                    //System.out.println("setting userPiece");
+                    System.out.println("setting userPiece");
                     tiles[i][j] = userPiece;
                     ai.addUser(userPiece);
                 }

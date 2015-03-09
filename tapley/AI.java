@@ -240,6 +240,7 @@ class AI
     }
     Tile[][] decision(Tile[][] tiles)
     {
+        System.out.println("In decision");
         for(Piece p:aiPieces)
         {
             Tile check=null;
@@ -251,15 +252,14 @@ class AI
             //System.out.println("Check: "+check);
             if(check!=null&&check.equals(user))//take the user
             {
-                //System.out.println("Took the user");
-
-                tiles= p.move((Tile)user,tiles,this);
+                System.out.println("Took the user");
+                tiles= p.move(user,tiles,this);
             }
             else
             {
-                //System.out.println("NEXT DECISION");
+                System.out.println("NEXT DECISION");
                 Node temp= minmax(depth,user,p,tiles);
-                //System.out.println("Le decision: "+ temp.getTile());
+                System.out.println("Le decision: "+ temp.getTile());
                 tiles= (p.move(temp.getTile(),tiles,this));
             }
         }
