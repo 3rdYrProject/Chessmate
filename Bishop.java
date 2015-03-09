@@ -35,7 +35,7 @@ class Bishop extends Piece
 			temp= checkRouteDiag(t,diag,tiles);
 			if(temp!=null)
 			{
-				return(super.move(temp,tiles,ai));
+				return(super.move(t,tiles,ai));
 			}
 		}
 		return tiles;	

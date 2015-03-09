@@ -76,6 +76,7 @@ class Board extends JPanel implements MouseListener
 		
 	}
 	
+	//various listener methods.
 	public Piece getPiece(int x, int y, int i, int color)
 	{
 		//i is greater than 3. 

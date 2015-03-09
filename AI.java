@@ -1,3 +1,4 @@
+
 import java.util.*;
 /*	This is here to keep me on track, you can delete when they are done
 *
@@ -27,14 +28,11 @@ class AI
 	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
 	LinkedList<LinkedList<Tile>> path;
-	LinkedList<Boolean> moved;
-	LinkedList<Boolean> tempMoved;
+	
 	AI()
 	{
 		aiPieces= new LinkedList<>();
 		path= new LinkedList<>();
-		moved= new LinkedList<>();
-		tempMoved= new LinkedList<>();
 		depth=8;//change later
 	}
 	boolean isEmpty()
@@ -48,8 +46,6 @@ class AI
 	void addPiece(Piece piece)//adds ai piece to the AI mum
 	{
 		aiPieces.add(piece);
-		moved.add(false);
-		tempMoved.add(false);
 	}
 	void addUser(Piece user)
 	{
@@ -64,6 +60,7 @@ class AI
 		oldUser= new Tile(this.user);
 		this.user=user;
 		tempUser= new Tile(this.user);
+		System.out.println("UPDATED: "+user);
 	}
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
@@ -255,9 +252,6 @@ class AI
 	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
-		moved.clear();
-		moved.addAll(tempMoved);
-		int count=0;
 		for(Piece p:aiPieces)
 		{
 			Tile check=null;
@@ -266,35 +260,34 @@ class AI
 				check = (p).checkRoute(user,p.checkOrth(user),tiles);
 			if(name.equals("Bishop")||name.equals("Queen"))
 				check = (p).checkRouteDiag(user,p.checkDiag(user),tiles);
+			System.out.println("Check: "+check);
 			if(check!=null&&check.equals(user))//take the user
 			{
+				System.out.println("Took the user");
 				tiles= p.move((Tile)user,tiles,this);
 			}
 			else
 			{
+				System.out.println("NEXT DECISION");
 				Node temp= minmax(depth,user,p,tiles);
+				System.out.println("Le decision: "+ temp.getTile());
 				tiles= (p.move(temp.getTile(),tiles,this));
 			}
-			moved.set(count,true);
-			count++;
 		}
 		return tiles;
 	}
 	boolean isProtected(Piece piece, Tile[][] tiles)
 	{	
-		int count=-1;
 		for(Piece p:aiPieces)
 		{
 			String name = p.getName();
-			count++;
 			if(p.equals(piece))
 				continue;
-			boolean hasMoved= moved.get(count);
-			if(!name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece)&&hasMoved)
+			if(name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
-			else if(name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece)&&hasMoved)
+			else if(name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
@@ -303,15 +296,18 @@ class AI
 	}
 	Node minmax(int depth,Piece user,Piece piece, Tile[][] tiles)
 	{
-		System.out.println(piece.getName());
-		Node value=(Min(depth,user,piece,new Node((int)(Double.NEGATIVE_INFINITY)),new Node((int)Double.POSITIVE_INFINITY),tiles));
-		System.out.println(value.getTile());
-		return value;
+		return(Min(depth,user,piece,new Node((int)(Double.NEGATIVE_INFINITY)),new Node((int)Double.POSITIVE_INFINITY),tiles));
 	}
 	 
 	Node Max(int depth, Piece user, Piece piece,Node alpha, Node beta, Tile[][] tiles)
 	{
-		int best = (int)(Double.POSITIVE_INFINITY);
+		if(depth <= 0)
+		{
+			int value=evaluatePaths(tiles, user);
+			if(value==0)//I reached the goal
+				return(new Node((int)(Double.POSITIVE_INFINITY)));//reached goal
+			return(new Node((10-value)*10));
+		}
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
 		for(Tile t:moves)
 		{
@@ -331,37 +327,24 @@ class AI
 	}
 	Node Min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
 	{
-		int best = (int)(Double.NEGATIVE_INFINITY);
 		if(depth <= 0)
 		{
-			int value = evaluatePaths(tiles,piece);
-			if(value==0)
-			{
-				return new Node((int)(best));
-			}
-			return new Node(-(10-value)*10);
-			/*int value=evaluatePaths(tiles, piece);
+			int value=evaluatePaths(tiles, piece);
 			if(value==0)
 			{
 				return new Node((int)(Double.NEGATIVE_INFINITY));
 			}
-			else if(piece.getName().equals(user.getName())&&value==1)//I can take the user, I can be taken too though
+			else if(value==1&&isProtected(piece,tiles))//I can take the user, I can be taken too though
 			{
-				if(isProtected(piece,tiles))
-					return(new Node((int)(Double.NEGATIVE_INFINITY+1));
-				else 
-					return(new Node((int)(Double.POSITIVE_INFINITY-1)));
+				return(new Node(-100000));
 			}
-			else if(isProtected(user,tiles))
+			else if(value==1)//I can be taken
 			{
-				return();
+				return(new Node((int)(Double.POSITIVE_INFINITY)-1));
 			}
-			//else if(value==1)//If I'm one away and am a bishop the user may be a rook so I am safe
-			//{
-			//	return(new Node((int)(Double.POSITIVE_INFINITY)-1));
-			//}*/
-			//return(new Node(-((10-value)*10)));
+			return(new Node(-((10-value)*10)));
 		}
+		System.out.println(piece.getName());
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
 		for(Tile t:moves)
 		{

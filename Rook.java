@@ -41,9 +41,10 @@ class Rook extends Piece
 			
 			//need to check each square in route to see if AI piece or obstacle
 			temp = checkRoute(t,dir,tiles);
+			
 			if(temp!=null)
 			{
-				tiles=(super.move(temp,tiles,ai));
+				tiles=(super.move(t,tiles,ai));
 			}
 		}
 		return tiles;	
