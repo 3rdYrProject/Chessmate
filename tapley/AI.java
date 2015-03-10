@@ -240,7 +240,7 @@ class AI
     }
     Tile[][] decision(Tile[][] tiles)
     {
-        System.out.println("In decision");
+        //System.out.println("In decision");
         for(Piece p:aiPieces)
         {
             Tile check=null;

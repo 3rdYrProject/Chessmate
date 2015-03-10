@@ -1,5 +1,6 @@
 package com.example.araic.tapley;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,21 +12,61 @@ import android.widget.GridView;
 public class ButtonActivity extends ActionBarActivity {
 
     int x, y;
-    Tile[][] tiles = new Tile[8][8];//-----
+    Tile[][] tiles = new Tile[8][8];
     AI ai;
     Piece userPiece = null;
+    int[][] map;
 
-    private int[][] map =
-        {{1, 1, 1, 0, 0, 1, 1, 1},
-        {1, 1, 1, 0, 0, 1, 3, 1},
-        {1, 1, 1, 0, 0, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 0, 0, 1, 1, 1},
-        {1, 9, 1, 0, 0, 4, 1, 1},
-        {1, 1, 1, 0, 0, 1, 1, 1}};
+    ImageAdapter img;
 
-    ImageAdapter img = new ImageAdapter(this, map);
+    int[][] mapForLevel(int level) {
+        int[][] mapFromArray;
+        if(level == 1) {
+            mapFromArray = new int[][]
+                {{1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 3, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 9, 1, 0, 0, 4, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1}};
+        }
+        else if(level == 2){
+            mapFromArray =  new int[][]
+                {{1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 4, 1, 0, 0, 1, 3, 1},
+                {1, 4, 1, 0, 0, 1, 1, 1},
+                {1, 4, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 9, 1, 0, 0, 4, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1}};
+        }
+        else if(level == 3){
+            mapFromArray =  new int[][]
+                {{1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 3, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 9, 1, 0, 0, 4, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1}};
+        }
+        else{
+            mapFromArray =  new int[][]
+                {{1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 3, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1},
+                {1, 11, 1, 0, 0, 4, 1, 1},
+                {1, 1, 1, 0, 0, 1, 1, 1}};
+        }
+        return mapFromArray;
+    }
 
     void print(Tile[][] tiles){
         for(int i = 0; i < 8; i++){
@@ -40,8 +81,17 @@ public class ButtonActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_button);
 
+        Intent myself = getIntent();
+        int level= myself.getIntExtra("test",0);
+
+        map = mapForLevel(level);
+
+        img = new ImageAdapter(this, map);
+
+
         GridView gridview = (GridView) findViewById(R.id.grid_view);
         gridview.setAdapter(img);//paint
+
 
         tiles = img.getTiles();
         ai = img.getAi();
@@ -67,7 +117,7 @@ public class ButtonActivity extends ActionBarActivity {
                             ai.updateUser(userPiece);
                             //System.out.println("Going into decision");
                             tiles = ai.decision(tiles);
-                            System.out.println("Returned from decision");
+                            //System.out.println("Returned from decision");
                         }
                     }
                     for(int i = 0; i < tiles.length; i++){
@@ -80,27 +130,6 @@ public class ButtonActivity extends ActionBarActivity {
             }
         });
     }
-/* if(moveLoc.getType()!=0&&!(userPiece.getX()==moveLoc.getX()&&userPiece.getY()==moveLoc.getY())) {
-                    Tile tempPiece = new Tile(userPiece);
-                    Tile[][] temp = userPiece.move(moveLoc, tiles, ai);
-                    if(moveLoc.equals(tempPiece)){
-                        tiles = temp;
-                        map[x][y] = userPiece.getType();
-                        System.out.println("In if statement: " + map[x][y]);
-                        map[userPiece.getX()][userPiece.getY()] = 1;
-                        img.notifyDataSetChanged();
-                        System.out.println("hereeeee");
-                        if(!ai.isEmpty()){
-                            ai.updateUser(userPiece);
-                            //tiles = ai.decision(tiles);
-                        }
-                    }
-
-    tiles[x][y] = userPiece;
-    map[x][y] = userPiece.getType();//integer to repaint
-    map[userPiece.getX()][userPiece.getY()] = 1;//if user clicks on same square
-    //repaint
-    img.notifyDataSetChanged();*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

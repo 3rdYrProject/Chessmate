@@ -172,7 +172,7 @@ class Tile implements Comparable{
             }
             inc++;
         }
-        System.out.println("returning goal");
+        //System.out.println("returning goal");
         return goal;
     }
 

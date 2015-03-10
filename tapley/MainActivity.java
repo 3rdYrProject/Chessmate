@@ -13,8 +13,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
-    public void sendMessage(View view){
+    public void sendMessage1(View view){
         Intent intent = new Intent(this, ButtonActivity.class);
+        intent.putExtra("test", 1);
+        startActivity(intent);
+    }
+    public void sendMessage2(View view){
+        Intent intent = new Intent(this, ButtonActivity.class);
+        intent.putExtra("test", 2);
+        startActivity(intent);
+    }
+    public void sendMessage3(View view){
+        Intent intent = new Intent(this, ButtonActivity.class);
+        intent.putExtra("test", 3);
+        startActivity(intent);
+    }
+    public void sendMessage4(View view){
+        Intent intent = new Intent(this, ButtonActivity.class);
+        intent.putExtra("test", 4);
         startActivity(intent);
     }
 }
