@@ -1,6 +1,6 @@
+import java.awt.*;
 import java.util.*;
 import java.io.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
@@ -15,13 +15,15 @@ class Knight extends Piece
 	{
 		super(x,y,type,"Knight",color);
 		this.color= color;
-		try
-		{
-			if(color==0)
-			
-				BKnight= ImageIO.read(new File("images/BlackKnight.png"));
-			else 
-				WKnight= ImageIO.read(new File("images/WhiteKnight.png"));
+		try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            if (color == 0) {
+                File file = new File(classLoader.getResource("BlackKnight.png").getFile());
+                BKnight = ImageIO.read(file);
+            } else {
+                File file = new File(classLoader.getResource("WhiteKnight.png").getFile());
+                WKnight = ImageIO.read(file);
+            }
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}
@@ -57,11 +59,6 @@ class Knight extends Piece
 				continue;
 			moves.add(tiles[newX][newY]);
 		}
-		System.out.println("KNIGHT: ");
-		for(Tile t:moves)
-		{
-			System.out.println("\t"+t);
-		}
 		return moves;
 	}
 	@Override
@@ -83,7 +80,7 @@ class Knight extends Piece
 			xNum=1;
 			yNum=2;
 		}
-		return null;
+		return this;
 	}
 	public void draw(Graphics g, int i)
 	{

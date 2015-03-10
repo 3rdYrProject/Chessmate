@@ -1,10 +1,9 @@
-import java.util.*;
-import java.io.*;
+
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import javax.imageio.*;
-import javax.swing.*;
 
 class Tile implements Comparable{
 	
@@ -84,10 +83,15 @@ class Tile implements Comparable{
 	
 	public void initImages(){
 		try {
-			dark = ImageIO.read(new File("images/Dark.png"));
-			light = ImageIO.read(new File("images/Light.png"));
-			obstacle = ImageIO.read(new File("images/tree.png"));
-			goal = ImageIO.read(new File("images/goal.png"));
+            ClassLoader classLoader = getClass().getClassLoader();
+            File darkF = new File(classLoader.getResource("dark.png").getFile());
+            File lightF = new File(classLoader.getResource("light.png").getFile());
+            File obstacleF = new File(classLoader.getResource("tree.png").getFile());
+            File goalF = new File(classLoader.getResource("goal.png").getFile());
+			dark = ImageIO.read(darkF);
+			light = ImageIO.read(lightF);
+			obstacle = ImageIO.read(obstacleF);
+			goal = ImageIO.read(goalF);
 		} catch (IOException e) {
 		}
 	}

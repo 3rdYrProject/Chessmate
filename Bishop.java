@@ -1,6 +1,5 @@
-import java.util.*;
-import java.io.*;
 import java.awt.*;
+import java.io.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,14 +15,19 @@ class Bishop extends Piece
 		this.color= color;
 		try
 		{
-			if(color==0)
-			
-				BBishop= ImageIO.read(new File("images/BlackBishop.png"));
-			else 
-				WBishop= ImageIO.read(new File("images/WhiteBishop.png"));
+            ClassLoader classLoader = getClass().getClassLoader();
+			if(color==0) {
+                File file = new File(classLoader.getResource("drawable/blackbishop.png").getFile());
+                BBishop = ImageIO.read(file);
+            }
+			else {
+                File file = new File(classLoader.getResource("drawable/whitebishop.png").getFile());
+                WBishop = ImageIO.read(file);
+            }
 		}
-		catch(FileNotFoundException e){}
-		catch(IOException e){}
+		catch(Exception e){
+            e.printStackTrace();
+        }
 	}
 	public Tile[][] move(Tile t, Tile[][] tiles, AI ai)
 	{

@@ -1,6 +1,5 @@
-import java.util.*;
-import java.io.*;
 import java.awt.*;
+import java.io.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
@@ -17,11 +16,16 @@ class Rook extends Piece
 		this.color=color;
 		try
 		{
-			if(color==0)
-			
-				BRook= ImageIO.read(new File("images/BlackRook.png"));
-			else 
-				WRook= ImageIO.read(new File("images/WhiteRook.png"));
+            ClassLoader classLoader = getClass().getClassLoader();
+
+			if(color==0) {
+                File file = new File(classLoader.getResource("blackrook.png").getFile());
+                BRook = ImageIO.read(file);
+            }
+			else {
+                File file = new File(classLoader.getResource("whiterook.png").getFile());
+                WRook = ImageIO.read(file);
+            }
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e){}

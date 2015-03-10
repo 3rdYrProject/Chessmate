@@ -1,6 +1,6 @@
+import java.awt.*;
 import java.util.*;
 import java.io.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
@@ -38,7 +38,9 @@ class Board extends JPanel implements MouseListener
 		//reads in a map for the current level. 
 		Scanner sc= null;
 		try{
-			sc = new Scanner(new File("level.txt"));
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("level.txt").getFile());
+			sc = new Scanner(file);
 		}catch(FileNotFoundException e){}
 		
 		int token= sc.nextInt();//player token.
@@ -120,7 +122,7 @@ class Board extends JPanel implements MouseListener
 			{
 				for(int j=0;j<tiles[i].length;j++)
 				{
-					System.out.print(tiles[j][i]+ ", ");
+					System.out.print(tiles[j][i].getType()+ ", ");
 				}
 				System.out.println();
 			}
