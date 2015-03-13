@@ -19,12 +19,10 @@ import java.util.*;
 */
 class AI
 {
-	Tile goal;
 	Piece user;
 	Tile tempUser;
 	Piece currentPiece;
 	Tile oldUser;
-    Tile aiGoal;
 	int depth;
 	int direction=2;//initial direction for the level
 	LinkedList<Piece> aiPieces; 
@@ -52,29 +50,24 @@ class AI
 	{
 		this.user=user;
 	}
-	void addGoal(Tile goal)
-	{
-		this.goal=goal;
-	}
 	void updateUser(Piece user)
 	{
 		oldUser= new Tile(this.user);
 		this.user=user;
-        aiGoal=user;
+        updateGoal(user);
 		tempUser= new Tile(this.user);
 	}
+    void updateGoal(Tile user)
+    {
+        for(Piece p:aiPieces)
+        {
+            p.setGoal(user);
+        }
+    }
 	public LinkedList<Tile> getPath(Tile[][] tiles, Piece piece)
 	{
 		currentPiece= piece;
-		Tile tempGoal=null;
-		for(Piece p:aiPieces)
-		{
-			if(piece.equals(p))
-			{
-				tempGoal=new Tile(goal);
-				goal=new Tile(aiGoal);
-			}	
-		}
+		Tile tempGoal=piece.getGoal();
 		LinkedList<Tile> closedset = new LinkedList<>();    // The set of nodes already evaluated.
 		LinkedList<Tile> openset = new LinkedList<>();	// The set of tentative nodes to be evaluated, initially containing the start node
 		HashMap<Tile,Tile> came_from = new HashMap<>();
@@ -82,7 +75,7 @@ class AI
 			direction= getDirection(oldUser,piece);
 		piece.setG(0);   // Cost from start along best known path.
 		// Estimated total cost from start to goal through y.
-		piece.setF(heuristic_cost_estimate(piece, goal));
+		piece.setF(heuristic_cost_estimate(piece, tempGoal));
 		openset.add(piece);
 		Tile lastCurrent= null;
 		while(!openset.isEmpty())
@@ -90,10 +83,8 @@ class AI
 			Tile current = getLowestF(openset);//lowest f_score 
 			
 			LinkedList<Tile> neighbours= new LinkedList<>();
-			if(current.equals(goal))
+			if(current.equals(tempGoal))
 			{
-				if(tempGoal!=null)
-					goal= new Tile(tempGoal);
 				return reconstruct_path(came_from,current);
 			}
 			openset.remove(current);
@@ -104,7 +95,7 @@ class AI
 			{
 				if(closedset.contains(neighbour))
 					continue;
-				int tentative_g_score = current.getG() + dist_between(current,neighbour,goal,tiles);
+				int tentative_g_score = current.getG() + dist_between(current,neighbour,tempGoal,tiles);
 				
 				if(!openset.contains(neighbour)||tentative_g_score < neighbour.getG())
 				{ //next goal in the path
@@ -112,7 +103,7 @@ class AI
 						direction =getDirection(current,neighbour);
 					came_from.put(neighbour,current);
 					neighbour.setG(tentative_g_score);
-					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, goal));
+					neighbour.setF(neighbour.getG() + heuristic_cost_estimate(neighbour, tempGoal));
 					if(!openset.contains(neighbour))
 					{
 						openset.add(neighbour);
@@ -127,7 +118,7 @@ class AI
 	int getDirection(Tile lastCurrent, Tile current)
 	{
 		int direction= lastCurrent.checkOrth(current);
-		if(direction==0&&user.getName().equals("Queen")||user.getName().equals("Bishop"))
+		if(direction==0)
 			return lastCurrent.checkDiag(current);
 		else 
 			return direction;
@@ -269,7 +260,6 @@ class AI
 			else
 			{
 				System.out.println("NEXT DECISION");
-                aiGoal= user;
                 System.out.println("The user: "+user);
                 Node tempMin= getMin(depth,user,p,tiles);
                 if(tempMin.getTile()==null||tempMin.getTile().equals(p)) {
@@ -284,8 +274,8 @@ class AI
 	}
     boolean gameOver(Piece piece)
     {
-        System.out.println("USER,GOAL,PIECE "+user+ " "+goal+ " "+piece);
-        return(user.equals(goal)||piece.equals(user));
+        System.out.println("USER,GOAL,PIECE "+user+ " "+user.getGoal()+ " "+piece+" "+piece.getGoal());
+        return(user.equals(user.getGoal())||piece.equals(piece.getGoal()));
     }
 	boolean isProtected(Piece piece, Tile[][] tiles)
 	{	
@@ -294,7 +284,7 @@ class AI
 			String name = p.getName();
 			if(p.equals(piece))
 				continue;
-			if(name.equals("Bishop")&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
+			if(!(name.equals("Bishop"))&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
@@ -313,6 +303,7 @@ class AI
 	{
 		if(depth <= 0)
 		{
+
 			int value=evaluatePaths(tiles, user);
 
 			if(value==0)//I reached the goal
@@ -342,9 +333,11 @@ class AI
 	}
 	Node Min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
 	{
+        updateGoal(user);
 		if(depth <= 0||gameOver(piece))
 		{
             System.out.println(depth);
+
 			int value=evaluatePaths(tiles, piece);
 			if(value==0)
 			{
