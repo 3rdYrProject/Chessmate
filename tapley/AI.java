@@ -19,6 +19,7 @@ import java.util.*;
 */
 class AI
 {
+    Random r = new Random();
 	Piece user;
 	Tile tempUser;
 	Piece currentPiece;
@@ -82,7 +83,7 @@ class AI
 		{
 			Tile current = getLowestF(openset);//lowest f_score 
 			
-			LinkedList<Tile> neighbours= new LinkedList<>();
+			LinkedList<Tile> neighbours;
 			if(current.equals(tempGoal))
 			{
 				return reconstruct_path(came_from,current);
@@ -149,42 +150,12 @@ class AI
 	LinkedList<Tile> getNeighbours(Tile current, Tile[][] tiles)//edit here for obstacles and to limit moves
 	//needs to know the piece in order to enforce the rules
 	{
-		LinkedList<Tile> neighbours= new LinkedList<>();
-		String name= currentPiece.getName();
-		if(!name.equals("Knight"))
-		{
-			for(int x=current.getX()-1;x<=current.getX()+1;x++)
-			{
-				for(int y= current.getY()-1;y<=current.getY()+1;y++)
-				{
-					if(x<0||x>=tiles[0].length||y<0||y>=tiles.length)
-						continue;
-					if(current.getType()==0||current.getType()==3)
-						continue;
-					if(current.equals(tiles[x][y]))
-						continue;
-					if(tiles[x][y].getOccupied()&&tiles[x][y].getColor()==current.getColor())//user 1, ai 0
-						continue;
-						
-					int temp= Math.abs(current.getX()-x)+Math.abs(current.getY()-y);
-					if(name.equals("Bishop"))
-					{
-						if(temp!=2)//diag
-							continue;
-					}
-					else if(name.equals("Rook"))
-					{
-						if(temp!=1)//orth
-							continue;
-					}
-					neighbours.add(tiles[x][y]);
-				}
-			}
-		}
-		else 
-		{
-			neighbours= currentPiece.getMoves(tiles,0);
-		}
+
+		LinkedList<Tile> neighbours;
+        Tile previous = new Tile(currentPiece);
+        tiles =currentPiece.changePos(current,tiles);
+	    neighbours= currentPiece.getMoves(tiles,1);
+        currentPiece.changePos(previous,tiles);
 		return neighbours;
 	}
 	
@@ -217,31 +188,6 @@ class AI
 		Collections.reverse(total_path);
 		return total_path;
 	}
-	
-	int evaluatePaths(Tile[][] tiles, Piece user)//returns a list of vertices for the ai to block
-	{
-		LinkedList<Tile> path=getPath(tiles,user);
-		if(path==null)
-			return(0);
-		Tile current = null;
-		int direction= 0;
-		LinkedList<Tile> vertices = new LinkedList<>();
-		for(Tile t:path)
-		{
-			if(current!=null)
-			{
-				if(direction!=0&&direction!=getDirection(current,t))
-				{
-					vertices.add(current);
-				}
-				direction= getDirection(current,t);
-			}
-		
-			current= t;
-		}
-		//increase size by 1 because unless it is on the goal it will take at least 1 extra move to reach the goal. 
-		return vertices.size()+1;
-	}	
 	Tile[][] decision(Tile[][] tiles)
 	{
 		for(Piece p:aiPieces)
@@ -268,13 +214,16 @@ class AI
                 }
 				System.out.println("Le decision: "+ tempMin.getTile()+" "+tempMin.getValue());
 				tiles= (p.move(tempMin.getTile(),tiles,this));
+                p.setMoved();
 			}
 		}
+        for(Piece p:aiPieces)
+            p.setMoved();
 		return tiles;
 	}
     boolean gameOver(Piece piece)
     {
-        System.out.println("USER,GOAL,PIECE "+user+ " "+user.getGoal()+ " "+piece+" "+piece.getGoal());
+        //System.out.println("USER,GOAL,PIECE "+user+ " "+user.getGoal()+ " "+piece+" "+piece.getGoal());
         return(user.equals(user.getGoal())||piece.equals(piece.getGoal()));
     }
 	boolean isProtected(Piece piece, Tile[][] tiles)
@@ -284,11 +233,11 @@ class AI
 			String name = p.getName();
 			if(p.equals(piece))
 				continue;
-			if(!(name.equals("Bishop"))&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
+			if(p.getMoved()&&!(name.equals("Bishop"))&&p.checkRoute(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
-			else if(name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))
+			else if(p.getMoved()&&name.equals("Queen")||p.checkRouteDiag(piece,getDirection(p,piece),tiles).equals(piece))
 			{
 				return true;
 			}
@@ -299,79 +248,79 @@ class AI
     {
         return(Min(depth, user, piece, new Node((int) (Double.NEGATIVE_INFINITY)), new Node((int) Double.POSITIVE_INFINITY), tiles));
     }
-	Node Max(int depth, Piece user, Piece piece,Node alpha, Node beta, Tile[][] tiles)
-	{
-		if(depth <= 0)
-		{
-
-			int value=evaluatePaths(tiles, user);
-
-			if(value==0)//I reached the goal
-				return(new Node((int)(Double.POSITIVE_INFINITY),piece));//reached goal
-            else if(value==1)
-            {
-                return(new Node(((int)(Double.POSITIVE_INFINITY))-1,piece));
-            }
-			return(new Node((10-value)*10,piece));
-		}
+	Node Max(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
+    {
+        if(depth <= 0||gameOver(piece))
+        {
+            return new Node(evaluation(user,piece,tiles));
+        }
 		LinkedList<Tile> moves = user.getMoves(tiles,1);
-		for(Tile t:moves)
-		{
-			Tile temp= new Tile(user);
-			this.user.changePos(t);
-			Node val = Min(depth - 1, this.user, piece, alpha, beta,tiles);
-			val.addTile(t);
-			this.user.changePos(temp);
-			if(val.getValue() >= beta.getValue())
-				return beta;
-			if(val.getValue() > alpha.getValue())
-			{
-				alpha = val;
-			}
-		}
-		return alpha;
+        Node best = new Node((int)(Double.NEGATIVE_INFINITY));
+		for(Tile t:moves) {
+            Tile temp = new Tile(user);
+            tiles = user.changePos(t, tiles);
+            Node val = Min(depth - 1, user, piece, alpha, beta, tiles);
+            val.addTile(t);
+            tiles = user.changePos(temp, tiles);
+            if(val.getValue()>best.getValue())
+                best=val;
+            //if v ≥ β then return v
+            //α ← MAX(α, v)
+        }
+		return best;
 	}
 	Node Min(int depth, Piece user, Piece piece, Node alpha, Node beta, Tile[][] tiles)
 	{
         updateGoal(user);
 		if(depth <= 0||gameOver(piece))
 		{
-            System.out.println(depth);
-
-			int value=evaluatePaths(tiles, piece);
-			if(value==0)
-			{
-				return new Node((int)(Double.NEGATIVE_INFINITY),beta.getTile());
-			}
-			else if(value==1&&isProtected(piece,tiles))//I can take the user, I can be taken too though
-			{
-				return(new Node(((int)(Double.NEGATIVE_INFINITY))+1,beta.getTile()));
-			}
-			else if(isProtected(piece, tiles))//I can be taken
-			{
-				return(new Node(-100000,beta.getTile()));
-			}
-            else if(isProtected(user,tiles))
-            {
-                return(new Node(100000,beta.getTile()));
-            }
-			return(new Node(-((10-value)*10),beta.getTile()));
+            return new Node(evaluation(user,piece,tiles));
 		}
 		LinkedList<Tile> moves = piece.getMoves(tiles,1);
+        Node best = new Node((int)(Double.POSITIVE_INFINITY));
 		for(Tile t:moves)
 		{
 			Tile temp= new Tile(piece);
-			piece.changePos(t);
-			Node val = Max(depth - 1, user, piece, alpha, beta,tiles);
-			val.addTile(t);
-			piece.changePos(temp);
-			if(val.getValue() <= alpha.getValue())
-				return(alpha);
-			if(val.getValue() < beta.getValue())  
-			{
-				beta = val;
-			}
+			tiles= piece.changePos(t,tiles);
+            Node val = Max(depth - 1, user, piece, alpha, beta,tiles);
+            val.addTile(t);
+			tiles= piece.changePos(temp,tiles);
+            if(val.getValue()<best.getValue())
+                best=val;
+
 		}
-		return beta;
+		return best;
 	}
+    int evaluation(Piece user, Piece piece,Tile[][] tiles)
+    {
+        int score=0;
+        //AI piece is protected -10
+        //User can take an AI piece +10
+        if(isProtected(piece, tiles))
+            score-=10;
+        if(isProtected(user,tiles))
+            score+=100;
+        if(piece.equals(piece.getGoal()))//this could also happen when the user takes us. Need to check who took who.
+            score-=10000000;
+        if(user.equals(user.getGoal()))
+            score+=10000000;
+
+        LinkedList<Tile> path =getPath(tiles,user);
+        if(path!=null) {
+            for (Tile t : path) {
+                for (Piece p : aiPieces) {
+                    if (p.equals(t)) {
+                        if (isProtected(p, tiles))
+                            score -= 100;
+                        score -= 5;
+                    }
+                }
+            }
+        }
+        //System.out.println("SCORE AWARDED: "+user+" "+piece+ " "+score);
+        //AI has taken the user -infinity
+        //User has reached it's goal +infinity
+        //AI is blocking the user from reaching his goal -5 if protected too -100
+        return score;
+    }
 }
